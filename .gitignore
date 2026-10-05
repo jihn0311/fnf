@@ -1,0 +1,11 @@
+/dist/
+/*-deploy.zip
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.log
+/analysis/sonic-stage.png
+/analysis/triple-stage.png

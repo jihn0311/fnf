@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NEON DUET — 네온 듀엣</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header><a class="brand" href="./">ND<span>NEON DUET</span></a><span class="edition">ORIGINAL RHYTHM GAME <b>VOL. 01</b></span><button id="sound" class="small" aria-label="소리 끄기">SOUND ON</button></header>
+    <section class="heading"><div><span class="eyebrow">FEEL THE CITY. FIND YOUR RHYTHM.</span><h1>네온 <em>듀엣.</em></h1><p>도시가 잠들면, 우리의 무대가 시작된다.</p></div><div class="track"><span class="disc">♫</span><div><small id="track-number">ORIGINAL TRACK / 01</small><strong id="track-title">Midnight Circuit</strong><span id="track-meta">120 BPM · SYNTH POP · 00:48</span></div></div></section>
+    <section class="song-picker" aria-label="곡 선택"><div><span class="eyebrow">SELECT YOUR TRACK</span><label for="song">오늘의 무대를 골라보세요.</label></div><select id="song"><option value="midnight">01 · Midnight Circuit — 120 BPM</option><option value="sunrise">02 · Peach Sunrise — 100 BPM</option><option value="voltage">03 · Voltage Rush — 150 BPM</option><option value="self">04 · 자폐원돈과 — SIRFLE · 약 160 BPM</option><optgroup label="Sonic.exe — 원본 채보"><option value="sonic-black-sun">Black Sun</option><option value="sonic-chaos">Chaos</option><option value="sonic-cycles">Cycles</option><option value="sonic-endless">Endless</option><option value="sonic-faker">Faker</option><option value="sonic-milk">Milk</option><option value="sonic-sunshine">Sunshine</option><option value="sonic-too-fest">Too Fest</option><option value="sonic-too-slow">Too Slow</option><option value="sonic-triple-trouble">Triple Trouble</option><option value="sonic-you-cant-run">You Cant Run</option></optgroup></select><p id="song-description"></p></section>
+    <section class="settings" aria-label="플레이 설정">
+      <label>난이도<select id="difficulty"><option value="easy">EASY · 쉬움</option><option value="normal" selected>NORMAL · 보통</option><option value="hard">HARD · 어려움</option></select></label>
+      <label>스크롤 방향<select id="scroll"><option value="up">↑ 업스크롤</option><option value="down">↓ 다운스크롤</option></select></label>
+      <label class="speed-setting">노트 속도 <output id="speed-value" for="speed">1.0×</output><input id="speed" type="range" min="0.5" max="2.5" step="0.1" value="1" aria-label="노트 속도"></label>
+      <label class="practice-setting"><input type="checkbox" id="practice" checked>연습 모드 · 체력 0이어도 계속</label><p id="chart-info"></p>
+    </section>
+    <section class="game" aria-label="리듬게임 무대">
+      <canvas id="stage" width="1120" height="530" aria-label="왼쪽 NOVA 자동 연주, 오른쪽 ECHO 플레이어의 4방향 레인"></canvas>
+      <div id="overlay" class="overlay"><div class="intro"><span id="overline" class="eyebrow">YOUR STAGE IS WAITING</span><h2 id="title">비트 위에 올라타.</h2><p id="description">왼쪽은 상대, 오른쪽은 당신의 무대.<br>내 파트와 합주에서는 오른쪽 노트를 연주하세요.<br>긴 노트는 꼬리까지 꾹!</p><button id="start" class="primary">플레이 시작 <span>↗</span></button><div id="pause-actions" class="pause-actions" hidden><button id="restart" disabled>↻ 처음부터 재시작</button><button id="stop-song" disabled>■ 곡 멈추기</button></div><small id="hint">방향키 또는 D · F · J · K</small></div></div>
+      <div class="hud battle-hud">
+        <div class="health"><div class="health-label"><span id="opponent-name">NOVA</span><span id="turn">준비</span><span><span id="player-name">ECHO</span> <b id="health-number">50%</b></span></div>
+          <div class="health-shell"><div id="health-meter" class="health-track" role="progressbar" aria-label="플레이어 체력" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i id="health"></i></div><div id="health-icons" class="health-icons"><span id="enemy-avatar" class="face nova-face">N</span><span id="player-avatar" class="face echo-face">E</span></div></div>
+        </div>
+        <div class="battle-stats"><span>SCORE <strong id="score">000000</strong></span><span>ACCURACY <strong id="accuracy">—</strong></span><span>COMBO <strong id="combo">0</strong></span><span>MISS <strong id="misses">0</strong></span></div>
+      </div>
+      <div class="stage-footer"><span><i></i> <b id="status">READY TO PLAY</b></span><span id="time">00:00 / 00:48</span><button id="pause" disabled>일시정지 <kbd>ESC</kbd></button></div>
+    </section>
+    <section class="bottom"><div class="controls" aria-label="터치 입력"><button data-lane="0" aria-label="왼쪽">←<kbd>D</kbd></button><button data-lane="1" aria-label="아래">↓<kbd>F</kbd></button><button data-lane="2" aria-label="위">↑<kbd>J</kbd></button><button data-lane="3" aria-label="오른쪽">→<kbd>K</kbd></button><span>키보드로, 또는 터치로.<br><b>판정선에 맞춰 리듬을 이어가세요.</b></span></div><div class="legend"><span><i class="pink"></i>NOVA <small>THE SPARK</small></span><span><i class="cyan"></i>ECHO <small>THAT'S YOU</small></span></div></section>
+    <p class="judgment-guide">PERFECT ≤45ms · GOOD ≤90ms · BAD ≤135ms / ≤160ms · MISS 놓침 / 롱노트 중간 해제<br>최대 500점 · 오차에 따라 점수 감소 · MISS -100점 · BAD부터 콤보가 끊깁니다.<br>설정은 시작 전과 곡이 끝난 뒤 변경할 수 있어요. 속도는 노트 이동 속도만 바꿉니다.</p>
+    <footer><span>MADE OF PIXELS & PULSE</span><span>오리지널 캐릭터 · 신스 곡 + 사용자 제공 음원</span></footer>
+    <div class="mod-controls"><button id="mod-cutscene" hidden>🎬 컷신 보기</button><button id="ring-input" hidden>◎ 링 · SPACE</button><p id="mod-help"></p></div>
+    <div id="mod-cinema" hidden><button id="close-cinema">닫기 / ESC</button><select id="mod-video-choice" aria-label="컷신 선택"></select><video id="mod-video" controls playsinline></video></div>
+  </main><script src="imported-chart.js"></script><script src="mod-songs.js"></script><script src="mod-art.js"></script><script src="mod-runtime.js"></script><script src="game.js"></script>
+<script>
+document.getElementById('mod-cutscene').onclick=showModVideo;
+document.getElementById('close-cinema').onclick=closeModVideo;
+document.getElementById('mod-video-choice').onchange=e=>{const v=document.getElementById('mod-video');v.src=e.target.value;v.play().catch(()=>{});};
+document.getElementById('ring-input').onpointerdown=e=>{e.preventDefault();modRingPress();};
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&song.rings?.[settings.difficulty]?.length){e.preventDefault();if(!e.repeat)modRingPress();}if(e.code==='Escape'&&!document.getElementById('mod-cinema').hidden)closeModVideo();});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+[
+  {
+    "song": "black-sun",
+    "duration": 164.8,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "hard": {
+        "echo": 484,
+        "nova": 548
+      }
+    }
+  },
+  {
+    "song": "bopeebo",
+    "skipped": "No matching chart"
+  },
+  {
+    "song": "chaos",
+    "duration": 157.5183673469388,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "hard": {
+        "echo": 588,
+        "nova": 497
+      }
+    }
+  },
+  {
+    "song": "cycles",
+    "duration": 152.30802721088435,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "normal": {
+        "echo": 178,
+        "nova": 180
+      },
+      "hard": {
+        "echo": 273,
+        "nova": 283
+      }
+    }
+  },
+  {
+    "song": "endless",
+    "duration": 169.54839002267573,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "hard": {
+        "echo": 588,
+        "nova": 588
+      }
+    }
+  },
+  {
+    "song": "faker",
+    "duration": 129.39285714285714,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "hard": {
+        "echo": 160,
+        "nova": 166
+      }
+    }
+  },
+  {
+    "song": "milk",
+    "duration": 194.57707482993197,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "normal": {
+        "echo": 522,
+        "nova": 563
+      }
+    }
+  },
+  {
+    "song": "sunshine",
+    "duration": 183.42857142857142,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "normal": {
+        "echo": 519,
+        "nova": 588
+      }
+    }
+  },
+  {
+    "song": "too-fest",
+    "duration": 131.03448979591838,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "hard": {
+        "echo": 468,
+        "nova": 480
+      }
+    }
+  },
+  {
+    "song": "too-slow",
+    "duration": 188.30326530612246,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "easy": {
+        "echo": 478,
+        "nova": 460
+      },
+      "normal": {
+        "echo": 478,
+        "nova": 460
+      },
+      "hard": {
+        "echo": 480,
+        "nova": 458
+      }
+    }
+  },
+  {
+    "song": "triple-trouble",
+    "duration": 507.1039909297052,
+    "omittedRingOrInvalid": 96,
+    "notes": {
+      "normal": {
+        "echo": 2013,
+        "nova": 1988
+      },
+      "hard": {
+        "echo": 2183,
+        "nova": 2139
+      }
+    }
+  },
+  {
+    "song": "you-cant-run",
+    "duration": 159.42857142857142,
+    "omittedRingOrInvalid": 0,
+    "notes": {
+      "easy": {
+        "echo": 259,
+        "nova": 298
+      },
+      "normal": {
+        "echo": 367,
+        "nova": 398
+      },
+      "hard": {
+        "echo": 503,
+        "nova": 458
+      }
+    }
+  }
+]

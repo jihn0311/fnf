@@ -1,0 +1,37 @@
+{
+  "method": "Bidirectional 3-band log-energy and band-balance change peaks; no beat-grid quantization",
+  "duration": 112.632,
+  "events": 565,
+  "charts": {
+    "easy": {
+      "echo": {
+        "notes": 80,
+        "holds": 10
+      },
+      "nova": {
+        "notes": 76,
+        "holds": 10
+      }
+    },
+    "normal": {
+      "echo": {
+        "notes": 164,
+        "holds": 11
+      },
+      "nova": {
+        "notes": 166,
+        "holds": 11
+      }
+    },
+    "hard": {
+      "echo": {
+        "notes": 310,
+        "holds": 13
+      },
+      "nova": {
+        "notes": 307,
+        "holds": 12
+      }
+    }
+  }
+}
