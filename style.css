@@ -12,3 +12,15 @@
 
 /* Top health and score HUD; the overlay covers only the stage. */
 .overlay{inset:108px 0 43px}.speed-setting input[type=number]{max-width:100px;padding:6px 9px;background:#202a38;color:#fff;border:1px solid #414e60;border-radius:6px}.battle-hud{border-bottom:1px solid #333c49}@media(max-width:700px){.overlay{inset:114px 0 43px}}
+
+/* Health belongs to the stage; section banners are intentionally omitted. */
+.stage-viewport{position:relative;isolation:isolate}
+.stage-viewport canvas{display:block;width:100%}
+.stage-viewport>.health{position:absolute;z-index:1;top:8px;left:15%;width:70%;max-width:none;margin:0;pointer-events:none;min-width:0}
+.stage-viewport .health-label{font-size:clamp(6px,.8vw,10px);margin-bottom:7px;text-shadow:0 1px 3px #000;color:#fff}
+.stage-viewport .health-track{height:12px;background:#ef79b6;border:3px solid #070b11;border-radius:5px;box-shadow:0 0 0 1px #526077}
+.stage-viewport .health-icons{top:-6px}
+.stage-viewport .face{width:25px;height:25px;font-size:14px}
+.stage-viewport>.overlay{inset:0;z-index:2}
+.game>.battle-stats{min-height:36px;background:#101520;flex-wrap:wrap;padding:5px 10px}
+@media(max-width:700px){.stage-viewport>.health{top:5px;left:12%;width:76%}.stage-viewport .health-label{margin-bottom:5px}.stage-viewport .health-track{height:10px;border-width:2px}.stage-viewport .health-icons .face{width:20px;height:20px}.game>.battle-stats{gap:10px}}

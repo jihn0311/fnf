@@ -11,3 +11,11 @@ __pycache__/
 /analysis/triple-stage.png
 /analysis/note-skin-*.png
 /analysis/settings-health-preview.png
+
+/analysis/virus-*.png
+/analysis/death-*.png
+/analysis/tainted-*.png
+/analysis/destruction-*.png
+/analysis/defeat-*.png
+
+/analysis/triple-phase-*.png

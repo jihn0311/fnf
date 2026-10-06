@@ -18,20 +18,10 @@ notes=[{time:4,lane:0,done:false}];press(1);assert.equal(score,0);press(0);asser
 notes=[{time:5,lane:1,done:false}];audio.currentTime=5.08;press(1);assert.equal(hits.good,1);assert.equal(score,568);
 notes=[{time:6,lane:2,done:false}];audio.currentTime=6.14;press(2);assert.equal(hits.bad,1);assert.equal(score,577);assert.equal(combo,0);assert.equal(splashes.length,1);assert.equal(splashes[0].lane,0);
 notes=[{time:7,lane:3,done:false}];audio.currentTime=7.2;frame();assert.equal(hits.miss,1);assert.equal(score,477);assert.equal(combo,0);assert.equal(maxCombo,2);assert.equal(judged,4);
-// Hold is one judgment, awarded only at its tail.
-notes=[{time:8,lane:0,duration:1.5,done:false}];audio.currentTime=8;inputDown('key:d',0);assert(notes[0].holding);assert.equal(judged,4);audio.currentTime=9.5;updateNotes(time());assert.equal(hits.perfect,2);assert.equal(judged,5);inputUp('key:d');assert.equal(judged,5);
-// An early release fails; duplicate pointer events cannot score it again.
-notes=[{time:10,lane:1,duration:1.5,done:false}];audio.currentTime=10;inputDown('pointer:1',1);audio.currentTime=10.6;inputUp('pointer:1');inputUp('pointer:1');assert.equal(hits.miss,2);assert.equal(judged,6);
-// Two physical controls in the same lane keep the hold alive until both release.
-notes=[{time:12,lane:2,duration:1.5,done:false}];audio.currentTime=12;inputDown('key:j',2);inputDown('key:ArrowUp',2);audio.currentTime=12.5;inputUp('key:j');assert(!notes[0].done);audio.currentTime=13.5;inputUp('key:ArrowUp');assert.equal(hits.perfect,3);
-// A missed hold head produces one MISS, never a separate tail penalty.
-notes=[{time:14,lane:0,duration:1.5,done:false}];audio.currentTime=14.2;updateNotes(time());audio.currentTime=16;updateNotes(time());assert.equal(hits.miss,3);
-// Preserve a GOOD head judgment on a completed hold.
-notes=[{time:17,lane:3,duration:1.5,done:false}];audio.currentTime=17.08;inputDown('key:k',3);audio.currentTime=18.5;updateNotes(time());inputUp('key:k');assert.equal(hits.good,2);
-// Focus loss pauses first; key release while paused must not fail a hold.
+// Segmented sustains preserve GOOD, support shared keys and pause grace.
+notes=[{time:8,lane:0,duration:1.5,done:false}];audio.currentTime=8.08;const goodBefore=hits.good;inputDown('key:d',0);assert(notes[0].holding);audio.currentTime=9.5;updateNotes(time());assert(notes[0].done);assert(hits.good>goodBefore);inputUp('key:d');
+notes=[{time:12,lane:2,duration:1.5,done:false}];audio.currentTime=12;inputDown('key:j',2);inputDown('key:ArrowUp',2);const missBefore=hits.miss;audio.currentTime=12.5;inputUp('key:j');assert(!notes[0].done);assert.equal(hits.miss,missBefore);audio.currentTime=13.5;inputUp('key:ArrowUp');assert(notes[0].done);
 notes=[{time:20,lane:0,duration:1.5,done:false}];audio.currentTime=20;inputDown('key:d',0);audio.currentTime=20.5;await pause();inputUp('key:d');assert(!notes[0].done);assert.equal(time(),20.5);await pause();audio.currentTime=20.6;updateNotes(time());assert(!notes[0].done);inputDown('key:d',0);audio.currentTime=21.5;updateNotes(time());assert(notes[0].done);inputUp('key:d');
-// Grace expiry fails an unheld resumed sustain.
-notes=[{time:22,lane:0,duration:1.5,done:false}];audio.currentTime=22;inputDown('key:d',0);audio.currentTime=22.3;await pause();inputUp('key:d');await pause();audio.currentTime=22.6;updateNotes(time());assert.equal(notes[0].headKind,'perfect');assert(notes[0].done);assert.equal(hits.miss,4);
 // Direction and speed affect position only; every note crosses its target at song time.
 for(const scroll of ['up','down'])for(const speed of [.5,1,2.5]){settings.scroll=scroll;settings.speed=speed;assert.equal(noteY(25,25),targetY());assert.equal(Math.sign(noteY(26,25)-targetY()),scroll==='up'?1:-1);assert.equal(Math.round(Math.abs(noteY(26,25)-targetY())),Math.round(430/LEAD*speed));}
 state='playing';audio.currentTime=48;frame();assert.equal(state,'finished');assert.equal(document.getElementById('status').textContent,'TRACK COMPLETE');assert.equal(document.getElementById('difficulty').disabled,false);

@@ -1,0 +1,237 @@
+{
+  "songs": {
+    "virus-invade": {
+      "duration": 93.08204081632653,
+      "notes": {
+        "easy": {
+          "echo": 135,
+          "nova": 136
+        },
+        "normal": {
+          "echo": 147,
+          "nova": 148
+        },
+        "hard": {
+          "echo": 177,
+          "nova": 185
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "virus-malfunction": {
+      "duration": 110.40625850340136,
+      "notes": {
+        "easy": {
+          "echo": 79,
+          "nova": 69
+        },
+        "normal": {
+          "echo": 86,
+          "nova": 69
+        },
+        "hard": {
+          "echo": 89,
+          "nova": 69
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "virus-r-memory": {
+      "duration": 165.32589569161,
+      "notes": {
+        "easy": {
+          "echo": 303,
+          "nova": 394
+        },
+        "normal": {
+          "echo": 303,
+          "nova": 394
+        },
+        "hard": {
+          "echo": 388,
+          "nova": 394
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "virus-test": {
+      "duration": 64.83385487528345,
+      "notes": {
+        "normal": {
+          "echo": 304,
+          "nova": 0
+        }
+      },
+      "events": {
+        "normal": 0
+      }
+    },
+    "virus-the-battle-of-robbery": {
+      "duration": 135.5041723356009,
+      "notes": {
+        "easy": {
+          "echo": 304,
+          "nova": 325
+        },
+        "normal": {
+          "echo": 774,
+          "nova": 793
+        },
+        "hard": {
+          "echo": 790,
+          "nova": 793
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "virus-virus-r": {
+      "duration": 334.7558503401361,
+      "notes": {
+        "easy": {
+          "echo": 952,
+          "nova": 1012
+        },
+        "normal": {
+          "echo": 952,
+          "nova": 1012
+        },
+        "hard": {
+          "echo": 952,
+          "nova": 1012
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "virus-warning": {
+      "duration": 134.3798866213152,
+      "notes": {
+        "easy": {
+          "echo": 533,
+          "nova": 536
+        },
+        "normal": {
+          "echo": 533,
+          "nova": 536
+        },
+        "hard": {
+          "echo": 533,
+          "nova": 536
+        }
+      },
+      "events": {
+        "easy": 0,
+        "normal": 0,
+        "hard": 0
+      }
+    },
+    "death-the-deathmatch": {
+      "duration": 212.16916666666665,
+      "notes": {
+        "normal": {
+          "echo": 619,
+          "nova": 672
+        }
+      },
+      "events": {
+        "normal": 9
+      }
+    },
+    "death-the-deathmatch-evil": {
+      "duration": 252.04351473922904,
+      "notes": {
+        "normal": {
+          "echo": 1039,
+          "nova": 771
+        }
+      },
+      "events": {
+        "normal": 16
+      }
+    },
+    "death-tutorial": {
+      "duration": 84.06249433106576,
+      "notes": {
+        "normal": {
+          "echo": 32,
+          "nova": 23
+        }
+      },
+      "events": {
+        "normal": 0
+      }
+    },
+    "death-tutorial-evil": {
+      "duration": 84.06249433106576,
+      "notes": {
+        "normal": {
+          "echo": 52,
+          "nova": 23
+        }
+      },
+      "events": {
+        "normal": 0
+      }
+    },
+    "tainted-crush": {
+      "duration": 66.46154195011339,
+      "notes": {
+        "normal": {
+          "echo": 158,
+          "nova": 162
+        }
+      },
+      "events": {
+        "normal": 30
+      }
+    },
+    "tainted-defeat": {
+      "duration": 180.57142857142858,
+      "notes": {
+        "normal": {
+          "echo": 471,
+          "nova": 528
+        }
+      },
+      "events": {
+        "normal": 87
+      }
+    },
+    "tainted-destruction": {
+      "duration": 177.0,
+      "notes": {
+        "normal": {
+          "echo": 366,
+          "nova": 294
+        }
+      },
+      "events": {
+        "normal": 305
+      }
+    }
+  },
+  "limitations": [
+    "Virus R: compiled engine effects are unavailable; stages are an asset-based web adaptation.",
+    "Deathmatch: old Psych note types 1=Alt Animation and 3=Hurt Note follow upstream compatibility mapping; compiled custom effects may differ.",
+    "Tainted Fate: Lua timing ported to Canvas; shader and camera rendering are web approximations."
+  ]
+}

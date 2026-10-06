@@ -157,3 +157,6 @@ Too Slow, You Can't Run, Milk, Chaos의 영상은 컷신 보기 버튼과 영상
 판정 오차와 롱노트 해제 허용 범위는 배속과 무관한 실제 시간 기준입니다.
 곡 정보에 원곡 BPM(1배속), 현재 BPM·배속과 예상 재생 시간을 표시합니다.
 체력바와 점수는 게임 화면 상단에 있습니다. 브라우저 검증: node test-speed-ui.cjs.
+
+## 추가 모드 (2026-10-06)
+Virus R, Deathmatch, Impostor Tainted Fate의 14개 곡 항목과 원본 데이터 기반 연출을 추가했습니다. 전체 곡은 29개입니다. 곡 목록, 조작, 특수 노트, 이식 범위와 원본 차이는 [MOD-IMPORT.md](MOD-IMPORT.md)를 참고하세요.

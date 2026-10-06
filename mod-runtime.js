@@ -2,13 +2,14 @@
 // Web adaptation: original art/notes, deterministic local-clock effects.
 const modImages=new Map();
 let modRingNotes=[],modRings=0,modStaticUntil=-Infinity,modPoisonUntil=-Infinity;
-function modSlug(){return songId.startsWith('sonic-')?songId.slice(6):null;}
+function modSlug(){return song.sceneKey||(songId.startsWith('sonic-')?songId.slice(6):null);}
 function modActive(){return typeof MOD_ART!=='undefined'&&!!modSlug();}
 async function prepareMod(){
  modRingNotes=(song.rings?.[settings.difficulty]||[]).map(n=>({...n,done:false}));modRings=0;modStaticUntil=modPoisonUntil=-Infinity;
  if(!modActive()||typeof Image==='undefined')return;
+ if(song.pack){await extraPrepare();return;}
  const slug=modSlug(),scene=MOD_ART.scenes[slug];
- const chars=[scene.opponent,scene.player,...(slug==='triple-trouble'?['Tails','KnucklesEXE','eggman_soul','SONIC_X']:[])];
+ const chars=[scene.opponent,scene.player,...(slug==='triple-trouble'?song.visualTimelineByDifficulty[settings.difficulty].flatMap(p=>[p.opponent,p.player]):[])];
  const paths=[...MOD_ART.backgrounds[slug],...chars.map(c=>MOD_ART.characters[c].src)];
  // Release sprites from previous songs, keeping only the current stage.
  for(const key of modImages.keys())if(!paths.includes(key))modImages.delete(key);
@@ -33,9 +34,11 @@ function modActor(name,side,t,x,y){
  ctx.drawImage(image,f.x,f.y,f.w,f.h,x-f.fw/2+f.ox,y-f.fh+f.oy,f.w,f.h);
 }
 function drawModStage(t){
+ if(typeof tripleActive==='function'&&tripleActive()){drawTripleStage(t);return;}
+ if(song.pack){extraStage(t);return;}
  const slug=modSlug(),scene=MOD_ART.scenes[slug];if(!scene)return;
  let opponent=scene.opponent;
- if(slug==='triple-trouble')opponent=['Tails','KnucklesEXE','eggman_soul','SONIC_X'][actors.nova.character||0];
+ // Character IDs attached to notes do not drive Triple Trouble phase changes.
  ctx.save();
  const step=t*song.bpm/60*4;
  const zoom=slug==='too-slow'&&((step>=760&&step<786)||(step>=1392&&step<1428))?1.12:1+Math.max(0,Math.cos(t/BEAT*Math.PI*2))*.008;
@@ -51,6 +54,7 @@ function modRingPress(){
  if(note){note.done=true;modRings++;feedback='RING +1';feedbackOffsetMs=null;feedbackAt=now;feedbackColor='#ffd75e';}
 }
 function modJudge(note,kind){
+ if(song.pack)return extraHurt(note,kind);
  if(!modActive())return false;
  if(note.type===3){
   note.done=true;
@@ -62,9 +66,11 @@ function modJudge(note,kind){
  return false;
 }
 function updateMod(t){
+ if(song.pack)extraUpdate(t);
  for(const ring of modRingNotes)if(!ring.done&&t>ring.time+.18*(settings.rate||1))ring.done=true;
 }
 function drawModHud(t){
+ if(song.pack){extraHud(t);return;}
  if(!modActive())return;
  if(song.rings?.[settings.difficulty]?.length){
   label('RINGS '+modRings+' · SPACE',560,468,15,'#ffdb65');
@@ -89,6 +95,7 @@ function syncModUI(){
  const status=$('mod-help');
  if(status)status.textContent=modActive()?'원본 아트 · 웹 연출 재현 | 금색 링: SPACE · 보라색 PHANTOM: 피하기 · 흰색 STATIC: 화면 효과':'';
 }
+const originalSyncModUI=syncModUI;syncModUI=function(){originalSyncModUI();if(typeof extraSync==='function')extraSync();if(typeof tripleSync==='function')tripleSync(state==='ready'?0:time(),true);};
 function showModVideo(){
  if(!modActive()||!['ready','finished'].includes(state))return;
  const choices=MOD_ART.videos[modSlug()];if(!choices)return;const list=$('mod-video-choice');list.replaceChildren(...choices.map((src,i)=>{const option=document.createElement('option');option.value=src;option.textContent='영상 '+(i+1)+' · '+src.split('/').pop();return option;}));const src=choices[0];
