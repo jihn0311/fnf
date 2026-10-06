@@ -1,0 +1,11 @@
+const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');const assert=require('assert/strict');
+(async()=>{const browser=await chromium.launch({headless:true,channel:'msedge'});const p=await browser.newPage({viewport:{width:1400,height:1100}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:5174/');
+for(const rate of ['0.5','2']){
+ await p.selectOption('#song','sonic-too-slow');await p.selectOption('#rate',rate);await p.click('#start');await p.waitForFunction(()=>state==='playing');
+ const result=await p.evaluate(()=>({rate:settings.rate,stems:sources.map(s=>s.playbackRate.value),clockError:Math.abs(time()-(audio.currentTime-startTime)*settings.rate),unlocked:!document.getElementById('speed').disabled,locked:document.getElementById('rate').disabled}));assert.equal(result.rate,+rate);assert(result.stems.every(v=>v===+rate));assert(result.clockError<.01);assert(result.unlocked&&result.locked);
+ await p.locator('#speed-number').fill('3.25');await p.locator('#speed-number').dispatchEvent('change');assert.equal(await p.evaluate(()=>settings.speed),3.25);
+ await p.keyboard.press('Escape');await p.waitForFunction(()=>!pauseTransition);assert.equal(await p.evaluate(()=>state),'paused');await p.keyboard.press('Escape');await p.waitForFunction(()=>!pauseTransition);assert.equal(await p.evaluate(()=>state),'playing');await p.keyboard.press('Escape');await p.waitForFunction(()=>!pauseTransition);await p.click('#stop-song');
+}
+await p.selectOption('#song','midnight');await p.selectOption('#rate','1');await p.evaluate(()=>changeScrollSpeed(1));
+const box=await p.evaluate(()=>{const h=document.querySelector('.battle-hud').getBoundingClientRect(),c=document.querySelector('canvas').getBoundingClientRect();return h.bottom<=c.top+1;});assert(box);await p.screenshot({path:'analysis/settings-health-preview.png',fullPage:true});
+await p.setViewportSize({width:390,height:844});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));assert.deepEqual(errors,[]);await browser.close();console.log('PASS 0.5x/2x dual-stem clock sync, live scroll speed, pause/resume, top HUD, mobile width');})().catch(e=>{console.error(e);process.exit(1)});

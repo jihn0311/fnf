@@ -13,26 +13,27 @@
     <section class="settings" aria-label="플레이 설정">
       <label>난이도<select id="difficulty"><option value="easy">EASY · 쉬움</option><option value="normal" selected>NORMAL · 보통</option><option value="hard">HARD · 어려움</option></select></label>
       <label>스크롤 방향<select id="scroll"><option value="up">↑ 업스크롤</option><option value="down">↓ 다운스크롤</option></select></label>
-      <label class="speed-setting">노트 속도 <output id="speed-value" for="speed">1.0×</output><input id="speed" type="range" min="0.5" max="2.5" step="0.1" value="1" aria-label="노트 속도"></label>
+      <label class="speed-setting">노트 속도 <output id="speed-value" for="speed">1.0×</output><input id="speed" type="range" min="0.25" max="5" step="0.05" value="1" aria-label="노트 속도"><input id="speed-number" type="number" min="0.25" max="5" step="0.05" value="1" aria-label="노트 속도 직접 입력"></label>
+      <label>곡 재생 속도<select id="rate"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
       <label class="practice-setting"><input type="checkbox" id="practice" checked>연습 모드 · 체력 0이어도 계속</label><p id="chart-info"></p>
     </section>
     <section class="game" aria-label="리듬게임 무대">
-      <canvas id="stage" width="1120" height="530" aria-label="왼쪽 NOVA 자동 연주, 오른쪽 ECHO 플레이어의 4방향 레인"></canvas>
-      <div id="overlay" class="overlay"><div class="intro"><span id="overline" class="eyebrow">YOUR STAGE IS WAITING</span><h2 id="title">비트 위에 올라타.</h2><p id="description">왼쪽은 상대, 오른쪽은 당신의 무대.<br>내 파트와 합주에서는 오른쪽 노트를 연주하세요.<br>긴 노트는 꼬리까지 꾹!</p><button id="start" class="primary">플레이 시작 <span>↗</span></button><div id="pause-actions" class="pause-actions" hidden><button id="restart" disabled>↻ 처음부터 재시작</button><button id="stop-song" disabled>■ 곡 멈추기</button></div><small id="hint">방향키 또는 D · F · J · K</small></div></div>
       <div class="hud battle-hud">
         <div class="health"><div class="health-label"><span id="opponent-name">NOVA</span><span id="turn">준비</span><span><span id="player-name">ECHO</span> <b id="health-number">50%</b></span></div>
           <div class="health-shell"><div id="health-meter" class="health-track" role="progressbar" aria-label="플레이어 체력" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i id="health"></i></div><div id="health-icons" class="health-icons"><span id="enemy-avatar" class="face nova-face">N</span><span id="player-avatar" class="face echo-face">E</span></div></div>
         </div>
         <div class="battle-stats"><span>SCORE <strong id="score">000000</strong></span><span>ACCURACY <strong id="accuracy">—</strong></span><span>COMBO <strong id="combo">0</strong></span><span>MISS <strong id="misses">0</strong></span></div>
       </div>
+      <canvas id="stage" width="1120" height="530" aria-label="왼쪽 NOVA 자동 연주, 오른쪽 ECHO 플레이어의 4방향 레인"></canvas>
+      <div id="overlay" class="overlay"><div class="intro"><span id="overline" class="eyebrow">YOUR STAGE IS WAITING</span><h2 id="title">비트 위에 올라타.</h2><p id="description">왼쪽은 상대, 오른쪽은 당신의 무대.<br>내 파트와 합주에서는 오른쪽 노트를 연주하세요.<br>긴 노트는 꼬리까지 꾹!</p><button id="start" class="primary">플레이 시작 <span>↗</span></button><div id="pause-actions" class="pause-actions" hidden><button id="restart" disabled>↻ 처음부터 재시작</button><button id="stop-song" disabled>■ 곡 멈추기</button></div><small id="hint">방향키 또는 D · F · J · K</small></div></div>
       <div class="stage-footer"><span><i></i> <b id="status">READY TO PLAY</b></span><span id="time">00:00 / 00:48</span><button id="pause" disabled>일시정지 <kbd>ESC</kbd></button></div>
     </section>
     <section class="bottom"><div class="controls" aria-label="터치 입력"><button data-lane="0" aria-label="왼쪽">←<kbd>D</kbd></button><button data-lane="1" aria-label="아래">↓<kbd>F</kbd></button><button data-lane="2" aria-label="위">↑<kbd>J</kbd></button><button data-lane="3" aria-label="오른쪽">→<kbd>K</kbd></button><span>키보드로, 또는 터치로.<br><b>판정선에 맞춰 리듬을 이어가세요.</b></span></div><div class="legend"><span><i class="pink"></i>NOVA <small>THE SPARK</small></span><span><i class="cyan"></i>ECHO <small>THAT'S YOU</small></span></div></section>
-    <p class="judgment-guide">PERFECT ≤45ms · GOOD ≤90ms · BAD ≤135ms / ≤160ms · MISS 놓침 / 롱노트 중간 해제<br>최대 500점 · 오차에 따라 점수 감소 · MISS -100점 · BAD부터 콤보가 끊깁니다.<br>설정은 시작 전과 곡이 끝난 뒤 변경할 수 있어요. 속도는 노트 이동 속도만 바꿉니다.</p>
+    <p class="judgment-guide">PERFECT ≤60ms · GOOD ≤110ms · BAD ≤150ms / ≤180ms · MISS 놓침 / 롱노트 중간 해제<br>최대 500점 · 오차에 따라 점수 감소 · MISS -100점 · BAD부터 콤보가 끊깁니다.<br>노트 속도는 플레이 중에도 변경할 수 있어요. 곡 속도는 시작 전에 선택하며 음악의 음높이도 함께 바뀝니다.</p>
     <footer><span>MADE OF PIXELS & PULSE</span><span>오리지널 캐릭터 · 신스 곡 + 사용자 제공 음원</span></footer>
     <div class="mod-controls"><button id="mod-cutscene" hidden>🎬 컷신 보기</button><button id="ring-input" hidden>◎ 링 · SPACE</button><p id="mod-help"></p></div>
     <div id="mod-cinema" hidden><button id="close-cinema">닫기 / ESC</button><select id="mod-video-choice" aria-label="컷신 선택"></select><video id="mod-video" controls playsinline></video></div>
-  </main><script src="imported-chart.js"></script><script src="mod-songs.js"></script><script src="mod-art.js"></script><script src="mod-runtime.js"></script><script src="game.js"></script>
+  </main><script src="imported-chart.js"></script><script src="mod-songs.js"></script><script src="mod-art.js"></script><script src="mod-runtime.js"></script><script src="note-skin.js"></script><script src="game.js"></script>
 <script>
 document.getElementById('mod-cutscene').onclick=showModVideo;
 document.getElementById('close-cinema').onclick=closeModVideo;

@@ -4,7 +4,7 @@ const nodes=new Map();function element(id){if(!nodes.has(id))nodes.set(id,{value
 const sandbox={console,document:{querySelector:element,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},window:{addEventListener(){}},requestAnimationFrame(){},assert};
 vm.createContext(sandbox);vm.runInContext(fs.readFileSync('game.js','utf8'),sandbox);
 vm.runInContext(`(async()=>{
-for(const [ms,kind,points] of [[0,'perfect',500],[4.999,'perfect',500],[5,'perfect',499],[20,'perfect',480],[44.999,'perfect',353],[45,'perfect',353],[45.001,'good',353],[80,'good',68],[89.999,'good',37],[90,'good',37],[90.001,'bad',37],[134.999,'bad',9],[135,'bad',9],[135.001,'bad',9],[159.999,'bad',9],[160,'bad',9],[160.001,'miss',-100]]){for(const sign of [-1,1]){const result=timingResult(sign*ms/1000);assert.equal(result.kind,kind);assert.equal(result.points,points);}}
+for(const [ms,kind,points] of [[0,'perfect',500],[4.999,'perfect',500],[5,'perfect',499],[20,'perfect',480],[44.999,'perfect',353],[45,'perfect',353],[45.001,'good',353],[80,'good',68],[89.999,'good',37],[90,'good',37],[90.001,'bad',37],[134.999,'bad',9],[135,'bad',9],[135.001,'bad',9],[159.999,'bad',9],[160,'bad',9],[160.001,'bad',9],[180,'bad',9],[180.001,'miss',-100]]){for(const sign of [-1,1]){const result=timingResult(sign*ms/1000);assert.equal(result.kind,ms<=60?'perfect':ms<=110?'good':ms<=180?'bad':'miss');assert.equal(result.points,points);}}
 const charts=['easy','normal','hard'].map(difficulty=>createChart(difficulty));
 assert(charts[0].length<charts[1].length&&charts[1].length<charts[2].length);
 for(const chart of charts){

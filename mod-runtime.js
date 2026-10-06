@@ -47,14 +47,14 @@ function drawModStage(t){
 }
 function modRingPress(){
  if(state!=='playing'||!modActive())return;
- const now=time(),note=modRingNotes.find(n=>!n.done&&Math.abs(n.time-now)<=.16);
- if(note){note.done=true;modRings++;feedback='RING +1';feedbackAt=now;feedbackColor='#ffd75e';}
+ const now=time(),note=modRingNotes.find(n=>!n.done&&Math.abs(n.time-now)/(settings.rate||1)<=.18);
+ if(note){note.done=true;modRings++;feedback='RING +1';feedbackOffsetMs=null;feedbackAt=now;feedbackColor='#ffd75e';}
 }
 function modJudge(note,kind){
  if(!modActive())return false;
  if(note.type===3){
   note.done=true;
-  if(kind!=='miss'){health=Math.max(0,health-12);modPoisonUntil=time()+2;feedback='PHANTOM';feedbackAt=time();feedbackColor='#d77fff';updateHud();}
+  if(kind!=='miss'){health=Math.max(0,health-12);modPoisonUntil=time()+2;feedback='PHANTOM';feedbackOffsetMs=null;feedbackAt=time();feedbackColor='#d77fff';updateHud();}
   return true;
  }
  if(kind==='miss'&&modRings>0){modRings--;health=Math.min(100,health+3);}
@@ -62,7 +62,7 @@ function modJudge(note,kind){
  return false;
 }
 function updateMod(t){
- for(const ring of modRingNotes)if(!ring.done&&t>ring.time+.16)ring.done=true;
+ for(const ring of modRingNotes)if(!ring.done&&t>ring.time+.18*(settings.rate||1))ring.done=true;
 }
 function drawModHud(t){
  if(!modActive())return;
