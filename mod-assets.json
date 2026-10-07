@@ -345,5 +345,12 @@
   "assets/extra-mods/silly/lyric-0.webp",
   "assets/extra-mods/silly/lyric-1.webp",
   "assets/extra-mods/silly/lyric-2.webp",
-  "silly-lyrics.js"
+  "silly-lyrics.js",
+  "assets/countdown/ready.png",
+  "assets/countdown/set.png",
+  "assets/countdown/go.png",
+  "assets/countdown/intro3.ogg",
+  "assets/countdown/intro2.ogg",
+  "assets/countdown/intro1.ogg",
+  "assets/countdown/introGo.ogg"
 ]

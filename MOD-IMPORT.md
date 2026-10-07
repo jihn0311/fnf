@@ -72,3 +72,6 @@ Deathmatch 숫자형 노트는 [Psych Engine 0.4.2의 이전 채보 호환표](h
 
 ## Silly Billy V-Slice port
 Imported source Hard chart (1027 player / 1103 opponent notes), instrumental and both vocal stems. Character animations, shrink state, mirror break, lyric text, blackouts, center lanes and original video overlays are adapted. Camera effects are approximate; The 272-frame Adobe Animate lyric-character opening is converted by analysis/import-silly-lyrics.py, followed by the original video. Notes remain above videos and blackouts during playable sections. Source scripts are read as data, not executed. Rebuild with analysis/import-silly.py.
+
+## Low-spec variants
+Each of the 26 mod songs has a separate [저사양] option. Originals are retained. Variants share audio/charts and resolve gameplay against their base song ID. Each low-spec stage uses a cached static composition of its background layers; camera/filter effects, videos, lyric cinematics, note spins and hit splashes are disabled. Only the required static background frames are loaded, while video assets are skipped. Character changes, hazard notes, lane swaps and health rules are retained.
