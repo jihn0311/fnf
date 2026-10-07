@@ -52,7 +52,10 @@ def atlas(base,key,definition=None,height=250,bg=False):
   for f in fs:
    token=f['name']
    if token not in packed:
-    a,b,w,h=[int(f[k]) for k in ['x','y','width','height']];im=image.crop((a,b,a+w,b+h));im=im.resize((max(1,round(w*scale)),max(1,round(h*scale))),Image.Resampling.LANCZOS)
+    a,b,w,h=[int(f[k]) for k in ['x','y','width','height']];im=image.crop((a,b,a+w,b+h))
+    if f.get('rotated','false').lower()=='true':im=im.transpose(Image.Transpose.ROTATE_90)
+    w,h=im.size
+    im=im.resize((max(1,round(w*scale)),max(1,round(h*scale))),Image.Resampling.LANCZOS)
     if x+im.width>2048:x=0;y+=row+2;row=0
     if y+max(row,im.height)>4096:
      savepage();pageidx+=1;page=Image.new('RGBA',(2048,4096));x=y=row=0

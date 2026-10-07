@@ -16,7 +16,8 @@ async function extraPrepare(){
  for(const key of scene.spriteKeys){const a=EXTRA_ART.sprites[key];assets.push(...(a.pages||[a.src]));}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
  await Promise.all([...new Set(assets)].map(src=>modImages.has(src)?null:new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;})));
- if(song.pack==='tainted')await Promise.all(Object.entries(EXTRA_ART.sounds).map(async([name,src])=>{if(!extraSoundBuffers.has(name)){const response=await fetch(src);if(!response.ok)throw Error('효과음 로드 실패: '+src);extraSoundBuffers.set(name,await audio.decodeAudioData(await response.arrayBuffer()));}}));
+ if(song.pack==='silly')await sillyPrepare();
+ if(song.pack==='tainted'||song.pack==='silly')await Promise.all(Object.entries(EXTRA_ART.sounds).map(async([name,src])=>{if(!extraSoundBuffers.has(name)){const response=await fetch(src);if(!response.ok)throw Error('효과음 로드 실패: '+src);extraSoundBuffers.set(name,await audio.decodeAudioData(await response.arrayBuffer()));}}));
 }
 function extraSound(name,volume=1,offset=0){
  const buffer=extraSoundBuffers.get(name);if(!buffer||!audio||offset>=buffer.duration)return;
@@ -27,6 +28,7 @@ function extraZoom(t){const z=extraState?.zoomTween;if(!z)return extraState?.zoo
 function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  switch(e.name){
+ case 'Silly':sillyEvent(e,t,quiet);break;
  case 'Change Character': {const key=song.pack+':'+b;if(MOD_ART.characters[key]){s.chars[extraSide(a)]=key;delete s.special[extraSide(a)];extraActorLabels();}break;}
  case 'Play Animation': {const target=/^(0|1|2|bf|dad|boyfriend|opponent)$/i.test(a)?a:b,anim=target===a?b:a;s.special[extraSide(target,true)]={name:anim,at:e.time};break;}
  case 'Alt Idle Animation':s.alt[extraSide(a,true)]=b;break;
@@ -94,13 +96,15 @@ function extraSprite(key,t,x=0,y=0,w=1120,h=530,anim='idle',fps=24,loop=true){
 function extraActor(side,t,x,y,black=false){
  const s=extraState,a=MOD_ART.characters[s.chars[side]];if(!a)return;
  const actor=actors[side]||{lane:-1,until:-1},singing=t<actor.until;
- let key=singing?'sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane]+(actor.alt?'-alt':''):'idle'+(s.alt[side]||'');
+ // Yourself's form is controlled by transformation events, not stale chart note tags.
+ const alternate=song.pack==='silly'&&side==='nova'?s.alt.nova==='-alt':actor.alt;
+ let key=singing?'sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane]+(alternate?'-alt':''):'idle'+(s.alt[side]||'');
  if(!a.animations[key])key=singing?'sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane]:'idle';
  if(!a.animations[key])key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(!a.animations[key]&&singing)key='sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane];
  let elapsed=singing?t-(actor.at??t):t%BEAT;
  const special=s.special[side];
- if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||!singing){key=special.name;elapsed=t-special.at;}}
+ if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
  const off=a.config?.[key]?.offsets||[0,0];ctx.save();ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
@@ -109,9 +113,12 @@ function extraActor(side,t,x,y,black=false){
  const flip=song.pack==='death'?(!!a.flip)!==(side==='echo'):!!a.flip;
  const destructionMoved=songId==='tainted-destruction'&&t>=112*BEAT;
  // Destruction BF sprites already face the opponent from the right-hand position.
- const facingFlip=songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des')?false:flip!==destructionMoved;
+ const facingFlip=(song.pack==='silly'&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
  if(facingFlip)ctx.scale(-1,1);if(black)ctx.filter='brightness(0)';
- ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
+ if(song.pack==='silly'){
+  const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
+ }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
 }
 function extraStage(t){
  if(!extraState||extraState.id!==songId)extraReset();
@@ -124,7 +131,8 @@ function extraStage(t){
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
  ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
  if(s.follow)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
- if(song.pack==='virus'){
+ if(song.pack==='silly'){sillyStage(t);
+ }else if(song.pack==='virus'){
   const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';
   const group=prefix.includes('cyber2')?['behindwall','wall','screen','floor','TV','blue','mute','blueline']:prefix.includes('window')?['week2BG','window_1','window_2','tiaowen']:['wall','Screen','floor','TV','TV left','TV right','line'];
   for(const key of group)extraSprite(prefix+key,t,0,0,1120,530,'idle',12);
@@ -168,7 +176,7 @@ function extraStage(t){
  if(songId==='tainted-destruction')extraShader(((beat>=182&&beat<320)||(beat>=382&&beat<384))?.5:beat>=388?1:0,t,false);
  const swap=extraSwap(t);label(s.chars.nova.split(':')[1].toUpperCase()+' / AUTO',265+580*swap,508,12,'#f58bc6');label('YOU / '+s.chars.echo.split(':')[1].toUpperCase(),845-580*swap,508,12,'#8cf5d9');
 }
-function extraHudAlpha(t){if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
+function extraHudAlpha(t){if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
 function extraHud(t){
  if(!extraActive()||!extraState)return;
  const s=extraState,beat=t/BEAT,step=beat*4;
@@ -192,8 +200,9 @@ function extraHud(t){
   const dark=beat>=460?1:1-clamp01((t-4*BEAT)/.5);if(dark>0&&t>=0){ctx.save();ctx.globalAlpha=dark;rect(0,0,1120,530,'#000');ctx.restore();}
   if(beat>=455&&beat<460)label('You never can be me.'.slice(0,Math.max(0,Math.floor((t-455*BEAT)/.1))),560,280,30,'#fff');
  }
- if(s.black)rect(0,0,1120,530,'#000');
+ if(s.black&&song.pack!=='silly')rect(0,0,1120,530,'#000');
  for(const f of s.flashes){ctx.save();ctx.globalAlpha=f.alpha*(1-clamp01((t-f.at)/f.duration));rect(0,0,1120,530,f.color);ctx.restore();}
+ if(song.pack==='silly')sillyHud(t);
  if(['playing','paused'].includes(state)){
   if(songId==='tainted-defeat')label('MISS '+hits.miss+' / 5'+($('practice').checked?' · PRACTICE':''),560,480,12,'#fff');
   if(songId==='tainted-destruction'){const safe=(beat>=112&&beat<182)||(beat>=320&&beat<388);label(safe?'SAFE PHASE':beat<112?'MISS '+hits.miss+' / 5':'SUDDEN DEATH'+($('practice').checked?' · PRACTICE':''),560,480,12,'#fff');}
@@ -202,7 +211,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;

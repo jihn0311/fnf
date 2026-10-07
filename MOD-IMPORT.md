@@ -69,3 +69,6 @@ Deathmatch 숫자형 노트는 [Psych Engine 0.4.2의 이전 채보 호환표](h
 ## Virus R 중앙 구도 (2026-10-07)
 
 제공된 원본 스크린샷에 따라 `virus-virus-r` 곡에서는 R만 중앙 창 안에 크게 표시하고, BF와 GF는 숨깁니다. 캐릭터 확대는 중앙 창 안에서 잘라 표시하며 노트 입력과 상단 체력바는 유지합니다. 다른 Virus R 수록곡의 무대 배치는 바꾸지 않았습니다.
+
+## Silly Billy V-Slice port
+Imported source Hard chart (1027 player / 1103 opponent notes), instrumental and both vocal stems. Character animations, shrink state, mirror break, lyric text, blackouts, center lanes and original video overlays are adapted. Camera effects are approximate; The 272-frame Adobe Animate lyric-character opening is converted by analysis/import-silly-lyrics.py, followed by the original video. Notes remain above videos and blackouts during playable sections. Source scripts are read as data, not executed. Rebuild with analysis/import-silly.py.
