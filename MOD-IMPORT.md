@@ -75,3 +75,18 @@ Imported source Hard chart (1027 player / 1103 opponent notes), instrumental and
 
 ## Low-spec variants
 Each of the 26 mod songs has a separate [저사양] option. Originals are retained. Variants share audio/charts and resolve gameplay against their base song ID. Each low-spec stage uses a cached static composition of its background layers; camera/filter effects, videos, lyric cinematics, note spins and hit splashes are disabled. Only the required static background frames are loaded, while video assets are skipped. Character changes, hazard notes, lane swaps and health rules are retained.
+
+## Impostor V4
+Imported 44 tracks / 44 playable difficulty charts (37,573 notes) from the supplied bin/assets directory. Each has a normal and low-spec selection. Original Inst/Voices, available character sprites and supported camera/animation events are preserved; unused events are listed in analysis/impostor-import-report.json. Stage art is an approximate composition of available image layers; some stage-specific compiled effects, dialogue/cinematics and custom mechanics are not ported. Missing bfghost JSON uses base BF as a documented fallback. Imported executables are never launched. Rebuild using analysis/import-impostor.py.
+
+Impostor V4 audit: excluded the legacy Christmas Normal chart because its notes extend beyond the provided audio; the current Hard chart remains. Track duration uses the longest provided instrumental/vocal stem. Nine stage backgrounds are unavailable in the supplied asset layout and use the plain stage fallback. Full chart/asset findings are in analysis/impostor-audit.json.
+
+
+## Impostor stage audit — 2026-10-09
+- Reference: https://github.com/Clowfoe/IMPOSTOR-UPDATE/blob/main/source/PlayState.hx and the supplied local assets/stages/*.json and data/*/events.json.
+- Restored legacy sectionNotes event import, including Change Character, Defeat Retro/Dark/Fade and Finale Drop/End. 44 tracks now have source-based stage layers, coordinates and relative character scales; oversized forms are capped to fit the web viewport.
+- Source stage parser: analysis/impostor-stage-source.py; expects the reference PlayState in C:/Users/kht80/AppData/Local/Temp/impostor-playstate.hx. Declarative sprite setup is read, never executed.
+- Camera, tint, light, warp and ending events are Canvas adaptations, not pixel-identical native shaders. Native foreground/group ordering, secondary performers, parallax and emitter choreography are not fully reproduced by the declarative parser. BF ghost definition is absent in the supplied pack; its existing BF fallback remains.
+- Low-spec variants retain static initial backgrounds and omit expensive rendering effects/videos.
+- Singing holds for 0.2 real seconds (or until the sustain ends); active held sustains restore the singer pose after competing note/miss animations.
+- Silly Billy: player lanes hidden only during the opening video; later singing/movie keeps the player lanes visible. Opponent lanes remain hidden in both cinematics.

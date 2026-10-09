@@ -1,0 +1,19 @@
+{
+  "songs": 44,
+  "charts": 44,
+  "notes": 37573,
+  "missingAssets": [],
+  "outOfBounds": [],
+  "missingAnimations": [],
+  "fallbackStages": [
+    "impostor-christmas",
+    "impostor-crewicide",
+    "impostor-drippypop",
+    "impostor-esculent",
+    "impostor-idk",
+    "impostor-roomcode",
+    "impostor-spookpostor",
+    "impostor-victory",
+    "impostor-who"
+  ]
+}

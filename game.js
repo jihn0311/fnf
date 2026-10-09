@@ -11,6 +11,7 @@ const SONGS = {
 if(typeof IMPORTED_SONG!=='undefined')SONGS.self=IMPORTED_SONG;
 if(typeof MOD_SONGS!=='undefined')Object.assign(SONGS,MOD_SONGS);
 if(typeof MOD_SONGS!=='undefined')for(const [id,track] of Object.entries(MOD_SONGS)){
+ if(track.pack==='impostor'&&typeof document.createElement==='function'){const original=document.createElement('option');original.value=id;original.textContent=track.title;$('song').appendChild(original);}
  const lowId=id+'-low';SONGS[lowId]={...track,baseSongId:id,lowSpec:true,title:track.title+' [저사양]',description:track.description+' · 특수효과 없는 저사양 버전'};
  if(typeof document.createElement==='function'){const option=document.createElement('option');option.value=lowId;option.textContent=SONGS[lowId].title;$('song').appendChild(option);}
 }
@@ -42,12 +43,12 @@ const actors={nova:{lane:-1,until:-1,miss:false},echo:{lane:-1,until:-1,miss:fal
 function sectionAt(t){if(song.sections){const section=song.sections.find(s=>t>=s.start&&t<s.end);return section?section.mode:t<song.sections[0].start?'intro':'outro';}const beat=Math.round(t/BEAT*1e8)/1e8;return beat<8?'intro':beat>=song.beats-4?'outro':song.parts[Math.floor((beat-8)/8)];}
 function sings(side,t){const part=sectionAt(t);return part===side||part==='duet';}
 function laneX(lane,side='echo'){if(song.pack==='silly'&&extraState?.middle&&side==='echo')return 425+lane*90;const swap=typeof tripleActive==='function'&&tripleActive()?tripleSwap():typeof extraSwap==='function'?extraSwap():0;return (side==='nova'?135+580*swap:715-580*swap)+lane*90;}
-function animateSinger(side,lane,t,duration=0,miss=false){actors[side]={lane,at:t,until:t+Math.max(.23,duration),miss};}
+function animateSinger(side,lane,t,duration=0,miss=false){actors[side]={lane,at:t,until:t+Math.max((song.pack==='impostor'?.2:.23)*(settings.rate||1),duration),miss};}
 function updateOpponent(t){
   for(const note of opponentNotes){
     if(note.time>t)break;
     if(note.done)continue;
-    if(!note.started&&t>=note.time){note.started=true;animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
+    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health=Math.max(0,health-.45);updateHud();}animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
     if(note.started&&t>=note.time+note.duration)note.done=true;
   }
 }
@@ -94,7 +95,7 @@ function createChart(difficulty = settings.difficulty, side = 'echo'){
   }
   return chart;
 }
-function setSettingsLocked(locked){for(const id of ['song','difficulty','scroll','rate','practice'])$(id).disabled=locked;}
+function setSettingsLocked(locked){for(const id of ['song','performance-mode','difficulty','scroll','rate','practice','nightmare'])$(id).disabled=locked;}
 function readSettings(){
   selectSong($('song').value);
   const available=song.charts?Object.keys(song.charts):['easy','normal','hard'];
@@ -110,7 +111,7 @@ function readSettings(){
   $('chart-info').textContent='내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
 }
 function targetY(){return settings.scroll==='down'?448:82;}
-function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed;}
+function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
 function laneHeld(lane){return [...held.values()].includes(lane);}
 function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));}
 function inputDown(source,lane){
@@ -139,6 +140,15 @@ function inputUp(source){
     if(note.holding&&!note.done&&note.lane===lane){sustainTick(note,'miss');note.nextTick=time()+.15*(settings.rate||1);}
   }
 }
+function updateHeldPose(t){
+  const active=notes.filter(n=>n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration);
+  if(!active.length)return;
+  const actor=actors.echo;
+  // Preserve the current held direction, then fall back to another held sustain.
+  const note=active.find(n=>n.lane===actor.lane)||active[active.length-1];
+  if(actor.lane!==note.lane||actor.miss||actor.until<=t){animateSinger('echo',note.lane,t,note.time+note.duration-t);if(typeof extraNote==='function')extraNote(note,'echo');}
+  else actor.until=Math.max(actor.until,note.time+note.duration);
+}
 function updateNotes(t){
   for(const note of notes){
     if(note.time>t)break;
@@ -149,6 +159,7 @@ function updateNotes(t){
       else judge(note,'miss',0);
     }
   }
+  updateHeldPose(t);
 }
 function time(){return state==='playing' ? (audio.currentTime-startTime)*(settings.rate||1) : pausedTime;}
 function tone(freq,at,length,type,volume,slide,pan=0){
@@ -310,7 +321,7 @@ const endlessSpins=[272,276,336,340,400,404,464,468,528,532,592,596,656,660,720,
 function endlessAngle(t){if(song.lowSpec||songId!=='sonic-endless')return 0;for(let i=endlessSpins.length-1;i>=0;i--){const age=(t-endlessSpins[i]*60/155/4)/(settings.rate||1);if(age>=0)return age<.2?Math.PI*2*(1-(1-age/.2)**5):0;}return 0;}
 function stageArrow(x,y,lane,size,color,fill,t,at=t){ctx.save();ctx.translate(x,y);ctx.rotate(endlessAngle(t));arrow(0,0,lane,size,color,fill,endlessSkin(at,!fill));ctx.restore();}
 function skinFrame(frame,x,y,width,height,majin=false){
-  ctx.drawImage(majin?majinSkinImage:noteSkinImage,frame.x,frame.y,frame.width,frame.height,x,y,width,height);
+  ctx.drawImage(majin?majinSkinImage:(song.pack==='silly'&&extraState?.blueNotes?sillyNoteAtlas():noteSkinImage),frame.x,frame.y,frame.width,frame.height,x,y,width,height);
 }
 function skinArrow(x,y,lane,size,fill,color,majin=false){
   if(!skinReady())return false;
@@ -378,11 +389,15 @@ function draw(t){
   label('NOVA / AUTO',265,508,12,'#f58bc6');label('ECHO / YOU',850,508,12,'#8cf5d9');
   }
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);
+  const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);
   ctx.save();if(typeof extraHudAlpha==='function')ctx.globalAlpha=extraHudAlpha(t);
   const opponentLit=[false,false,false,false];
   for(const n of opponentNotes){if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration))opponentLit[n.lane]=true;}
-  const visibleUntil=t+LEAD/settings.speed*1.3;
+  const visibleUntil=t+LEAD/(settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
   for(const side of ['nova','echo']){
+    if(impostorVideo)continue;
+    if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
+    ctx.save();
     const left=laneX(0,side)-47;
     const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
     ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);
@@ -399,7 +414,7 @@ function draw(t){
       if(note.time>visibleUntil)break;
       if(note.done)continue;
       const holding=side==='nova'?note.started:note.holding;
-      const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x,y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
+      const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
       if(Math.max(y,tail)<-35||Math.min(y,tail)>565)continue;
       const color=note.type===3?'#bd7aff':note.type===2?'#ffffff':COLORS[note.lane];
       if(note.hurt&&typeof extraDrawHurt==='function'){extraDrawHurt(note,x,y,tail);continue;}
@@ -408,6 +423,7 @@ function draw(t){
       }
       ctx.shadowColor='#000';ctx.shadowBlur=song.lowSpec?0:8;stageArrow(x,y,note.lane,36,COLORS[note.lane],true,t,note.time);ctx.shadowBlur=0;if(note.type===3||note.type===2)label(note.type===3?'×':'!',x,y+5,15,'#221533');
     }
+    ctx.restore();
     ctx.restore();
   }
   splashes=splashes.filter(effect=>t-effect.at<.45);
@@ -457,3 +473,43 @@ function changeScrollSpeed(value){
 $('speed').addEventListener('input',()=>changeScrollSpeed($('speed').value));
 $('speed-number').addEventListener('change',()=>changeScrollSpeed($('speed-number').value));
 readSettings();frame();
+
+const fullscreenButton=$('fullscreen');
+fullscreenButton.addEventListener('click',async()=>{
+ try{
+  if(document.fullscreenElement)await document.exitFullscreen();
+  else await document.querySelector('.game').requestFullscreen();
+ }catch(error){fullscreenButton.textContent='전체화면 불가 · F11';fullscreenButton.title=error.message;}
+});
+document.addEventListener('fullscreenchange',()=>{
+ const active=!!document.fullscreenElement;
+ fullscreenButton.textContent=active?'⛶ 전체화면 해제':'⛶ 전체화면';
+ fullscreenButton.setAttribute('aria-pressed',String(active));
+ fullscreenButton.setAttribute('aria-label',active?'전체화면 해제':'게임 전체화면');
+});
+
+// Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
+const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
+function rebuildSongPicker(){
+ const picker=$('song'),low=$('performance-mode').value==='low';
+ const previous=picker.value,base=SONGS[previous]?.baseSongId||previous;
+ const preferred=low?base+'-low':base;
+ const groups=new Map();picker.replaceChildren();
+ const entries=Object.entries(SONGS);
+ const rank=id=>{const key=(SONGS[id].baseSongId||id).replace(/^impostor-/,'');const index=impostorStoryOrder.indexOf(key.toLowerCase());return index<0?impostorStoryOrder.length:index;};
+ // Sort within this pack only; preserve every other pack's existing order.
+ const orderedImpostor=entries.filter(([,track])=>track.pack==='impostor').sort((a,b)=>rank(a[0])-rank(b[0]));
+ let nextImpostor=0;
+ for(const entry of entries){
+  const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry;
+  if(!!track.lowSpec!==low)continue;
+  const family=track.pack|| (id.startsWith('sonic-')||track.baseSongId?.startsWith('sonic-')?'sonic':'original');
+  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',original:'기본 곡 / 추가 음악'}[family]||family;
+  if(!groups.has(name)){const group=document.createElement('optgroup');group.label=name;groups.set(name,group);picker.appendChild(group);}
+  const option=document.createElement('option');option.value=id;option.textContent=track.title.replace(/ \[저사양\]$/,'');groups.get(name).appendChild(option);
+ }
+ if([...picker.options].some(option=>option.value===preferred))picker.value=preferred;
+ picker.dispatchEvent(new Event('input',{bubbles:true}));
+}
+$('performance-mode').addEventListener('change',rebuildSongPicker);
+if(typeof document.createElement==='function')rebuildSongPicker();

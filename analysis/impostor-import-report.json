@@ -1,0 +1,14 @@
+{
+  "songs": 44,
+  "fallbacks": [
+    "bfghost"
+  ],
+  "unsupportedEvents": {},
+  "excludedDifficulties": [
+    {
+      "song": "impostor-christmas",
+      "difficulty": "normal",
+      "reason": "chart extends beyond supplied audio"
+    }
+  ]
+}

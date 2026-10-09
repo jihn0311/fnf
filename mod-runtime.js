@@ -108,7 +108,8 @@ function drawLowSpecStage(t){
  if(lowSpecBackground)ctx.drawImage(lowSpecBackground,0,0);else{rect(0,0,1120,530,'#171d2b');rect(0,460,1120,70,'#101522');}
  if(song.pack){
   if(!extraState||extraState.id!==songId)extraReset();
-  if(songId==='virus-virus-r')extraActor('nova',t,560,465);
+  if(song.pack==='impostor')drawImpostorActors(t);
+  else if(songId==='virus-virus-r')extraActor('nova',t,560,465);
   else{const swapped=songId==='tainted-destruction'&&t>=112*BEAT;extraActor('nova',t,swapped?835:285,465);extraActor('echo',t,swapped?285:835,465);}
  }else if(tripleActive()){
   const p=triplePhase(t);tripleSync(t);tripleActor(p.opponent,'nova',t,p.swap?835:285,475,p.enemyFlip,p);tripleActor(p.player,'echo',t,p.swap?285:835,475,p.playerFlip,p);
@@ -119,6 +120,7 @@ let lowSpecBackground=null;
 function lowSpecLayers(){
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
+ if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){
  const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';
  const names=prefix.includes('cyber2')?['behindwall','wall','screen','floor','TV','blue','mute','blueline']:prefix.includes('window')?['week2BG','window_1','window_2','tiaowen']:['wall','Screen','floor','TV','TV left','TV right','line'];
@@ -132,6 +134,6 @@ function lowSpecLayers(){
 function lowSpecLayerSource(layer){const a=layer.key?EXTRA_ART.sprites[layer.key]:null,f=a?extraFrame(a,'idle',0):null;return {a,f,src:layer.src||f?.src||a?.src};}
 function buildLowSpecBackground(){
  const c=document.createElement('canvas');c.width=1120;c.height=530;const g=c.getContext('2d');g.fillStyle='#171d2b';g.fillRect(0,0,1120,530);
- for(const layer of lowSpecLayers()){const {a,f,src}=lowSpecLayerSource(layer),im=modImages.get(src);if(!im)continue;const {x,y,w,h}=layer;if(f)g.drawImage(im,f.x,f.y,f.w,f.h,x+f.ox*w/f.fw,y+f.oy*h/f.fh,f.w*w/f.fw,f.h*h/f.fh);else g.drawImage(im,x,y,w,h);}
+ for(const layer of lowSpecLayers()){const {a,f,src}=lowSpecLayerSource(layer),im=modImages.get(src);if(!im)continue;const {x,y,w,h}=layer;g.globalAlpha=layer.alpha??1;if(f)g.drawImage(im,f.x,f.y,f.w,f.h,x+f.ox*w/f.fw,y+f.oy*h/f.fh,f.w*w/f.fw,f.h*h/f.fh);else g.drawImage(im,x,y,w,h);}
  lowSpecBackground=c;
 }

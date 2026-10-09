@@ -11,13 +11,14 @@ function extraReset(){
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
- extraReset();const scene=MOD_ART.scenes[song.sceneKey];const assets=[];
+ extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));}
- for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];assets.push(...(a.pages||[a.src]));}
+ for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
  await Promise.all([...new Set(assets)].map(src=>modImages.has(src)?null:new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;})));
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
+ if(song.pack==='impostor'&&!song.lowSpec)await prepareImpostorVideos();
  if(!song.lowSpec&&(song.pack==='tainted'||song.pack==='silly'))await Promise.all(Object.entries(EXTRA_ART.sounds).map(async([name,src])=>{if(!extraSoundBuffers.has(name)){const response=await fetch(src);if(!response.ok)throw Error('효과음 로드 실패: '+src);extraSoundBuffers.set(name,await audio.decodeAudioData(await response.arrayBuffer()));}}));
 }
 function extraSound(name,volume=1,offset=0){if(song.lowSpec)return;
@@ -28,6 +29,7 @@ function extraSide(value,animation=false){const v=String(value).toLowerCase();if
 function extraZoom(t){const z=extraState?.zoomTween;if(!z)return extraState?.zoom||1;const p=clamp01((t-z.at)/Math.max(.00001,z.duration)),ease=p<.5?2*p*p:1-(-2*p+2)**2/2;return z.from+(z.to-z.from)*ease;}
 function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
+ if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
  case 'Silly':sillyEvent(e,t,quiet);break;
  case 'Change Character': {const key=song.pack+':'+b;if(MOD_ART.characters[key]){if(songId==='tainted-destruction'&&s.chars[extraSide(a)]!==key)s.invulnerableUntil=t+3*(settings.rate||1);s.chars[extraSide(a)]=key;delete s.special[extraSide(a)];extraActorLabels();}break;}
@@ -98,7 +100,9 @@ function extraSprite(key,t,x=0,y=0,w=1120,h=530,anim='idle',fps=24,loop=true){
 }
 function extraActor(side,t,x,y,black=false){
  const s=extraState,a=MOD_ART.characters[s.chars[side]];if(!a)return;
- const actor=actors[side]||{lane:-1,until:-1},singing=t<actor.until;
+ const actor=actors[side]||{lane:-1,until:-1};
+ const singUntil=(songId==='tainted-defeat')&&actor.lane>=0&&Number.isFinite(actor.at)?Math.max(actor.until,actor.at+(song.pack==='impostor'?(a.singDuration||4):6.1)*BEAT/4):actor.until;
+ const singing=t<singUntil;
  // Yourself's form is controlled by transformation events, not stale chart note tags.
  const alternate=song.pack==='silly'&&side==='nova'?s.alt.nova==='-alt':actor.alt;
  let key=singing?'sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane]+(alternate?'-alt':''):'idle'+(s.alt[side]||'');
@@ -107,18 +111,26 @@ function extraActor(side,t,x,y,black=false){
  if(!a.animations[key]&&singing)key='sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane];
  let elapsed=singing?t-(actor.at??t):t%BEAT;
  const special=s.special[side];
- if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&!singing)){key=special.name;elapsed=t-special.at;}}
+ if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
  const off=a.config?.[key]?.offsets||[0,0];ctx.save();ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
  if(songId==='tainted-destruction'&&t<320*BEAT&&s.chars[side].startsWith('tainted:bf_des'))ctx.scale(1.4,1.4);
  // Deathmatch character JSON describes the opponent-facing base; the player slot reverses it.
- const flip=song.pack==='death'?(!!a.flip)!==(side==='echo'):!!a.flip;
+ const flip=(song.pack==='death'||song.pack==='impostor')?(!!a.flip)!==(side==='echo'):!!a.flip;
  const destructionMoved=songId==='tainted-destruction'&&t>=112*BEAT;
  // Destruction BF sprites already face the opponent from the right-hand position.
- const facingFlip=(song.pack==='silly'&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
+ const facingFlip=((song.pack==='silly'||songId==='tainted-defeat')&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
  if(facingFlip)ctx.scale(-1,1);if(black)ctx.filter='brightness(0)';
- if(song.pack==='silly'){
+ if(song.pack==='impostor'){
+  const layout=impostorViewLayout(),placement=layout?.actors[side];
+  if(placement){const idle=a.animations.idle[0],factor=Math.min((a.nativeScale||placement.native)*layout.scale/a.scale,410/idle.h,550/idle.w);ctx.scale(factor,factor);}
+  const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
+  // Flixel animation offsets are screen pixels: a 2x sprite must not double them.
+  const offsetScale=a.scale/(a.nativeScale||1);
+  const originX=-idle.w/2-idle.ox+idleOff[0]*offsetScale,originY=-idle.h-idle.oy+idleOff[1]*offsetScale;
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
+ }else if(song.pack==='silly'||songId==='tainted-defeat'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -132,13 +144,13 @@ function extraStage(t){
  const zoom=Math.max(.6,Math.min(1.6,1+(extraZoom(t)-1)*.35+Math.min(.3,s.bumps.reduce((v,b)=>v+b.amount*Math.exp(-(t-b.at)*9),0))+pulse));
  const shaking=s.shake&&t<s.shake.at+s.shake.duration;const shake=shaking?s.shake.amount*530:0;
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
- ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
+ ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(song.pack==='impostor'&&s.twist)ctx.rotate(Math.sin(beat*Math.PI)*s.twist*Math.PI/180);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
  if(s.follow)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
- if(song.pack==='silly'){sillyStage(t);
+ if(song.pack==='impostor'){
+  drawImpostorStage(t);
+ }else if(song.pack==='silly'){sillyStage(t);
  }else if(song.pack==='virus'){
-  const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';
-  const group=prefix.includes('cyber2')?['behindwall','wall','screen','floor','TV','blue','mute','blueline']:prefix.includes('window')?['week2BG','window_1','window_2','tiaowen']:['wall','Screen','floor','TV','TV left','TV right','line'];
-  for(const key of group)extraSprite(prefix+key,t,0,0,1120,530,'idle',12);
+  drawVirusBackdrop(t);
   if(songId==='virus-virus-r'){
    // The original window scene shows R alone in the central window.
    ctx.save();ctx.beginPath();ctx.rect(270,82,595,370);ctx.clip();
@@ -179,7 +191,7 @@ function extraStage(t){
  if(songId==='tainted-destruction')extraShader(((beat>=182&&beat<320)||(beat>=382&&beat<384))?.5:beat>=388?1:0,t,false);
  const swap=extraSwap(t);label(s.chars.nova.split(':')[1].toUpperCase()+' / AUTO',265+580*swap,508,12,'#f58bc6');label('YOU / '+s.chars.echo.split(':')[1].toUpperCase(),845-580*swap,508,12,'#8cf5d9');
 }
-function extraHudAlpha(t){if(song.lowSpec)return 1;if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
+function extraHudAlpha(t){if(song.lowSpec)return 1;if(song.pack==='impostor')return impostorHudAlpha(t);if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
 function extraHud(t){
  if(!extraActive()||!extraState)return;
  const s=extraState,beat=t/BEAT,step=beat*4;
@@ -214,7 +226,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;
@@ -270,4 +282,130 @@ function extraDrawHurt(note,x,y,tail){
  const colors=['purple','blue','green','red'],anim=colors[note.lane];
  if(note.duration){ctx.save();ctx.strokeStyle='#230b31';ctx.lineWidth=22;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,tail);ctx.stroke();ctx.strokeStyle='#e8557e';ctx.lineWidth=3;ctx.stroke();ctx.restore();}
  extraSprite('death/stage/hurt-notes',0,x-36,y-36,72,72,anim);label('×',x,y+5,18,'#ff7897');
+}
+
+// Recompose only when a background animation frame changes; camera transforms stay live.
+let virusBackdrop=null;
+function virusLayerKeys(){
+ const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';
+ const names=prefix.includes('cyber2')?['behindwall','wall','screen','floor','TV','blue','mute','blueline']:prefix.includes('window')?['week2BG','window_1','window_2','tiaowen']:['wall','Screen','floor','TV','TV left','TV right','line'];
+ return names.map(n=>prefix+n).filter(k=>EXTRA_ART.sprites[k]);
+}
+function drawVirusBackdrop(t){
+ if(!virusBackdrop||virusBackdrop.id!==songId){const surface=document.createElement('canvas');surface.width=1120;surface.height=530;virusBackdrop={id:songId,surface,context:surface.getContext('2d'),keys:virusLayerKeys(),frames:null,builds:0};}
+ const cache=virusBackdrop,frames=cache.keys.map(k=>extraFrame(EXTRA_ART.sprites[k],'idle',t,12));
+ if(!cache.frames||frames.some((f,i)=>f!==cache.frames[i])){
+ const g=cache.context;g.clearRect(0,0,1120,530);
+ for(let i=0;i<cache.keys.length;i++){const a=EXTRA_ART.sprites[cache.keys[i]],f=frames[i],im=modImages.get(f?.src||a.src);if(!im)continue;if(f)g.drawImage(im,f.x,f.y,f.w,f.h,f.ox*1120/f.fw,f.oy*530/f.fh,f.w*1120/f.fw,f.h*530/f.fh);else g.drawImage(im,0,0,1120,530);}
+ cache.frames=frames;cache.builds++;
+ }
+ ctx.drawImage(cache.surface,0,0);
+}
+
+function impostorLayers(){
+ const scene=MOD_ART.scenes[song.sceneKey],v=impostorViewLayout();
+ return (scene.nativeLayers||[]).map(l=>({...l,x:v.x+l.x*v.scale,y:v.y+l.y*v.scale,w:l.w*v.scale,h:l.h*v.scale}));
+}
+function drawImpostorActors(t){
+ const v=impostorViewLayout();
+ if(extraState.ellie&&!extraState.hideSpectator)extraActor('gf',t,530,465);
+ for(const side of ['nova','echo']){if(extraState.whoBuzz===1)continue;if(side==='echo'&&extraState.armedEnd!=null&&t>extraState.armedEnd+3.4)continue;if(side==='nova'&&(extraState.hiddenNova||extraState.tomongusDead))continue;const a=v?.actors[side];const x=songId==='impostor-defeat'?(side==='nova'?310:830):(a?v.x+a.x*v.scale:side==='nova'?285:835),y=a?v.y+a.y*v.scale:465;ctx.save();if(side==='nova'&&extraState.turbEnding!=null&&!song.lowSpec){const age=Math.max(0,t-extraState.turbEnding);ctx.translate(x+age*1200,y+age*350);ctx.rotate(age*8);ctx.translate(-x,-y);}extraActor(side,t,x,y);ctx.restore();}
+}
+function drawImpostorStage(t){
+ rect(-1120,-530,3360,1590,'#000');
+ for(const l of impostorLayers()){
+  const alpha=impostorLayerAlpha(l,t);if(alpha<=0)continue;ctx.save();ctx.globalAlpha*=alpha;
+  extraSprite(l.key,l.loop?t:Math.max(0,t)%(BEAT*4),l.x,l.y,l.w,l.h,'idle',24,l.loop);ctx.restore();
+ }
+ if(!extraState.impostorEnd){ctx.save();if(extraState.lightsOut)ctx.globalAlpha=.18;if(extraState.daveDead)extraState.hiddenNova=true;drawImpostorActors(t);ctx.restore();}
+ if(extraState.lightsOut)rect(0,0,1120,530,'#0009');
+ if(extraState.victoryDark)rect(0,0,1120,530,'#000d');
+ if(extraState.pink&&!song.lowSpec){ctx.save();ctx.globalAlpha=.15+.07*Math.cos(t/BEAT*Math.PI*2);rect(0,0,1120,530,'#ff54bc');ctx.restore();}
+ if(!song.lowSpec&&extraState.chrom)extraShader(extraState.chrom,t);
+}
+
+function impostorHudAlpha(t){const f=extraState?.hudFade;if(!f)return 1;const p=clamp01((t-f.at)/.7);return f.from+(f.to-f.from)*p;}
+function impostorEvent(e,t){
+ const s=extraState,a=e.v1,b=e.v2,n=Number(a)||0;
+ const flash=(color='#fff',duration=.35,alpha=1)=>s.flashes.push({at:e.time,color,duration,alpha});
+ switch(e.name){
+ case 'Alter Camera Bop':s.bumpMult=Number.isFinite(Number(a))?Number(a):1;s.bumpInterval=Math.max(1,Number(b)||4);break;
+ case 'Extra Cam Zoom':s.zoom=1+n;break;
+ case 'Camera Twist':s.twist=Number(b)?n:0;break;
+ case 'Reactor Beep':flash('#ff2020',.35,a===''?.4:Math.max(0,Math.min(1,n)));s.bumps.push({at:e.time,amount:.015});break;
+ case 'flash':flash('#fff',n>=2?.55:.35);break;
+ case 'HUD Fade':s.hudFade={at:e.time,from:impostorHudAlpha(e.time),to:n===1?0:1};break;
+ case 'setChrom':case 'chromToggle':s.chrom=Math.max(0,Math.min(1,n));break;
+ case 'Defeat Fade':s.defeatBodies={at:e.time,to:n===0?1:0};break;
+ case 'Defeat Retro':s.defeatRetro=n===0;if(n===1){s.chars.echo='impostor:bf-defeat-scared';s.chars.nova='impostor:black';extraActorLabels();}break;
+ case 'DefeatDark':s.defeatDark=n===1;break;
+ case 'Finale Drop':s.finaleDrop=true;flash('#ff1266',.75);break;
+ case 'Finale End':s.impostorEnd=true;flash('#ff1266',5);break;
+ case 'Finale Flashback Change':s.finaleFlash=a;if(a==='flash')flash('#fff',1.2);break;
+ case 'scream danger':s.dangerScream=true;break;
+ case 'unscream danger':s.dangerScream=false;break;
+ case 'Dave AUGH':s.daveDead=true;s.shake={at:e.time,duration:.6,amount:.05};break;
+ case 'Lights out':case 'Lights Down OFF':s.lightsOut=true;flash();break;
+ case 'Lights on':case 'Lights on Ending':s.lightsOut=false;flash();break;
+ case 'pink toggle':s.pink=!s.pink;s.pinkAt=e.time;break;
+ case 'Victory Darkness':s.victoryDark=a==='on';break;
+ case 'Show Victory Guy':{s.victoryGuys??={};const key=a==='jor'?'bg_jor':a.startsWith('war')?'bg_war':a.startsWith('jelq')?'bg_jelq':null;if(key)s.victoryGuys[key]=b==='show'?1:0;else s.victoryGuys={bg_jor:0,bg_war:0,bg_jelq:0};break;}
+ case 'Cam lock in Voting Time':case 'Cam lock in Who':s.zoom=a==='close'?1.25:a==='in'?1.2:1;s.follow=['in','close'].includes(a)?{x:b==='dad'?460:1470,y:700}:null;break;
+ case 'Who Buzz':s.whoBuzz=n;s.hudFade={at:e.time,from:1,to:0};break;
+ case 'Ejected Start':flash();break;
+ case 'Lights Down O2':s.lightsOut=true;break;
+ case 'WTF O2':if(a==='appear')s.lightsOut=false;else if(a==='die')flash('#ff0000',.75);else s.lightsOut=true;break;
+ case 'Armed End':s.armedEnd=e.time;s.hudFade={at:e.time,from:1,to:0};break;
+ case 'Turbulence Ending':s.turbEnding=e.time;break;
+ case 'bye gf':s.hideSpectator=true;break;
+ case 'Ellie Drop':s.chars.gf='impostor:ellie';s.ellie=true;break;
+ case 'tomongusdie':s.tomongusDead=true;flash('#fff',.15);break;
+ case 'Ejected Video':case 'Meltdown Video':s.impostorVideo={src:song.eventVideos?.[e.name],at:e.time};break;
+ case 'Change Scroll Speed':s.scrollChange={at:e.time,from:impostorScrollSpeed(e.time),to:Math.max(.1,n||1),duration:Math.max(0,Number(b)||0)};break;
+
+
+ default:return false;
+ }return true;
+}
+function impostorLayerAlpha(l,t){
+ const s=extraState;
+ if(s.impostorEnd)return 0;
+ if(s.victoryGuys&&l.name in s.victoryGuys)return s.victoryGuys[l.name];
+ if(song.stage==='who'&&s.whoBuzz!=null){if(['starsBG','starsFG','whoAngered'].includes(l.name))return s.whoBuzz===1?1:0;if(['meeting','furiousRage','emergency'].includes(l.name))return s.whoBuzz===0?1:0;}
+ if(song.stage==='defeat'){
+  if(l.name==='mainoverlayDK')return s.defeatRetro?1:0;
+  if(s.defeatDark&&l.name!=='mainoverlayDK')return 0;
+  if(['bodies','bodies2','bodiesfront'].includes(l.name)){const f=s.defeatBodies;return f?f.to*clamp01((t-f.at)/.7):0;}
+ }
+ if(song.stage==='finalem'){
+  if(['defeatthing','mainoverlayDK'].includes(l.name))return s.finaleDrop?0:l.alpha;
+  if(l.name==='finaleFlashbackStuff')return s.finaleFlash&&s.finaleFlash!=='flash'?.5:0;
+  if(!s.finaleDrop)return 0;
+ }
+ if(l.name==='airshipskyflash')return s.dangerScream?1:0;
+ if(l.name==='daveDIE')return s.daveDead?1:0;
+ return l.alpha;
+}
+
+function impostorScrollSpeed(t){const c=extraState?.scrollChange;if(song.pack!=='impostor'||!c)return 1;const p=c.duration?clamp01((t-c.at)/c.duration):1;return c.from+(c.to-c.from)*p;}
+async function prepareImpostorVideos(){
+ await Promise.all(Object.values(song.eventVideos||{}).map(src=>new Promise((resolve,reject)=>{
+  if(sillyVideos.has(src)){resolve();return;}const v=document.createElement('video');v.preload='auto';v.muted=true;v.playsInline=true;v.onloadeddata=()=>{sillyVideos.set(src,v);resolve();};v.onerror=()=>reject(Error('모드 영상 로드 실패'));v.src=src;v.load();
+ })));
+}
+function impostorVideoFrame(t){
+ if(song.pack!=='impostor'||song.lowSpec)return false;
+ const active=extraState?.impostorVideo,v=active&&sillyVideos.get(active.src);
+ if(!v)return false;const elapsed=t-active.at;
+ if(elapsed<0||elapsed>=v.duration){v.pause();return false;}
+ v.playbackRate=settings.rate||1;if(Math.abs(v.currentTime-elapsed)>.25)v.currentTime=elapsed;
+ if(state==='playing')v.play().catch(()=>{});else v.pause();
+ ctx.drawImage(v,0,0,1120,530);return true;
+}
+
+function impostorViewLayout(){
+ const v=MOD_ART.scenes[song.sceneKey].layout;
+ if(songId!=='impostor-defeat'||!v)return v;
+ const zoom=.82;
+ return {...v,scale:v.scale*zoom,x:560+(v.x-560)*zoom,y:265+(v.y-265)*zoom};
 }

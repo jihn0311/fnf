@@ -165,7 +165,7 @@ for pack,folder in [('virus','fnf virus r c'),('death','fnf deathmatch c'),('tai
 for sid,scene in ART['scenes'].items():
  pack=SONGS[sid]['pack'];slug=sid.removeprefix(pack+'-')
  if pack=='virus':
-  stage='cyber2' if slug=='r-memory' else 'window' if slug in ['virus-r','warning','the-battle-of-robbery'] else 'cyber'
+  stage='window' if slug=='virus-r' else 'cyber2' if slug in ['warning','the-battle-of-robbery'] else 'cyber'
   scene['spriteKeys']=[k for k in ART['sprites'] if k.startswith('virus/stage/'+stage+'/')]
  elif pack=='death':scene['spriteKeys']=[k for k in ART['sprites'] if k.startswith('death/stage/')]
  else:scene['spriteKeys']=[k for k in ART['sprites'] if k.startswith('tainted/BG/') and ('/crush/' in k if slug=='crush' else '/crush/' not in k)]

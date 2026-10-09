@@ -21,3 +21,6 @@ __pycache__/
 /analysis/triple-phase-*.png
 
 /analysis/silly-*.png
+
+/analysis/impostor-atlas-cache.json
+/analysis/impostor-*.png

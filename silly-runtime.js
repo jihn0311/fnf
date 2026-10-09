@@ -1,6 +1,7 @@
 'use strict';
 const sillyVideos=new Map();
 async function sillyPrepare(){
+ if(skinReady())sillyNoteAtlas();
  await Promise.all(SILLY_LYRICS.pages.map(src=>new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(e){reject(e)}};im.onerror=reject;im.src=src;})));
  await Promise.all(MOD_ART.videos['silly-billy'].map(src=>new Promise((resolve,reject)=>{if(sillyVideos.has(src)){resolve();return;}const v=document.createElement('video');v.preload='auto';v.muted=true;v.playsInline=true;v.onloadeddata=()=>{sillyVideos.set(src,v);resolve();};v.onerror=()=>reject(Error('Silly Billy 영상 로드 실패'));v.src=src;v.load();})));
 }
@@ -19,7 +20,7 @@ function sillyEvent(e,t,quiet){const s=extraState,v=e.value;
  case 7:if(!quiet&&health>25)health=Math.max(25,health-2.5);break;
  case 9:case 13:s.zoomTween={from:extraZoom(e.time),to:Math.max(.65,Math.min(1.5,extraZoom(e.time)+(Number(v.floatVal)||0)*(Number(v.sillyType)===13?.45:1))),at:e.time,duration:Number(v.floatVal2)||.25};break;
  case 10:s.bumpMult=Number(v.floatVal)||1;break;
- case 11:s.lyricAnimationAt=null;s.middle=false;s.lyric='';break;
+ case 11:s.blueNotes=true;s.lyricAnimationAt=null;s.middle=false;s.lyric='';break;
  case 14:s.black=0;s.sillyHud=1;break;
  }
 }
@@ -42,4 +43,30 @@ function sillyLyricActor(elapsed){
  const [left,top,right,bottom]=data.bounds,scale=Math.min(600/(right-left),440/(bottom-top));
  ctx.save();ctx.translate(420-(left+right)*scale/2,475-bottom*scale);ctx.scale(scale,scale);
  for(const [name,matrix] of frame){const [page,x,y,w,h]=data.sprites[name],im=modImages.get(data.pages[page]);if(!im)continue;ctx.save();ctx.transform(...matrix);ctx.drawImage(im,x,y,w,h,0,0,w,h);ctx.restore();}ctx.restore();
+}
+
+// Original blue.frag fixes HSV hue to 1.3 / 2 * 360 = 234 degrees.
+let sillyBlueAtlas=null;
+function sillyNoteAtlas(){
+ if(!sillyBlueAtlas&&skinReady()){
+  const c=document.createElement('canvas');c.width=noteSkinImage.naturalWidth;c.height=noteSkinImage.naturalHeight;
+  const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(noteSkinImage,0,0);
+  const pixels=g.getImageData(0,0,c.width,c.height),d=pixels.data;
+  for(let i=0;i<d.length;i+=4){const hi=Math.max(d[i],d[i+1],d[i+2]),lo=Math.min(d[i],d[i+1],d[i+2]);d[i]=lo;d[i+1]=lo+(hi-lo)*.1;d[i+2]=hi;}
+  g.putImageData(pixels,0,0);sillyBlueAtlas=c;
+ }
+ return sillyBlueAtlas||noteSkinImage;
+}
+
+function sillyCutsceneActive(t){
+ if(song.pack!=='silly'||song.lowSpec)return false;
+ if(extraState?.lyricAnimationAt!=null&&t>=extraState.lyricAnimationAt)return true;
+ const active=extraState?.video,video=active&&sillyVideos.get(active.src);
+ return !!(video&&t>=active.at&&t<active.at+video.duration);
+}
+
+function sillyOpeningActive(t){
+ const active=extraState?.video;
+ const video=active&&sillyVideos.get(active.src);
+ return !!(song.pack==='silly'&&!song.lowSpec&&active?.src===MOD_ART.videos['silly-billy'][0]&&video&&t>=active.at&&t<active.at+video.duration);
 }
