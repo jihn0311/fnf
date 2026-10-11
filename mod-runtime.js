@@ -28,7 +28,8 @@ function modActor(name,side,t,x,y){
  const actor=actors[side],sheet=MOD_ART.characters[name];if(!sheet)return;
  const image=modImages.get(sheet.src);if(!image)return;
  const singing=t<actor.until;
- const key=singing?['left','down','up','right'][actor.lane]:'idle';
+ let key=singing?['left','down','up','right'][actor.lane]:'idle';
+ if(singing&&actor.miss)key=missAnimationKey(sheet,actor.lane)||key;
  const frames=sheet.animations[key]||sheet.animations.idle;
  const elapsed=singing?Math.max(0,t-(actor.at??t)):Math.max(0,t);
  const f=frames[Math.floor(elapsed*24)%frames.length];
@@ -140,4 +141,20 @@ function buildLowSpecBackground(){
  const c=document.createElement('canvas');c.width=1120;c.height=530;const g=c.getContext('2d');g.fillStyle='#171d2b';g.fillRect(0,0,1120,530);
  for(const layer of lowSpecLayers()){const {a,f,src}=lowSpecLayerSource(layer),im=modImages.get(src);if(!im)continue;const {x,y,w,h}=layer;g.globalAlpha=layer.alpha??1;if(f)g.drawImage(im,f.x,f.y,f.w,f.h,x+f.ox*w/f.fw,y+f.oy*h/f.fh,f.w*w/f.fw,f.h*h/f.fh);else g.drawImage(im,x,y,w,h);}
  lowSpecBackground=c;
+}
+
+// Native miss names vary between engines and imported atlases.
+const missKeyCache=new WeakMap();
+function missAnimationKey(sheet,lane){
+ if(!sheet?.animations||lane<0||lane>3)return null;
+ if(!missKeyCache.has(sheet))missKeyCache.set(sheet,['left','down','up','right'].map(direction=>Object.keys(sheet.animations).find(key=>key.toLowerCase().includes(direction)&&key.toLowerCase().includes('miss'))||null));
+ return missKeyCache.get(sheet)[lane];
+}
+function girlfriendPose(sheet,t){
+ const beat=Math.max(0,t)/BEAT,index=Math.floor(beat),elapsed=(beat-index)*BEAT;
+ if(sheet.animations.danceLeft&&sheet.animations.danceRight)return {key:index%2?'danceRight':'danceLeft',elapsed};
+ const frames=sheet.animations.idle;
+ // A combined GF atlas contains both 15-frame dance directions.
+ if(frames?.length>=28&&frames.length<=32){const half=Math.floor(frames.length/2),frame=(index%2)*half+Math.min(half-1,Math.floor(elapsed*24));return {key:'idle',elapsed:frame/24};}
+ return {key:'idle',elapsed};
 }

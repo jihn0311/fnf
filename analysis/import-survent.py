@@ -1,12 +1,18 @@
 from pathlib import Path
-import json,xml.etree.ElementTree as ET
+import json,hashlib,xml.etree.ElementTree as ET
 from PIL import Image
 root=Path(__file__).resolve().parent.parent
 helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)}
 exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0],ns)
 r=Path('C:/Users/kht80/Desktop/fnf selever/bin/assets');art=ns['ART'];songs={}
 for name,path in {'sarvente':'sacredmass/sarvente_sheet','sarvente-dark':'sacredmass/sarvente_dark','ruv':'sacredmass/ruv_sheet','bf':'BOYFRIEND','gf':'GF_assets','selever':'selever/fuckboi_sheet','sarvente-lucifer':'sacredmass/smokinhotbabe'}.items():
- a=ns['atlas'](r/'images'/path,'survent/characters/'+name,height=310 if name!='bf' else 220)
+ definition=None
+ if name=='gf':definition={'animations':[{'anim':'idle','name':'GF Dancing Beat0'}]}
+ if name=='bf':
+  names={'idle':'BF idle dance0',**{d:'BF NOTE '+d.upper()+'0' for d in ['left','down','up','right']},**{d+'Miss':'BF NOTE '+d.upper()+' MISS0' for d in ['left','down','up','right']}}
+  definition={'animations':[{'anim':key,'name':prefix} for key,prefix in names.items()]}
+ a=ns['atlas'](r/'images'/path,'survent/characters/'+name,definition,height=620 if name!='bf' else 440)
+ a['renderScale']=.5
  art['characters']['survent:'+name]=a
 for slug,stage in [('parish','church1'),('worship','church1'),('zavodila','church2'),('casanova','churchSelever'),('gospel','church3')]:
  sid='survent-'+slug;charts={};events={};sections={};base=None
@@ -43,5 +49,12 @@ for direction,color in [('left','purple'),('down','blue'),('up','green'),('right
   row[kind]={key:int(frames[name].get(key,0)) for key in ['x','y','width','height','frameX','frameY','frameWidth','frameHeight']}
  skin.append(row)
 songs['survent-gospel']['noteSkin']={'src':ns['web'](note_dest),'frames':skin}
+def version_character(value):
+ if isinstance(value,dict):return {k:version_character(v) for k,v in value.items()}
+ if isinstance(value,list):return [version_character(v) for v in value]
+ if isinstance(value,str) and value.startswith('assets/extra-mods/survent/characters/'):
+  path=value.split('?')[0];return path+'?v='+hashlib.sha256((root/path).read_bytes()).hexdigest()[:12]
+ return value
+art['characters']=version_character(art['characters'])
 (root/'survent-mod.js').write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst SURVENT_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],SURVENT_ART[key]);\nObject.assign(EXTRA_ART.sprites,SURVENT_ART.sprites);\n',encoding='utf-8')
 p=root/'mod-assets.json';manifest=ns['read'](p)+['survent-mod.js']+[ns['web'](f) for f in (root/'assets/extra-mods/survent').rglob('*') if f.is_file()];p.write_text(json.dumps(list(dict.fromkeys(manifest)),indent=2),encoding='utf-8')

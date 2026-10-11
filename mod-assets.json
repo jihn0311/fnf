@@ -843,8 +843,6 @@
   "assets/extra-mods/survent/characters/bf-3.webp",
   "assets/extra-mods/survent/characters/gf-0.webp",
   "assets/extra-mods/survent/characters/gf-1.webp",
-  "assets/extra-mods/survent/characters/gf-2.webp",
-  "assets/extra-mods/survent/characters/gf-3.webp",
   "assets/extra-mods/survent/characters/ruv-0.webp",
   "assets/extra-mods/survent/characters/sarvente-0.webp",
   "assets/extra-mods/survent/characters/sarvente-dark-0.webp",
@@ -880,5 +878,17 @@
   "assets/extra-mods/survent/gospel-notes.webp",
   "assets/extra-mods/survent/fx/circ0.webp",
   "assets/extra-mods/survent/fx/circ1.webp",
-  "assets/extra-mods/survent/fx/circ2.webp"
+  "assets/extra-mods/survent/fx/circ2.webp",
+  "assets/extra-mods/survent/characters/bf-4.webp",
+  "assets/extra-mods/survent/characters/bf-5.webp",
+  "assets/extra-mods/survent/characters/ruv-1.webp",
+  "assets/extra-mods/survent/characters/sarvente-1.webp",
+  "assets/extra-mods/survent/characters/sarvente-2.webp",
+  "assets/extra-mods/survent/characters/sarvente-dark-1.webp",
+  "assets/extra-mods/survent/characters/sarvente-dark-2.webp",
+  "assets/extra-mods/survent/characters/sarvente-dark-3.webp",
+  "assets/extra-mods/survent/characters/sarvente-lucifer-1.webp",
+  "assets/extra-mods/survent/characters/sarvente-lucifer-2.webp",
+  "assets/extra-mods/survent/characters/selever-1.webp",
+  "assets/extra-mods/survent/characters/selever-2.webp"
 ]

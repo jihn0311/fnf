@@ -43,7 +43,11 @@ const actors={nova:{lane:-1,until:-1,miss:false},echo:{lane:-1,until:-1,miss:fal
 function sectionAt(t){if(song.sections){const section=song.sections.find(s=>t>=s.start&&t<s.end);return section?section.mode:t<song.sections[0].start?'intro':'outro';}const beat=Math.round(t/BEAT*1e8)/1e8;return beat<8?'intro':beat>=song.beats-4?'outro':song.parts[Math.floor((beat-8)/8)];}
 function sings(side,t){const part=sectionAt(t);return part===side||part==='duet';}
 function laneX(lane,side='echo'){if(song.pack==='silly'&&extraState?.middle&&side==='echo')return 425+lane*90;const swap=typeof tripleActive==='function'&&tripleActive()?tripleSwap():typeof extraSwap==='function'?extraSwap():0;return (side==='nova'?135+580*swap:715-580*swap)+lane*90;}
-function animateSinger(side,lane,t,duration=0,miss=false){actors[side]={lane,at:t,until:t+Math.max((song.pack==='impostor'?.2:.23)*(settings.rate||1),duration),miss};}
+function animateSinger(side,lane,t,duration=0,miss=false){
+ const previous=actors[side],hold=(song.pack==='survent'?.36:song.pack==='impostor'?.2:.23)*(settings.rate||1);
+ const same=song.pack==='survent'&&!miss&&!previous.miss&&previous.lane===lane&&previous.until>t;
+ actors[side]={lane,at:same?previous.at:t,until:t+Math.max(hold,duration),miss};
+}
 function updateOpponent(t){
   for(const note of opponentNotes){
     if(note.time>t)break;
@@ -280,7 +284,7 @@ function press(lane){
     if(note.hurt&&typeof extraHurt==='function'){extraHurt(note,'hit');return;}
     note.hitOffsetMs=(t-note.time)/(settings.rate||1)*1000;
     const {kind,value,points}=timingResult((note.time-t)/(settings.rate||1));animateSinger('echo',lane,t,Math.max(0,note.time+(note.duration||0)-t));if(typeof extraNote==='function')extraNote(note,'echo');
-    if(note.duration){note.holding=true;note.headKind=kind;note.headValue=value;note.headPoints=points;note.nextTick=Math.max(t,note.time)+.15*(settings.rate||1);judge({...note,done:false},kind,value,points);feedback=kind.toUpperCase()+' · HOLD';feedbackOffsetMs=note.hitOffsetMs;feedbackAt=t;feedbackColor=COLORS[lane];if(kind==='perfect')splash(lane);if(kind==='bad')combo=0;}
+    if(note.duration){note.holding=true;note.headKind=kind;note.headValue=value;note.headPoints=points;note.nextTick=Math.max(t,note.time)+.15*(settings.rate||1);judge({...note,done:false},kind,value,points);feedback=kind.toUpperCase();feedbackOffsetMs=note.hitOffsetMs;feedbackAt=t;feedbackColor=COLORS[lane];if(kind==='perfect')splash(lane);if(kind==='bad')combo=0;}
     else judge(note,kind,value,points);
   }
 }
@@ -375,7 +379,14 @@ function character(x,y,color,isNova,t){
   ctx.strokeStyle=color;ctx.lineWidth=6;ctx.beginPath();ctx.arc(0,-29,44,Math.PI,Math.PI*2);ctx.stroke();rect(-48,-36,12,26,color);rect(36,-36,12,26,color);
   ctx.restore();
 }
-function draw(t){
+function prepareStageResolution(){
+ const width=canvas.getBoundingClientRect?.().width||1120;
+ const ratio=song.lowSpec?1:Math.min(2,Math.max(1,width*(window.devicePixelRatio||1)/1120));
+ const w=Math.round(1120*ratio),h=Math.round(530*ratio);
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+ ctx.setTransform(w/1120,0,0,h/530,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality=song.lowSpec?'medium':'high';
+}
+function draw(t){prepareStageResolution();
   ctx.clearRect(0,0,1120,530);const bg=ctx.createLinearGradient(0,0,0,530);bg.addColorStop(0,song.sky[0]);bg.addColorStop(1,song.sky[1]);ctx.fillStyle=bg;ctx.fillRect(0,0,1120,530);
   if(typeof modActive==='function'&&modActive()){drawModStage(t);}else{
   ctx.fillStyle='#a5b8d755';for(let i=0;i<38;i++)ctx.fillRect((i*193)%1120,(i*71)%260,2,2);
@@ -400,7 +411,7 @@ function draw(t){
     if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
     ctx.save();
     const left=laneX(0,side)-47;
-    const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
+    const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,['survent-casanova','survent-gospel'].includes(songId)?'#080e1d55':'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
     ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);
     for(let lane=0;lane<4;lane++){
       const activeOpponent=opponentLit[lane];

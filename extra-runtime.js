@@ -109,7 +109,9 @@ function extraActor(side,t,x,y,black=false){
  if(!a.animations[key])key=singing?'sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane]:'idle';
  if(!a.animations[key])key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(!a.animations[key]&&singing)key='sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane];
- let elapsed=singing?t-(actor.at??t):t%BEAT;
+ let elapsed=singing?t-(actor.at??t):Math.max(0,t)%BEAT;
+ if(singing&&actor.miss)key=missAnimationKey(a,actor.lane)||key;
+ if(side==='gf'&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
@@ -130,7 +132,7 @@ function extraActor(side,t,x,y,black=false){
   const offsetScale=a.scale/(a.nativeScale||1);
   const originX=-idle.w/2-idle.ox+idleOff[0]*offsetScale,originY=-idle.h-idle.oy+idleOff[1]*offsetScale;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
- }else if(song.pack==='silly'||songId==='tainted-defeat'){
+ }else if(song.pack==='silly'||song.pack==='survent'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -418,9 +420,9 @@ function impostorViewLayout(){
 }
 
 // Casanova: stage framing adapted from the supplied gameplay reference.
-function casanovaLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>key!=='survent/fx/circle').map(key=>({key,x:-150,y:-105,w:1420,h:672}));}
+function casanovaLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>key!=='survent/fx/circle').map(key=>({key,x:-35,y:-35,w:1190,h:595}));}
 function drawCasanovaActors(t){
- for(const [side,x,y,scale] of [['gf',540,382,1.12],['nova',250,520,1.35],['echo',850,515,1]]){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();}
+ for(const [side,x,y,scale] of [['gf',540,382,1],['nova',250,515,1.22],['echo',850,510,.95]]){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();}
 }
 function casanovaEffect(t){
  if(song.lowSpec||settings.difficulty!=='hard')return 0;
@@ -428,11 +430,11 @@ function casanovaEffect(t){
 }
 
 // Mid-Fight Masses: video-referenced framing and lightweight native-art effects.
-function surventLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>!key.includes('/fx/')).map(key=>({key,x:-180,y:-110,w:1480,h:700}));}
+function surventLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>!key.includes('/fx/')).map(key=>songId==='survent-gospel'?{key,x:-50,y:-35,w:1220,h:600}:{key,x:-180,y:-110,w:1480,h:700});}
 function drawSurventActors(t){
  const gospel=songId==='survent-gospel',ruv=songId==='survent-zavodila';
  const floating=gospel&&!song.lowSpec?Math.sin(t/BEAT*Math.PI/2)*10:0;
- for(const [side,x,y,scale] of [['gf',535,385,1.12],['nova',230,gospel?440+floating:520,ruv?1.48:gospel?1.5:1.4],['echo',850,515,1]]){
+ for(const [side,x,y,scale] of [['gf',535,385,gospel?1:1.12],['nova',230,gospel?440+floating:520,ruv?1.48:gospel?1.32:1.4],['echo',850,515,1]]){
   ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();
  }
 }
@@ -446,10 +448,9 @@ function drawSurventStage(t){
  const gospel=songId==='survent-gospel',worship=songId==='survent-worship',ruv=songId==='survent-zavodila';
  const actor=actors.nova,age=t-(actor.at??-100),singing=actor.lane>=0&&t<actor.until;
  ctx.save();
- if(ruv&&singing){const shake=Math.exp(-Math.max(0,age)*12)*3;ctx.translate(Math.sin(t*101)*shake,Math.cos(t*127)*shake);}
  for(const l of surventLayers())extraSprite(l.key,t,l.x,l.y,l.w,l.h);
  if(worship){rect(0,0,1120,530,'#65143038');if(singing)surventRing(t,235,275,420,.25+.3*Math.exp(-Math.max(0,age)*5));}
- if(gospel){rect(0,0,1120,530,'#49192b40');surventRing(t,550,130,740);}
+ if(gospel){rect(0,0,1120,530,'#49192b40');surventRing(t,550,150,600);}
  if(!gospel){ctx.save();ctx.fillStyle='#ffffff70';for(let i=0;i<14;i++){const x=(i*193+t*9)%1120,y=(i*89-t*6)%530;ctx.beginPath();ctx.arc(x,(y+530)%530,1.5,0,Math.PI*2);ctx.fill();}ctx.restore();}
  drawSurventActors(t);ctx.restore();
 }
