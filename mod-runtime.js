@@ -120,6 +120,7 @@ let lowSpecBackground=null;
 function lowSpecLayers(){
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
+ if(song.pack==='survent')return MOD_ART.scenes[song.sceneKey].spriteKeys.map(full);
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){
  const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';

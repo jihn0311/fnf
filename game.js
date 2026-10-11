@@ -504,7 +504,7 @@ function rebuildSongPicker(){
   const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry;
   if(!!track.lowSpec!==low)continue;
   const family=track.pack|| (id.startsWith('sonic-')||track.baseSongId?.startsWith('sonic-')?'sonic':'original');
-  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',original:'기본 곡 / 추가 음악'}[family]||family;
+  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses',original:'기본 곡 / 추가 음악'}[family]||family;
   if(!groups.has(name)){const group=document.createElement('optgroup');group.label=name;groups.set(name,group);picker.appendChild(group);}
   const option=document.createElement('option');option.value=id;option.textContent=track.title.replace(/ \[저사양\]$/,'');groups.get(name).appendChild(option);
  }
