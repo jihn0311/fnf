@@ -149,8 +149,13 @@ function extraStage(t){
  if(song.pack==='impostor'){
   drawImpostorStage(t);
  }else if(song.pack==='survent'){
-  for(const key of MOD_ART.scenes[song.sceneKey].spriteKeys)extraSprite(key,t);
-  extraSpectator(t);extraActor('nova',t,280,465);extraActor('echo',t,840,465);
+  if(songId==='survent-casanova'){
+   for(const layer of casanovaLayers())extraSprite(layer.key,t,layer.x,layer.y,layer.w,layer.h);
+   const strength=casanovaEffect(t);
+   if(strength>0){rect(0,0,1120,530,'rgba(0,0,0,'+(.48*strength)+')');ctx.save();ctx.globalAlpha=.85*strength;ctx.translate(250,285);ctx.rotate(t*.35);extraSprite('survent/fx/circle',t,-225,-225,450,450);ctx.restore();}
+   drawCasanovaActors(t);
+  }else{for(const key of MOD_ART.scenes[song.sceneKey].spriteKeys)extraSprite(key,t);
+   extraSpectator(t);extraActor('nova',t,280,465);extraActor('echo',t,840,465);}
  }else if(song.pack==='silly'){sillyStage(t);
  }else if(song.pack==='virus'){
   drawVirusBackdrop(t);
@@ -229,7 +234,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 3곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;
@@ -411,4 +416,14 @@ function impostorViewLayout(){
  if(songId!=='impostor-defeat'||!v)return v;
  const zoom=.82;
  return {...v,scale:v.scale*zoom,x:560+(v.x-560)*zoom,y:265+(v.y-265)*zoom};
+}
+
+// Casanova: stage framing adapted from the supplied gameplay reference.
+function casanovaLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>key!=='survent/fx/circle').map(key=>({key,x:-150,y:-105,w:1420,h:672}));}
+function drawCasanovaActors(t){
+ for(const [side,x,y,scale] of [['gf',540,382,1.12],['nova',250,520,1.35],['echo',850,515,1]]){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();}
+}
+function casanovaEffect(t){
+ if(song.lowSpec||settings.difficulty!=='hard')return 0;
+ let strength=0;for(const cue of song.circleCues||[]){if(cue.time>t)break;const elapsed=t-cue.time;strength=Math.max(strength,Math.max(0,Math.min(1,(cue.duration+.22-elapsed)/.22)));}return strength;
 }

@@ -108,7 +108,8 @@ function drawLowSpecStage(t){
  if(lowSpecBackground)ctx.drawImage(lowSpecBackground,0,0);else{rect(0,0,1120,530,'#171d2b');rect(0,460,1120,70,'#101522');}
  if(song.pack){
   if(!extraState||extraState.id!==songId)extraReset();
-  if(song.pack==='impostor')drawImpostorActors(t);
+  if(songId==='survent-casanova')drawCasanovaActors(t);
+  else if(song.pack==='impostor')drawImpostorActors(t);
   else if(songId==='virus-virus-r')extraActor('nova',t,560,465);
   else{const swapped=songId==='tainted-destruction'&&t>=112*BEAT;extraActor('nova',t,swapped?835:285,465);extraActor('echo',t,swapped?285:835,465);}
  }else if(tripleActive()){
@@ -120,6 +121,7 @@ let lowSpecBackground=null;
 function lowSpecLayers(){
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
+ if(songId==='survent-casanova')return casanovaLayers();
  if(song.pack==='survent')return MOD_ART.scenes[song.sceneKey].spriteKeys.map(full);
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){
