@@ -7,3 +7,5 @@
 - Gospel 추가 및 선택 종료 승인(y). Casanova/Gospel을 추가하고 기존 Parish/Worship/Zavodila를 유지함.
 - 추가 요청: 캐릭터 모습과 방향 확인. 원본 스프라이트의 셀레버, Lucifer 사르벤테, BF 및 4방향 동작 확인.
 - 검증: 두 곡 음원 재생, Hard 채보(Casanova 643 / Gospel 603 플레이어 노트), 4방향 렌더링, 일반·저사양 배경 통과. Casanova Easy/Normal은 원본부터 48노트인 짧은 채보임.
+
+- 공개 사이트에서 새 모드 캐릭터/배경이 보이지 않는다는 요청: 새 브라우저에서는 Casanova 이미지 13개 로딩 성공, HTTP 오류 없음. 이전 런타임 캐시 혼용을 막도록 모든 JS/CSS 주소에 내용 해시 버전을 적용.
