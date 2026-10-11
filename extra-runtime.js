@@ -11,7 +11,7 @@ function extraReset(){
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
- extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];
+ extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.noteSkin)assets.push(song.noteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
@@ -154,8 +154,7 @@ function extraStage(t){
    const strength=casanovaEffect(t);
    if(strength>0){rect(0,0,1120,530,'rgba(0,0,0,'+(.48*strength)+')');ctx.save();ctx.globalAlpha=.85*strength;ctx.translate(250,285);ctx.rotate(t*.35);extraSprite('survent/fx/circle',t,-225,-225,450,450);ctx.restore();}
    drawCasanovaActors(t);
-  }else{for(const key of MOD_ART.scenes[song.sceneKey].spriteKeys)extraSprite(key,t);
-   extraSpectator(t);extraActor('nova',t,280,465);extraActor('echo',t,840,465);}
+  }else drawSurventStage(t);
  }else if(song.pack==='silly'){sillyStage(t);
  }else if(song.pack==='virus'){
   drawVirusBackdrop(t);
@@ -426,4 +425,31 @@ function drawCasanovaActors(t){
 function casanovaEffect(t){
  if(song.lowSpec||settings.difficulty!=='hard')return 0;
  let strength=0;for(const cue of song.circleCues||[]){if(cue.time>t)break;const elapsed=t-cue.time;strength=Math.max(strength,Math.max(0,Math.min(1,(cue.duration+.22-elapsed)/.22)));}return strength;
+}
+
+// Mid-Fight Masses: video-referenced framing and lightweight native-art effects.
+function surventLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.filter(key=>!key.includes('/fx/')).map(key=>({key,x:-180,y:-110,w:1480,h:700}));}
+function drawSurventActors(t){
+ const gospel=songId==='survent-gospel',ruv=songId==='survent-zavodila';
+ const floating=gospel&&!song.lowSpec?Math.sin(t/BEAT*Math.PI/2)*10:0;
+ for(const [side,x,y,scale] of [['gf',535,385,1.12],['nova',230,gospel?440+floating:520,ruv?1.48:gospel?1.5:1.4],['echo',850,515,1]]){
+  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();
+ }
+}
+function surventRing(t,x,y,size,alpha=1){
+ ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
+ extraSprite('survent/fx/circ0',t,-size*.32,-size*.32,size*.64,size*.64);
+ extraSprite('survent/fx/circ2',t,-size/2,-size/2,size,size);
+ ctx.rotate(t*.25);extraSprite('survent/fx/circ1',t,-size*.45,-size*.45,size*.9,size*.9);ctx.restore();
+}
+function drawSurventStage(t){
+ const gospel=songId==='survent-gospel',worship=songId==='survent-worship',ruv=songId==='survent-zavodila';
+ const actor=actors.nova,age=t-(actor.at??-100),singing=actor.lane>=0&&t<actor.until;
+ ctx.save();
+ if(ruv&&singing){const shake=Math.exp(-Math.max(0,age)*12)*3;ctx.translate(Math.sin(t*101)*shake,Math.cos(t*127)*shake);}
+ for(const l of surventLayers())extraSprite(l.key,t,l.x,l.y,l.w,l.h);
+ if(worship){rect(0,0,1120,530,'#65143038');if(singing)surventRing(t,235,275,420,.25+.3*Math.exp(-Math.max(0,age)*5));}
+ if(gospel){rect(0,0,1120,530,'#49192b40');surventRing(t,550,130,740);}
+ if(!gospel){ctx.save();ctx.fillStyle='#ffffff70';for(let i=0;i<14;i++){const x=(i*193+t*9)%1120,y=(i*89-t*6)%530;ctx.beginPath();ctx.arc(x,(y+530)%530,1.5,0,Math.PI*2);ctx.fill();}ctx.restore();}
+ drawSurventActors(t);ctx.restore();
 }

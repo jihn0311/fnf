@@ -313,7 +313,8 @@ function finish(failed=false){
 }
 const noteSkinImage=typeof Image!=='undefined'?new Image():null;
 if(noteSkinImage)noteSkinImage.src='assets/note-skin.png';
-function skinReady(){return typeof NOTE_SKIN!=='undefined'&&noteSkinImage?.complete&&noteSkinImage.naturalWidth>0;}
+function customNoteSkin(){return song.noteSkin&&modImages.get(song.noteSkin.src)?.complete?song.noteSkin:null;}
+function skinReady(){return !!customNoteSkin()|| typeof NOTE_SKIN!=='undefined'&&noteSkinImage?.complete&&noteSkinImage.naturalWidth>0;}
 const majinSkinImage=typeof Image!=='undefined'?new Image():null;
 if(majinSkinImage)majinSkinImage.src='assets/majin-notes.png';
 function endlessSkin(at,receptor=false){return songId==='sonic-endless'&&at>= (receptor?899:912)*60/155/4&&typeof MAJIN_SKIN!=='undefined'&&majinSkinImage?.complete&&majinSkinImage.naturalWidth>0;}
@@ -321,11 +322,11 @@ const endlessSpins=[272,276,336,340,400,404,464,468,528,532,592,596,656,660,720,
 function endlessAngle(t){if(song.lowSpec||songId!=='sonic-endless')return 0;for(let i=endlessSpins.length-1;i>=0;i--){const age=(t-endlessSpins[i]*60/155/4)/(settings.rate||1);if(age>=0)return age<.2?Math.PI*2*(1-(1-age/.2)**5):0;}return 0;}
 function stageArrow(x,y,lane,size,color,fill,t,at=t){ctx.save();ctx.translate(x,y);ctx.rotate(endlessAngle(t));arrow(0,0,lane,size,color,fill,endlessSkin(at,!fill));ctx.restore();}
 function skinFrame(frame,x,y,width,height,majin=false){
-  ctx.drawImage(majin?majinSkinImage:(song.pack==='silly'&&extraState?.blueNotes?sillyNoteAtlas():noteSkinImage),frame.x,frame.y,frame.width,frame.height,x,y,width,height);
+  ctx.drawImage(customNoteSkin()?modImages.get(song.noteSkin.src):majin?majinSkinImage:(song.pack==='silly'&&extraState?.blueNotes?sillyNoteAtlas():noteSkinImage),frame.x,frame.y,frame.width,frame.height,x,y,width,height);
 }
 function skinArrow(x,y,lane,size,fill,color,majin=false){
   if(!skinReady())return false;
-  const skin=(majin?MAJIN_SKIN:NOTE_SKIN)[lane],lit=!fill&&color===COLORS[lane];
+  const skin=(customNoteSkin()?.frames||(majin?MAJIN_SKIN:NOTE_SKIN))[lane],lit=!fill&&color===COLORS[lane];
   const frame=skin[fill?'note':lit?'confirm':'idle'];
   const base=skin.idle,scale=size*2/Math.max(base.width,base.height);
   const fw=frame.frameWidth||frame.width,fh=frame.frameHeight||frame.height;
@@ -335,7 +336,7 @@ function skinArrow(x,y,lane,size,fill,color,majin=false){
 function sustainSkin(x,head,tail,lane,color,majin=false){
   const top=Math.max(-30,Math.min(head,tail)),bottom=Math.min(560,Math.max(head,tail));
   if(!skinReady()){rect(x-12,top,24,Math.max(0,bottom-top),color);return;}
-  const skin=(majin?MAJIN_SKIN:NOTE_SKIN)[lane],scale=72/Math.max(skin.idle.width,skin.idle.height);
+  const skin=(customNoteSkin()?.frames||(majin?MAJIN_SKIN:NOTE_SKIN))[lane],scale=72/Math.max(skin.idle.width,skin.idle.height);
   const width=skin.body.width*scale,capHeight=Math.min(Math.abs(tail-head),skin.tail.height*scale);
   const sign=tail>=head?1:-1;
   const bodyEnd=tail-sign*capHeight;
