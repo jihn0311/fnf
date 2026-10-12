@@ -48,8 +48,11 @@ function animateSinger(side,lane,t,duration=0,miss=false){
  const same=song.pack==='survent'&&!miss&&!previous.miss&&previous.lane===lane&&previous.until>t;
  actors[side]={lane,at:same?previous.at:t,until:t+Math.max(hold,duration),miss};
 }
+// Each chart owns its cursor; replacing a chart automatically resets traversal.
+const chartCursors=new WeakMap();
+function chartStart(chart){let i=chartCursors.get(chart)||0;while(i<chart.length&&chart[i].done)i++;chartCursors.set(chart,i);return i;}
 function updateOpponent(t){
-  for(const note of opponentNotes){
+  for(let i=chartStart(opponentNotes);i<opponentNotes.length;i++){const note=opponentNotes[i];
     if(note.time>t)break;
     if(note.done)continue;
     if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health=Math.max(0,health-.45);updateHud();}animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
@@ -116,7 +119,7 @@ function readSettings(){
 }
 function targetY(){return settings.scroll==='down'?448:82;}
 function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
-function laneHeld(lane){return [...held.values()].includes(lane);}
+function laneHeld(lane){for(const value of held.values())if(value===lane)return true;return false;}
 function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));}
 function inputDown(source,lane){
   if(held.has(source))return;
@@ -145,16 +148,17 @@ function inputUp(source){
   }
 }
 function updateHeldPose(t){
-  const active=notes.filter(n=>n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration);
-  if(!active.length)return;
-  const actor=actors.echo;
-  // Preserve the current held direction, then fall back to another held sustain.
-  const note=active.find(n=>n.lane===actor.lane)||active[active.length-1];
+  const actor=actors.echo;let note=null;
+  for(let i=chartStart(notes);i<notes.length;i++){
+    const n=notes[i];if(n.time>t+.18*(settings.rate||1))break;
+    if(n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration){note=n;if(n.lane===actor.lane)break;}
+  }
+  if(!note)return;
   if(actor.lane!==note.lane||actor.miss||actor.until<=t){animateSinger('echo',note.lane,t,note.time+note.duration-t);if(typeof extraNote==='function')extraNote(note,'echo');}
   else actor.until=Math.max(actor.until,note.time+note.duration);
 }
 function updateNotes(t){
-  for(const note of notes){
+  for(let i=chartStart(notes);i<notes.length;i++){const note=notes[i];
     if(note.time>t)break;
     if(note.done)continue;
     if(note.holding)updateSustain(note,t);
@@ -379,12 +383,21 @@ function character(x,y,color,isNova,t){
   ctx.strokeStyle=color;ctx.lineWidth=6;ctx.beginPath();ctx.arc(0,-29,44,Math.PI,Math.PI*2);ctx.stroke();rect(-48,-36,12,26,color);rect(36,-36,12,26,color);
   ctx.restore();
 }
+let stageDisplayWidth=0;
+function measureStage(){stageDisplayWidth=canvas.getBoundingClientRect?.().width||1120;}
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(measureStage).observe(canvas);
+window.addEventListener('resize',measureStage);
 function prepareStageResolution(){
- const width=canvas.getBoundingClientRect?.().width||1120;
+ if(!stageDisplayWidth)measureStage();
+ const width=stageDisplayWidth;
  const ratio=song.lowSpec?1:Math.min(2,Math.max(1,width*(window.devicePixelRatio||1)/1120));
  const w=Math.round(1120*ratio),h=Math.round(530*ratio);
  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
  ctx.setTransform(w/1120,0,0,h/530,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality=song.lowSpec?'medium':'high';
+}
+const flashEndCache=new WeakMap();
+function opponentFlashEnds(chart){
+ let ends=flashEndCache.get(chart);if(!ends){ends=[];let end=-Infinity;for(const n of chart){end=Math.max(end,n.time+Math.max(.15,n.duration||0));ends.push(end);}flashEndCache.set(chart,ends);}return ends;
 }
 function draw(t){prepareStageResolution();
   ctx.clearRect(0,0,1120,530);const bg=ctx.createLinearGradient(0,0,0,530);bg.addColorStop(0,song.sky[0]);bg.addColorStop(1,song.sky[1]);ctx.fillStyle=bg;ctx.fillRect(0,0,1120,530);
@@ -404,7 +417,10 @@ function draw(t){prepareStageResolution();
   const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);
   ctx.save();if(typeof extraHudAlpha==='function')ctx.globalAlpha=extraHudAlpha(t);
   const opponentLit=[false,false,false,false];
-  for(const n of opponentNotes){if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration))opponentLit[n.lane]=true;}
+  // Prefix end times retain long holds while skipping old receptor flashes.
+  const ends=opponentFlashEnds(opponentNotes);let lo=0,hi=ends.length;
+  while(lo<hi){const mid=(lo+hi)>>>1;if(ends[mid]<=t)lo=mid+1;else hi=mid;}
+  for(let i=lo;i<opponentNotes.length;i++){const n=opponentNotes[i];if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration||0))opponentLit[n.lane]=true;}
   const visibleUntil=t+LEAD/(settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
   for(const side of ['nova','echo']){
     if(impostorVideo)continue;
@@ -422,7 +438,8 @@ function draw(t){prepareStageResolution();
       if(side==='echo')label(['D','F','J','K'][lane],x,settings.scroll==='down'?492:33,10,'#a7b7cd');
     }
     ctx.save();ctx.beginPath();ctx.rect(left,0,366,490);ctx.clip();
-    for(const note of side==='nova'?opponentNotes:notes){
+    const chart=side==='nova'?opponentNotes:notes;
+    for(let i=chartStart(chart);i<chart.length;i++){const note=chart[i];
       if(note.time>visibleUntil)break;
       if(note.done)continue;
       const holding=side==='nova'?note.started:note.holding;

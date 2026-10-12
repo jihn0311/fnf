@@ -15,7 +15,7 @@ async function prepareMod(){lowSpecBackground=null;
  for(const key of modImages.keys())if(!paths.includes(key))modImages.delete(key);
  await Promise.all(paths.map(src=>{
   if(modImages.has(src))return Promise.resolve();
-  return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{modImages.set(src,im);resolve();};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});
+  return new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});
  }));
  if(song.lowSpec)buildLowSpecBackground();
 }

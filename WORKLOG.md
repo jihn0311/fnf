@@ -28,3 +28,11 @@
 - Casanova/Gospel 배경 확대율과 레인 음영 축소. Zavodila 인위적인 화면 흔들림 제거.
 - 모든 곡 출력 캔버스에 화면 크기/DPR 기반 최대 2배 해상도와 고품질 보간 적용, 저사양은 1배. Survent 캐릭터 원본에서 2배 크기로 재변환, BF/GF 불필요 모션 제외, 이미지 내용 해시로 캐시 혼용 방지.
 - 검증: test-game, test-sustain-segments, test-triple, test-mod-fixes 통과. 브라우저 GF 교대/BF miss/연속 노트/2240x1060 렌더링/저사양 전환 통과, 5곡 실제 시작·일시정지·정지 통과. test-extra-game은 기존 카운트다운 4개를 세지 않는 오래된 기대값(2 vs 6)에서 실패, 해당 테스트는 수정하지 않음.
+
+## 2026-10-13 — Impostor grounding and shared runtime optimization
+- Grounded standing Impostor opponents at visible foot baseline 465 (Defeat keeps its zoom-adjusted baseline). Ejected/ Esculent airborne/giant framing remains unchanged. Shared path covers normal and low-spec versions.
+- WeakMap chart cursors skip completed prefixes in note judgments, hold pose selection and drawing. Prefix-max end-time lookup retains opponent sustain/short-tap receptor flashes without rescanning the entire chart. Removed held-key array allocation.
+- Cache transformed Impostor layers, measure canvas display width only on resize, preserve high-resolution rendering, and decode Sonic images before play. Existing effects remain enabled in normal versions.
+- Checks: test-game, test-sustain-segments, test-hurt-priority, test-mod-fixes and test-triple pass. New test-runtime-performance checks 75 mods x normal/low at start/middle/end, 150 paths, no page/resource errors; checks cursor replacement and long-hold prefix handling. Clean canvas screenshot reviewed for Sussus Moogus grounding.
+- Synthetic completed-note traversal: 20,000 old notes over 500 calls, old opponent loop ~18.3 ms total vs new below timer resolution on this machine; this is a CPU microbenchmark, not an FPS or no-stutter guarantee.
+- Updated browser cache hashes.

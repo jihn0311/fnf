@@ -311,14 +311,25 @@ function drawVirusBackdrop(t){
  ctx.drawImage(cache.surface,0,0);
 }
 
+const impostorLayerCache=new WeakMap();
 function impostorLayers(){
  const scene=MOD_ART.scenes[song.sceneKey],v=impostorViewLayout();
- return (scene.nativeLayers||[]).map(l=>({...l,x:v.x+l.x*v.scale,y:v.y+l.y*v.scale,w:l.w*v.scale,h:l.h*v.scale}));
+ let cached=impostorLayerCache.get(scene);
+ if(!cached||cached.scale!==v.scale||cached.x!==v.x||cached.y!==v.y){cached={scale:v.scale,x:v.x,y:v.y,layers:(scene.nativeLayers||[]).map(l=>({...l,x:v.x+l.x*v.scale,y:v.y+l.y*v.scale,w:l.w*v.scale,h:l.h*v.scale}))};impostorLayerCache.set(scene,cached);}
+ return cached.layers;
+}
+function impostorActorY(side,v){
+ const placement=v?.actors[side],nativeY=placement?v.y+placement.y*v.scale:465;
+ // Imported idle frames are trimmed, but native stage positions include transparent
+ // margins. Ground standing opponents by their visible feet, not those margins.
+ if(side!=='nova'||['impostor-ejected','impostor-esculent'].includes(songId))return nativeY;
+ const floor=songId==='impostor-defeat'?265+(465-265)*.82:465;
+ return Math.max(nativeY,floor);
 }
 function drawImpostorActors(t){
  const v=impostorViewLayout();
  if(extraState.ellie&&!extraState.hideSpectator)extraActor('gf',t,530,465);
- for(const side of ['nova','echo']){if(extraState.whoBuzz===1)continue;if(side==='echo'&&extraState.armedEnd!=null&&t>extraState.armedEnd+3.4)continue;if(side==='nova'&&(extraState.hiddenNova||extraState.tomongusDead))continue;const a=v?.actors[side];const x=songId==='impostor-defeat'?(side==='nova'?310:830):(a?v.x+a.x*v.scale:side==='nova'?285:835),y=a?v.y+a.y*v.scale:465;ctx.save();if(side==='nova'&&extraState.turbEnding!=null&&!song.lowSpec){const age=Math.max(0,t-extraState.turbEnding);ctx.translate(x+age*1200,y+age*350);ctx.rotate(age*8);ctx.translate(-x,-y);}extraActor(side,t,x,y);ctx.restore();}
+ for(const side of ['nova','echo']){if(extraState.whoBuzz===1)continue;if(side==='echo'&&extraState.armedEnd!=null&&t>extraState.armedEnd+3.4)continue;if(side==='nova'&&(extraState.hiddenNova||extraState.tomongusDead))continue;const a=v?.actors[side];const x=songId==='impostor-defeat'?(side==='nova'?310:830):(a?v.x+a.x*v.scale:side==='nova'?285:835),y=impostorActorY(side,v);ctx.save();if(side==='nova'&&extraState.turbEnding!=null&&!song.lowSpec){const age=Math.max(0,t-extraState.turbEnding);ctx.translate(x+age*1200,y+age*350);ctx.rotate(age*8);ctx.translate(-x,-y);}extraActor(side,t,x,y);ctx.restore();}
 }
 function drawImpostorStage(t){
  rect(-1120,-530,3360,1590,'#000');
