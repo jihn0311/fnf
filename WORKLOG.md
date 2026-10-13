@@ -70,3 +70,8 @@
 ## 2026-10-14 — D/F/J/K press counters
 - Added independent visible keyboard press counts below score HUD inside the game. Counts playing-state D/F/J/K keydowns once per physical press, including empty hits; excludes held-key repeats, paused input, arrows and touch. Reset on a new start or song change.
 - test-key-counts and test-game pass. Refreshed CSS/JS hashes.
+
+## 2026-10-14 — Dense-chart hot paths
+- Restrict keypress candidate scans to unfinished notes in the current 180ms judgment horizon. Preserve active-sustain precedence and normal-note priority over Deathmatch hazards.
+- Remove per-note 8px Canvas shadow blur (atlas outlines remain) and skip save/translate/rotate/restore for unrotated arrows; retain custom skins, sustains and rotation effects.
+- test-dense-notes: 160-note rendering both scroll directions; 19 predicate visits out of 20,000 notes. This is a functional/work-bound check, not a measured user-device FPS improvement. Judgment, hurt priority, sustain and key-count tests pass. Cache hash refreshed.

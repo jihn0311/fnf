@@ -282,12 +282,16 @@ function judge(note,kind,value,points=note.headPoints||0){
   if(typeof extraAfterJudge==='function')extraAfterJudge(kind);
   updateHud();
 }
+function findPlayableNote(t,predicate){
+  const until=t+.180000001*(settings.rate||1);
+  for(let i=chartStart(notes);i<notes.length;i++){const note=notes[i];if(note.time>until)break;if(predicate(note))return note;}
+}
 function press(lane){
   if(state!=='playing')return;const t=time();flashes[lane]=t+.13;
-  const continuing=notes.find(n=>n.holding&&!n.done&&n.lane===lane&&t<n.time+n.duration);
+  const continuing=findPlayableNote(t,n=>n.holding&&!n.done&&n.lane===lane&&t<n.time+n.duration);
   if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);animateSinger('echo',lane,t,continuing.time+continuing.duration-t);return;}
   const hittable=n=>!n.done&&!n.holding&&n.lane===lane&&(song.pack==='death'&&n.hurt?Math.abs((n.time-t)/(settings.rate||1))<=.045+1e-9:timingResult((n.time-t)/(settings.rate||1)).kind!=='miss');
-  const note=(song.pack==='death'?notes.find(n=>!n.hurt&&hittable(n)):null)||notes.find(hittable);
+  const note=(song.pack==='death'?findPlayableNote(t,n=>!n.hurt&&hittable(n)):null)||findPlayableNote(t,hittable);
   if(note){
     if(note.hurt&&typeof extraHurt==='function'){extraHurt(note,'hit');return;}
     note.hitOffsetMs=(t-note.time)/(settings.rate||1)*1000;
@@ -332,7 +336,11 @@ if(majinSkinImage)majinSkinImage.src='assets/majin-notes.png';
 function endlessSkin(at,receptor=false){return songId==='sonic-endless'&&at>= (receptor?899:912)*60/155/4&&typeof MAJIN_SKIN!=='undefined'&&majinSkinImage?.complete&&majinSkinImage.naturalWidth>0;}
 const endlessSpins=[272,276,336,340,400,404,464,468,528,532,592,596,656,660,720,724,784,788,848,852,912,916,976,980,1040,1044,1104,1108,1424,1428,1488,1492,1552,1556,1616,1620];
 function endlessAngle(t){if(song.lowSpec||songId!=='sonic-endless')return 0;for(let i=endlessSpins.length-1;i>=0;i--){const age=(t-endlessSpins[i]*60/155/4)/(settings.rate||1);if(age>=0)return age<.2?Math.PI*2*(1-(1-age/.2)**5):0;}return 0;}
-function stageArrow(x,y,lane,size,color,fill,t,at=t){ctx.save();ctx.translate(x,y);ctx.rotate(endlessAngle(t)+(!fill&&typeof agotiNoteAngle==='function'?agotiNoteAngle(t):0));arrow(0,0,lane,size,color,fill,endlessSkin(at,!fill));ctx.restore();}
+function stageArrow(x,y,lane,size,color,fill,t,at=t){
+ const angle=endlessAngle(t)+(!fill&&typeof agotiNoteAngle==='function'?agotiNoteAngle(t):0),majin=endlessSkin(at,!fill);
+ if(!angle){arrow(x,y,lane,size,color,fill,majin);return;}
+ ctx.save();ctx.translate(x,y);ctx.rotate(angle);arrow(0,0,lane,size,color,fill,majin);ctx.restore();
+}
 function skinFrame(frame,x,y,width,height,majin=false){
   ctx.drawImage(customNoteSkin()?modImages.get(song.noteSkin.src):majin?majinSkinImage:(song.pack==='silly'&&extraState?.blueNotes?sillyNoteAtlas():noteSkinImage),frame.x,frame.y,frame.width,frame.height,x,y,width,height);
 }
@@ -454,7 +462,7 @@ function draw(t){prepareStageResolution();
       if(note.duration){
         sustainSkin(x,y,tail,note.lane,COLORS[note.lane],endlessSkin(note.time));
       }
-      ctx.shadowColor='#000';ctx.shadowBlur=song.lowSpec?0:8;stageArrow(x,y,note.lane,36,COLORS[note.lane],true,t,note.time);ctx.shadowBlur=0;if(note.type===3||note.type===2)label(note.type===3?'×':'!',x,y+5,15,'#221533');
+      stageArrow(x,y,note.lane,36,COLORS[note.lane],true,t,note.time);if(note.type===3||note.type===2)label(note.type===3?'×':'!',x,y+5,15,'#221533');
     }
     ctx.restore();
     ctx.restore();
