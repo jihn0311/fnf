@@ -250,11 +250,12 @@ async function start(){
   try{
     if(!audio){audio=new AudioContext();master=audio.createGain();master.gain.value=muted?0:.65;master.connect(audio.destination);}
     await audio.resume();
-    await prepareCountdown();
-    if(typeof prepareMod==='function')await prepareMod();
-    // Keep only the current track's stems in memory (long songs can decode to hundreds of MB).
+    // Release the previous song's decoded audio before loading the next stage.
     const voiceSources=song.voiceSources||(song.voiceSrc?[song.voiceSrc]:[]);
     for(const key of audioBuffers.keys())if(key!==song.audioSrc&&!voiceSources.includes(key))audioBuffers.delete(key);
+    await prepareCountdown();
+    if(typeof prepareMod==='function')await prepareMod();
+    $('start').textContent='음원 준비 중…';
     const buffers=song.audioSrc?await Promise.all([loadTrackAudio(song),...voiceSources.map(audioSrc=>loadTrackAudio({audioSrc}))]):[];
     const buffer=buffers[0];
     if(buffer)DURATION=Math.max(...buffers.map(b=>b.duration));

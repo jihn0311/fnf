@@ -16,7 +16,11 @@ async function extraPrepare(){
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
- await Promise.all([...new Set(assets)].map(src=>modImages.has(src)?null:new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;})));
+ // Bound concurrent image decoding to avoid a memory/CPU spike at song changes.
+ const pending=[...new Set(assets)].filter(src=>!modImages.has(src));let next=0,loaded=0;
+ const worker=async()=>{while(next<pending.length){const src=pending[next++];await new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});loaded++;if(state==='loading')$('start').textContent='이미지 준비 중… '+loaded+'/'+pending.length;}};
+ const results=await Promise.allSettled(Array.from({length:Math.min(3,pending.length)},worker));
+ const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
  if(song.pack==='impostor'&&!song.lowSpec)await prepareImpostorVideos();
  if(!song.lowSpec&&(song.pack==='tainted'||song.pack==='silly'))await Promise.all(Object.entries(EXTRA_ART.sounds).map(async([name,src])=>{if(!extraSoundBuffers.has(name)){const response=await fetch(src);if(!response.ok)throw Error('효과음 로드 실패: '+src);extraSoundBuffers.set(name,await audio.decodeAudioData(await response.arrayBuffer()));}}));

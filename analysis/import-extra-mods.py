@@ -49,8 +49,22 @@ def atlas(base,key,definition=None,height=250,bg=False):
   dest=OUT/(key+'-'+str(pageidx)+'.webp');dest.parent.mkdir(parents=True,exist_ok=True);page.crop((0,0,2048,max(1,y+row))).save(dest,quality=84,method=3);result['pages'].append(web(dest));return web(dest)
  for anim,fs in animations.items():
   result['animations'][anim]=[]
-  for f in fs:
-   token=f['name']
+  previous=None
+  for original in fs:
+   f=original
+   def pixels(frame):
+    a,b,w,h=[int(frame[k]) for k in ['x','y','width','height']]
+    return image.crop((a,b,a+w,b+h))
+   raw=pixels(f)
+   # The supplied Selever sheet has seven transparent Up frames. Keep timing,
+   # holding the last visible pose instead of making the singer disappear.
+   if key.endswith('/characters/selever') and not raw.getbbox():
+    f=previous or next((candidate for candidate in fs if pixels(candidate).getbbox()),None)
+    if f is None:raise ValueError('Animation has no visible frame: '+key+'/'+anim)
+    raw=pixels(f)
+   previous=f
+   # Repeated source frames share texture storage; animation entries stay intact.
+   token=(hashlib.sha256(raw.tobytes()).digest(),raw.size,tuple(f.get(k) for k in ['frameX','frameY','frameWidth','frameHeight','rotated']))
    if token not in packed:
     a,b,w,h=[int(f[k]) for k in ['x','y','width','height']];im=image.crop((a,b,a+w,b+h))
     if f.get('rotated','false').lower()=='true':im=im.transpose(Image.Transpose.ROTATE_90)

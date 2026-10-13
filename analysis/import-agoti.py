@@ -1,5 +1,5 @@
 from pathlib import Path
-import json
+import json,hashlib
 root=Path(__file__).resolve().parent.parent
 helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)}
 exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0],ns)
@@ -22,6 +22,13 @@ for slug in ['screenplay','parasite','a.g.o.t.i','guns']:
  folder=r/'songs'/slug;duration=max(ns['duration'](folder/n) for n in ['Inst.ogg','Voices.ogg'])
  songs[sid]={'title':'A.G.O.T.I · '+base['song'],'pack':'agoti','sceneKey':sid,'stage':'agoti-void' if crazy else 'agoti','bpm':base['bpm'],'bpmByDifficulty':bpms,'duration':duration,'beats':duration*base['bpm']/60,'defaultDifficulty':'hard','genre':'A.G.O.T.I','description':'원본 음원·Easy / Normal / Hard 채보 · Agoti 무대','charts':charts,'sectionsByDifficulty':sections,'sections':sections['hard'],'events':{diff:[] for diff in charts},'sourceCharts':source,'audioSrc':ns['copy'](folder/'Inst.ogg','agoti/audio/'+slug),'voiceSrc':ns['copy'](folder/'Voices.ogg','agoti/audio/'+slug),'sky':['#5b4354','#17121e']}
  print(slug,{diff:len(chart['echo']) for diff,chart in charts.items()},flush=True)
+def version_assets(value):
+ if isinstance(value,dict):return {k:version_assets(v) for k,v in value.items()}
+ if isinstance(value,list):return [version_assets(v) for v in value]
+ if isinstance(value,str) and value.startswith('assets/extra-mods/agoti/') and value.endswith('.webp'):
+  return value+'?v='+hashlib.sha256((root/value).read_bytes()).hexdigest()[:12]
+ return value
+art=version_assets(art)
 (root/'agoti-mod.js').write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst AGOTI_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],AGOTI_ART[key]);\nObject.assign(EXTRA_ART.sprites,AGOTI_ART.sprites);\n',encoding='utf-8')
 # Remove superseded generated atlas pages within this pack only.
 used=set()
@@ -30,7 +37,7 @@ def collect(value):
   for child in value.values():collect(child)
  elif isinstance(value,list):
   for child in value:collect(child)
- elif isinstance(value,str) and value.startswith('assets/extra-mods/agoti/'):used.add(value)
+ elif isinstance(value,str) and value.startswith('assets/extra-mods/agoti/'):used.add(value.split('?')[0])
 collect(art)
 stage_dir=(root/'assets/extra-mods/agoti/stage').resolve()
 for old in stage_dir.glob('*.webp'):
