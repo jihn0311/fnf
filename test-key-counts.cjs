@@ -11,6 +11,6 @@ for(const [lane,key] of [[1,'f'],[2,'j'],[3,'k']])inputDown('key:'+key,lane);
 assert.equal(keyPressCounts.join(','),'2,1,1,1');assert.equal($('count-d').textContent,'2');
 inputDown('key:ArrowLeft',0);inputDown('pointer:1',0);assert.equal(keyPressCounts[0],2);
 state='paused';inputUp('key:f');inputDown('key:f',1);assert.equal(keyPressCounts[1],1);
-resetKeyPressCounts();assert.equal(keyPressCounts.join(','),'0,0,0,0');assert.equal($('count-d').textContent,'0');
+showKeyPressCounts();assert.equal(keyPressCounts.join(','),'2,1,1,1');assert.equal($('count-d').textContent,'2');
 console.log('PASS separate key counts, repeated holds, simultaneous keys, pause, arrows/touch exclusion and reset');
 `,sandbox);

@@ -75,3 +75,8 @@
 - Restrict keypress candidate scans to unfinished notes in the current 180ms judgment horizon. Preserve active-sustain precedence and normal-note priority over Deathmatch hazards.
 - Remove per-note 8px Canvas shadow blur (atlas outlines remain) and skip save/translate/rotate/restore for unrotated arrows; retain custom skins, sustains and rotation effects.
 - test-dense-notes: 160-note rendering both scroll directions; 19 predicate visits out of 20,000 notes. This is a functional/work-bound check, not a measured user-device FPS improvement. Judgment, hurt priority, sustain and key-count tests pass. Cache hash refreshed.
+
+## 2026-10-14 — Persistent illuminated keycaps
+- D/F/J/K counts now accumulate across songs and restarts in localStorage for this browser. Writes coalesced once per second and flushed on focus loss/pagehide to avoid synchronous storage on every note. Storage errors safely retain in-memory counting.
+- Square keycaps illuminate while their physical key is held, clearing on release/focus loss. Counts remain playing-only; repeat suppression retained.
+- test-key-persistence verifies lighting, deferred persistence, reload and song switching. test-key-counts and test-game pass. Updated cache hashes.

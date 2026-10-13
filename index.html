@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NEON DUET — 네온 듀엣</title>
-  <link rel="stylesheet" href="style.css?v=1282663cb1c8">
+  <link rel="stylesheet" href="style.css?v=f4d2bb61aa06">
 </head>
 <body>
   <main class="app">
@@ -26,7 +26,7 @@
       <div id="overlay" class="overlay"><div class="intro"><span id="overline" class="eyebrow">YOUR STAGE IS WAITING</span><h2 id="title">비트 위에 올라타.</h2><p id="description">왼쪽은 상대, 오른쪽은 당신의 무대.<br>내 파트와 합주에서는 오른쪽 노트를 연주하세요.<br>긴 노트는 끝까지 누르면 자동 성공!</p><button id="start" class="primary">플레이 시작 <span>↗</span></button><div id="pause-actions" class="pause-actions" hidden><button id="restart" disabled>↻ 처음부터 재시작</button><button id="stop-song" disabled>■ 곡 멈추기</button></div><small id="hint">방향키 또는 D · F · J · K</small></div></div>
       </div>
         <div class="battle-stats"><span>SCORE <strong id="score">000000</strong></span><span>ACCURACY <strong id="accuracy">—</strong></span><span>COMBO <strong id="combo">0</strong></span><span>MISS <strong id="misses">0</strong></span></div>
-      <div class="key-counts" aria-label="이번 곡 키 입력 횟수"><span><kbd>D</kbd> <strong id="count-d">0</strong></span><span><kbd>F</kbd> <strong id="count-f">0</strong></span><span><kbd>J</kbd> <strong id="count-j">0</strong></span><span><kbd>K</kbd> <strong id="count-k">0</strong></span></div>
+      <div class="key-counts" aria-label="누적 키 입력 횟수" title="이 브라우저에 저장되는 누적 횟수"><span id="keycap-d" class="keycap"><kbd>D</kbd> <strong id="count-d">0</strong></span><span id="keycap-f" class="keycap"><kbd>F</kbd> <strong id="count-f">0</strong></span><span id="keycap-j" class="keycap"><kbd>J</kbd> <strong id="count-j">0</strong></span><span id="keycap-k" class="keycap"><kbd>K</kbd> <strong id="count-k">0</strong></span></div>
       <div class="stage-footer"><span><i></i> <b id="status">READY TO PLAY</b></span><span id="time">00:00 / 00:48</span><button id="fullscreen" aria-label="게임 전체화면" aria-pressed="false">⛶ 전체화면</button><button id="pause" disabled>일시정지 <kbd>ESC / Enter</kbd></button></div>
     </section>
     <section class="bottom"><div class="controls" aria-label="터치 입력"><button data-lane="0" aria-label="왼쪽">←<kbd>D</kbd></button><button data-lane="1" aria-label="아래">↓<kbd>F</kbd></button><button data-lane="2" aria-label="위">↑<kbd>J</kbd></button><button data-lane="3" aria-label="오른쪽">→<kbd>K</kbd></button><span>키보드로, 또는 터치로.<br><b>판정선에 맞춰 리듬을 이어가세요.</b></span></div><div class="legend"><span><i class="pink"></i>NOVA <small>THE SPARK</small></span><span><i class="cyan"></i>ECHO <small>THAT'S YOU</small></span></div></section>
@@ -34,7 +34,7 @@
     <footer><span>MADE OF PIXELS & PULSE</span><span>오리지널 캐릭터 · 신스 곡 + 사용자 제공 음원</span></footer>
     <div class="mod-controls"><button id="mod-cutscene" hidden>🎬 컷신 보기</button><button id="ring-input" hidden>◎ 링 · SPACE</button><p id="mod-help"></p></div>
     <div id="mod-cinema" hidden><button id="close-cinema">닫기 / ESC</button><select id="mod-video-choice" aria-label="컷신 선택"></select><video id="mod-video" controls playsinline></video></div>
-  </main><script src="imported-chart.js?v=fba3dfba82bf"></script><script src="mod-songs.js?v=db52a15de005"></script><script src="mod-art.js?v=8b061cd959ba"></script><script src="extra-mods.js?v=358d7913f873"></script><script src="silly-mod.js?v=0ee9ef3138d3"></script><script src="impostor-mod.js?v=046fe6b2fb67"></script><script src="survent-mod.js?v=437f624006e8"></script><script src="selever2-mod.js?v=f09002fba1ab"></script><script src="agoti-mod.js?v=ffecd5b4df06"></script><script src="silly-lyrics.js?v=07c7c993de51"></script><script src="mod-runtime.js?v=b4ea4a07a7ce"></script><script src="triple-runtime.js?v=58ad7684e931"></script><script src="extra-runtime.js?v=d05dede69129"></script><script src="silly-runtime.js?v=5ed47ac8cf17"></script><script src="note-skin.js?v=92fbdce1b2fe"></script><script src="game.js?v=2b97e9ab8a13"></script>
+  </main><script src="imported-chart.js?v=fba3dfba82bf"></script><script src="mod-songs.js?v=db52a15de005"></script><script src="mod-art.js?v=8b061cd959ba"></script><script src="extra-mods.js?v=358d7913f873"></script><script src="silly-mod.js?v=0ee9ef3138d3"></script><script src="impostor-mod.js?v=046fe6b2fb67"></script><script src="survent-mod.js?v=437f624006e8"></script><script src="selever2-mod.js?v=f09002fba1ab"></script><script src="agoti-mod.js?v=ffecd5b4df06"></script><script src="silly-lyrics.js?v=07c7c993de51"></script><script src="mod-runtime.js?v=b4ea4a07a7ce"></script><script src="triple-runtime.js?v=58ad7684e931"></script><script src="extra-runtime.js?v=d05dede69129"></script><script src="silly-runtime.js?v=5ed47ac8cf17"></script><script src="note-skin.js?v=92fbdce1b2fe"></script><script src="game.js?v=2a48a4e191da"></script>
 <script>
 document.getElementById('mod-cutscene').onclick=showModVideo;
 document.getElementById('close-cinema').onclick=closeModVideo;
