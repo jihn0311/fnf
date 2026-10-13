@@ -291,7 +291,7 @@ function extraHurt(note,kind){
  if(kind!=='miss'){
   health=Math.max(0,health-15);combo=0;score-=100;judged++;hits.miss++;
   feedback='HURT · MISS';feedbackOffsetMs=null;feedbackAt=time();feedbackColor='#ff4d6a';
-  animateSinger('echo',note.lane,time(),0,true);
+  
   extraState.flashes.push({at:time(),duration:.35,color:'#e90000',alpha:.4});updateHud();
  }
  return true;

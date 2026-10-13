@@ -62,3 +62,7 @@
 - Selever atlas repacked at existing resolution, WebP quality 90. BF/GF lossless repacking increased downloads, so those assets/metadata remain unchanged. Existing Survent song/chart data remains unchanged.
 - Limit extra-pack image loads/decodes to 3 workers; await all workers on failure before returning. Release previous decoded audio before preparing the next stage; show image progress separately from audio preparation. Playback still starts after image and full instrumental/vocal decoding, followed by scheduled countdown.
 - test-agoti: all 8 normal/low playback paths and source charts passed. test-recent-loading: Casanova/Demonila/Attack normal/low playback passed with no page/resource errors. analysis/test-selever-frames verifies every pose and retained Up timing. Nightmare and sustain regressions passed. Manifest checked; cache hashes refreshed.
+
+## 2026-10-14 — Disable miss poses
+- Removed failure-pose triggers for ordinary misses, sustain misses and hurt notes. Existing singing poses complete normally; MISS feedback, score, combo, health and hazard penalties remain unchanged.
+- test-game, test-sustain-segments, test-hurt-priority and test-nightmare pass. Refreshed script cache hashes.

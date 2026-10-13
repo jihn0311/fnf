@@ -270,7 +270,7 @@ async function start(){
 }
 function judge(note,kind,value,points=note.headPoints||0){
   if(note.done)return;if(typeof modJudge==='function'&&modJudge(note,kind))return;note.done=true;note.holding=false;judged++;earned+=value;hits[kind]++;feedback=kind.toUpperCase();feedbackOffsetMs=kind==='miss'?null:(note.hitOffsetMs??null);feedbackAt=time();
-  if(kind==='miss'){animateSinger('echo',note.lane,time(),0,true);score-=100;combo=0;if(!(typeof destructionInvulnerable==='function'&&destructionInvulnerable()))health=Math.max(0,health-3);feedbackColor='#f58bc6';}
+  if(kind==='miss'){score-=100;combo=0;if(!(typeof destructionInvulnerable==='function'&&destructionInvulnerable()))health=Math.max(0,health-3);feedbackColor='#f58bc6';}
   else{
     if(kind==='bad'){combo=0;if(!(typeof destructionInvulnerable==='function'&&destructionInvulnerable()))health=Math.max(0,health-1);}else{combo++;maxCombo=Math.max(combo,maxCombo);health=Math.min(100,health+1.4);}
     score+=points;feedbackColor=kind==='perfect'?'#8cf5d9':kind==='good'?'#82e6f5':'#ffd491';
