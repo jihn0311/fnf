@@ -132,6 +132,9 @@ function extraActor(side,t,x,y,black=false){
   const offsetScale=a.scale/(a.nativeScale||1);
   const originX=-idle.w/2-idle.ox+idleOff[0]*offsetScale,originY=-idle.h-idle.oy+idleOff[1]*offsetScale;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
+ }else if(song.pack==='agoti'){
+  const anchor=a.animations[key]?.[0]||a.animations.idle[0];
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
  }else if(song.pack==='silly'||song.pack==='survent'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
@@ -150,6 +153,8 @@ function extraStage(t){
  if(s.follow)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
  if(song.pack==='impostor'){
   drawImpostorStage(t);
+ }else if(song.pack==='agoti'){
+  drawAgotiStage(t);
  }else if(song.pack==='survent'){
   if(song.pack==='survent'&&song.stage==='churchSelever'){
    for(const layer of casanovaLayers())extraSprite(layer.key,t,layer.x,layer.y,layer.w,layer.h);
@@ -464,4 +469,25 @@ function drawSurventStage(t){
  if(gospel){rect(0,0,1120,530,'#49192b40');surventRing(t,550,150,600);}
  if(!gospel){ctx.save();ctx.fillStyle='#ffffff70';for(let i=0;i<14;i++){const x=(i*193+t*9)%1120,y=(i*89-t*6)%530;ctx.beginPath();ctx.arc(x,(y+530)%530,1.5,0,Math.PI*2);ctx.fill();}ctx.restore();}
  drawSurventActors(t);ctx.restore();
+}
+
+// Original Agoti assets; stage framing adapted to the 1120 x 530 canvas.
+function agotiLayers(){
+ const layer=(name,x,y,w,h)=>({key:'agoti/stage/'+name,x,y,w,h});
+ if(song.stage==='agoti-void')return [layer('The_void',0,0,1120,530),layer('Pillar_BG_Stage',-60,0,1240,610),layer('Pillar_BG',20,60,300,500),layer('Pillar_FG',-20,400,1160,400)];
+ return [layer('The_void',0,0,1120,530),layer('Void_Back',0,0,1120,480),layer('Void_Front',-70,-55,1260,817)];
+}
+function drawAgotiActors(t){
+ extraActor('gf',t,565,song.stage==='agoti-void'?425:405);
+ extraActor('nova',t,270,480);extraActor('echo',t,850,480);
+}
+function drawAgotiStage(t){
+ for(const l of agotiLayers())extraSprite(l.key,t,l.x,l.y,l.w,l.h,'idle',12,true);
+ drawAgotiActors(t);
+}
+function agotiNoteAngle(t){
+ if(song.lowSpec||songId!=='agoti-a.g.o.t.i')return 0;
+ const step=t/BEAT*4;
+ for(const at of [120,248,375,632,696,824,952,1208]){const elapsed=(step-at)*BEAT/4;if(elapsed>=0&&elapsed<.6)return elapsed/.6*Math.PI*2;}
+ return 0;
 }

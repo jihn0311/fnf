@@ -328,7 +328,7 @@ if(majinSkinImage)majinSkinImage.src='assets/majin-notes.png';
 function endlessSkin(at,receptor=false){return songId==='sonic-endless'&&at>= (receptor?899:912)*60/155/4&&typeof MAJIN_SKIN!=='undefined'&&majinSkinImage?.complete&&majinSkinImage.naturalWidth>0;}
 const endlessSpins=[272,276,336,340,400,404,464,468,528,532,592,596,656,660,720,724,784,788,848,852,912,916,976,980,1040,1044,1104,1108,1424,1428,1488,1492,1552,1556,1616,1620];
 function endlessAngle(t){if(song.lowSpec||songId!=='sonic-endless')return 0;for(let i=endlessSpins.length-1;i>=0;i--){const age=(t-endlessSpins[i]*60/155/4)/(settings.rate||1);if(age>=0)return age<.2?Math.PI*2*(1-(1-age/.2)**5):0;}return 0;}
-function stageArrow(x,y,lane,size,color,fill,t,at=t){ctx.save();ctx.translate(x,y);ctx.rotate(endlessAngle(t));arrow(0,0,lane,size,color,fill,endlessSkin(at,!fill));ctx.restore();}
+function stageArrow(x,y,lane,size,color,fill,t,at=t){ctx.save();ctx.translate(x,y);ctx.rotate(endlessAngle(t)+(!fill&&typeof agotiNoteAngle==='function'?agotiNoteAngle(t):0));arrow(0,0,lane,size,color,fill,endlessSkin(at,!fill));ctx.restore();}
 function skinFrame(frame,x,y,width,height,majin=false){
   ctx.drawImage(customNoteSkin()?modImages.get(song.noteSkin.src):majin?majinSkinImage:(song.pack==='silly'&&extraState?.blueNotes?sillyNoteAtlas():noteSkinImage),frame.x,frame.y,frame.width,frame.height,x,y,width,height);
 }
@@ -533,7 +533,7 @@ function rebuildSongPicker(){
   const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry;
   if(!!track.lowSpec!==low)continue;
   const family=track.pack|| (id.startsWith('sonic-')||track.baseSongId?.startsWith('sonic-')?'sonic':'original');
-  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses',original:'기본 곡 / 추가 음악'}[family]||family;
+  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses',agoti:'A.G.O.T.I',original:'기본 곡 / 추가 음악'}[family]||family;
   if(!groups.has(name)){const group=document.createElement('optgroup');group.label=name;groups.set(name,group);picker.appendChild(group);}
   const option=document.createElement('option');option.value=id;option.textContent=track.title.replace(/ \[저사양\]$/,'');groups.get(name).appendChild(option);
  }

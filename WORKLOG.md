@@ -48,3 +48,10 @@
 ## 2026-10-13 — Nonlethal nightmare opponent drain
 - Opponent note drain stops at 1 health. Health already below 1 stays unchanged; zero health is never revived. Player MISS/BAD and hazard damage still apply normally. Applies to all songs and both performance modes.
 - test-nightmare checks normal drain, threshold crossing, 100 repeated hits, sub-floor health, zero health, lethal player judgments, disabled nightmare and invulnerability. test-game and test-sustain-segments pass. Updated browser cache hash.
+
+## 2026-10-13 — A.G.O.T.I mod
+- Added source freeplay order Screenplay, Parasite, A.G.O.T.I, Guns (bonus), original Inst/Voices and Easy/Normal/Hard charts, plus normal/low-spec entries and dedicated picker group.
+- Imported normal/angry Agoti, original BF including misses, GF and rock GF. Uses original void/platform/pillar art in an adapted canvas layout. Large background atlases reduced to 320px reference height; low-spec prerenders a still background.
+- A.G.O.T.I Lua: 10px cosine lane motion, 360-degree receptor turns at steps 120,248,375,632,696,824,952,1208 over 0.6s. Disabled for low-spec. Original engine easing, stage layout and animation offsets are approximations; story dialogue/cutscenes excluded.
+- test-agoti passed four songs x three difficulties note time/lane match (1.1 microsecond rounding tolerance), sustain endpoints, 8 actual normal/low playback paths, stage start/middle/end, all singing directions, correct cast, note effects and pause/reset with no page/resource errors. Screenplay and angry stage captures reviewed. test-nightmare and test-game pass.
+- Manifest and JS cache hashes updated.

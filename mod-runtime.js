@@ -20,6 +20,7 @@ async function prepareMod(){lowSpecBackground=null;
  if(song.lowSpec)buildLowSpecBackground();
 }
 function modOffset(lane,side,t){if(song.lowSpec)return {x:0,y:0};
+ if(songId==='agoti-a.g.o.t.i')return {x:0,y:10*Math.cos((t/BEAT+(lane+(side==='echo'?4:0))*.25)*Math.PI)};
  if(modSlug()!=='too-slow')return {x:0,y:0};
  const step=t*song.bpm/60*4,phase=(t*song.bpm/84+(lane+(side==='echo'?4:0))*.25)*Math.PI;
  return {x:step>=1049&&step<1176?2*Math.sin(phase):step>=1177&&step<1959?-6*Math.sin(phase):0,y:step>=789&&step<923?5*Math.sin(phase):step>=924&&step<1048?-5*Math.sin(phase):0};
@@ -111,6 +112,7 @@ function drawLowSpecStage(t){
   if(!extraState||extraState.id!==songId)extraReset();
   if(song.pack==='survent'&&song.stage==='churchSelever')drawCasanovaActors(t);
   else if(song.pack==='survent')drawSurventActors(t);
+  else if(song.pack==='agoti')drawAgotiActors(t);
   else if(song.pack==='impostor')drawImpostorActors(t);
   else if(songId==='virus-virus-r')extraActor('nova',t,560,465);
   else{const swapped=songId==='tainted-destruction'&&t>=112*BEAT;extraActor('nova',t,swapped?835:285,465);extraActor('echo',t,swapped?285:835,465);}
@@ -125,6 +127,7 @@ function lowSpecLayers(){
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
  if(song.pack==='survent'&&song.stage==='churchSelever')return casanovaLayers();
  if(song.pack==='survent')return surventLayers();
+ if(song.pack==='agoti')return agotiLayers();
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){
  const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';
