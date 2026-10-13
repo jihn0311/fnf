@@ -44,3 +44,7 @@
 - Hard player notes: Casanova 659, Demonila 413, Attack 736.
 - Fixed missing-icon URL fallback during song selection.
 - Validation: test-selever2 passes all source note-time/lane sets for 3 songs x 3 difficulties, character/audio preservation, six normal/low playback paths, decoded duration, source counts, start/middle/end drawing and pause/reset without missing resources. Reviewed Attack canvas capture; test-game and test-sustain-segments pass. Deployment manifest checked and cache hashes refreshed.
+
+## 2026-10-13 — Nonlethal nightmare opponent drain
+- Opponent note drain stops at 1 health. Health already below 1 stays unchanged; zero health is never revived. Player MISS/BAD and hazard damage still apply normally. Applies to all songs and both performance modes.
+- test-nightmare checks normal drain, threshold crossing, 100 repeated hits, sub-floor health, zero health, lethal player judgments, disabled nightmare and invulnerability. test-game and test-sustain-segments pass. Updated browser cache hash.
