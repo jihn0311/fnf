@@ -32,3 +32,5 @@
 #fullscreen{white-space:nowrap}
 
 .song-picker{flex-wrap:wrap}.song-picker .mode-picker{display:flex;flex-direction:column;gap:6px;font-size:10px;color:#a1a6b3}.song-picker .mode-picker select{min-width:135px;width:150px}.song-picker>#song{flex:1;min-width:220px}@media(max-width:700px){.song-picker .mode-picker select,.song-picker>#song{width:100%;min-width:0}}
+
+.key-counts{display:flex;justify-content:center;gap:24px;padding:6px 12px;background:#0c1320;color:#dbe6ef;font:12px monospace}.key-counts span{display:flex;align-items:center;gap:8px}.key-counts kbd{color:#8cf5d9}.key-counts strong{min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}

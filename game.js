@@ -121,8 +121,11 @@ function targetY(){return settings.scroll==='down'?448:82;}
 function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
 function laneHeld(lane){for(const value of held.values())if(value===lane)return true;return false;}
 function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));}
+let keyPressCounts=[0,0,0,0];
+function resetKeyPressCounts(){keyPressCounts=[0,0,0,0];for(const key of ['d','f','j','k']){const node=$('count-'+key);if(node)node.textContent='0';}}
 function inputDown(source,lane){
   if(held.has(source))return;
+  if(state==='playing'&&source==='key:'+['d','f','j','k'][lane]){keyPressCounts[lane]++;const node=$('count-'+['d','f','j','k'][lane]);if(node)node.textContent=String(keyPressCounts[lane]);}
   if(state==='playing')updateNotes(time());
   const wasHeld=laneHeld(lane);held.set(source,lane);refreshButtons();
   if(!wasHeld)press(lane);
@@ -259,7 +262,7 @@ async function start(){
     const buffers=song.audioSrc?await Promise.all([loadTrackAudio(song),...voiceSources.map(audioSrc=>loadTrackAudio({audioSrc}))]):[];
     const buffer=buffers[0];
     if(buffer)DURATION=Math.max(...buffers.map(b=>b.duration));
-    notes=createChart();opponentNotes=createChart(settings.difficulty,'nova');buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
+    resetKeyPressCounts();notes=createChart();opponentNotes=createChart(settings.difficulty,'nova');buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
     startTime=audio.currentTime+5*BEAT/(settings.rate||1)+.05;for(const stem of buffers)playTrackBuffer(stem,startTime);
     countdownBuffers.forEach((sound,i)=>playTrackBuffer(sound,startTime-(4-i)*BEAT/(settings.rate||1)));
     state='playing';$('overlay').classList.add('hidden');$('pause').disabled=false;$('pause').innerHTML='일시정지 <kbd>ESC / Enter</kbd>';$('status').textContent='LIVE / '+song.title.toUpperCase();updateHud();
@@ -495,7 +498,7 @@ for(const button of document.querySelectorAll('[data-lane]')){
 function loseFocus(){if(state==='loading')pauseAfterLoad=true;if(state==='playing')pause();held.clear();refreshButtons();}
 window.addEventListener('blur',loseFocus);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)loseFocus();});
-for(const id of ['song','difficulty','scroll','speed','rate'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';$('hint').textContent='방향키 또는 D · F · J · K';$('status').textContent='READY TO PLAY';}}});
+for(const id of ['song','difficulty','scroll','speed','rate'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){resetKeyPressCounts();state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';$('hint').textContent='방향키 또는 D · F · J · K';$('status').textContent='READY TO PLAY';}}});
 function changeScrollSpeed(value){
  const speed=Math.min(5,Math.max(.25,Number(value)||1));settings.speed=speed;
  $('speed').value=String(speed);$('speed-number').value=String(speed);$('speed-value').textContent=speed.toFixed(2)+'×';

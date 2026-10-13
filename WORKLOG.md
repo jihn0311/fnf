@@ -66,3 +66,7 @@
 ## 2026-10-14 — Disable miss poses
 - Removed failure-pose triggers for ordinary misses, sustain misses and hurt notes. Existing singing poses complete normally; MISS feedback, score, combo, health and hazard penalties remain unchanged.
 - test-game, test-sustain-segments, test-hurt-priority and test-nightmare pass. Refreshed script cache hashes.
+
+## 2026-10-14 — D/F/J/K press counters
+- Added independent visible keyboard press counts below score HUD inside the game. Counts playing-state D/F/J/K keydowns once per physical press, including empty hits; excludes held-key repeats, paused input, arrows and touch. Reset on a new start or song change.
+- test-key-counts and test-game pass. Refreshed CSS/JS hashes.
