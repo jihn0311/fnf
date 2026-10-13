@@ -36,3 +36,11 @@
 - Checks: test-game, test-sustain-segments, test-hurt-priority, test-mod-fixes and test-triple pass. New test-runtime-performance checks 75 mods x normal/low at start/middle/end, 150 paths, no page/resource errors; checks cursor replacement and long-hold prefix handling. Clean canvas screenshot reviewed for Sussus Moogus grounding.
 - Synthetic completed-note traversal: 20,000 old notes over 500 calls, old opponent loop ~18.3 ms total vs new below timer resolution on this machine; this is a CPU microbenchmark, not an FPS or no-stutter guarantee.
 - Updated browser cache hashes.
+
+## 2026-10-13 — Selected Selever 2.1 charts and two tracks
+- User selected Attack and Demonila. Added original instrumental/vocal stems and Easy/Normal/Hard charts, reusing existing Selever, BF, GF and Casanova church framing in normal/low-spec modes. New mod character art and scripted transformation/ghost-trail effects are not imported.
+- Casanova now uses Selever 2.1 charts for all three difficulties; existing characters, stage, audio and visual effects retained. Both source Casanova stems are byte-identical to existing stems.
+- Dedicated import-selever2.py emits a data-only overlay loaded after survent-mod.js, so original art import remains independent. Default Hard. Existing importer deduplicates simultaneous same-lane notes and trims overlapping same-lane holds.
+- Hard player notes: Casanova 659, Demonila 413, Attack 736.
+- Fixed missing-icon URL fallback during song selection.
+- Validation: test-selever2 passes all source note-time/lane sets for 3 songs x 3 difficulties, character/audio preservation, six normal/low playback paths, decoded duration, source counts, start/middle/end drawing and pause/reset without missing resources. Reviewed Attack canvas capture; test-game and test-sustain-segments pass. Deployment manifest checked and cache hashes refreshed.

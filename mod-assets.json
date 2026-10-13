@@ -890,5 +890,10 @@
   "assets/extra-mods/survent/characters/sarvente-lucifer-1.webp",
   "assets/extra-mods/survent/characters/sarvente-lucifer-2.webp",
   "assets/extra-mods/survent/characters/selever-1.webp",
-  "assets/extra-mods/survent/characters/selever-2.webp"
+  "assets/extra-mods/survent/characters/selever-2.webp",
+  "selever2-mod.js",
+  "assets/extra-mods/survent/audio/attack/Inst.ogg",
+  "assets/extra-mods/survent/audio/attack/Voices.ogg",
+  "assets/extra-mods/survent/audio/demonila/Inst.ogg",
+  "assets/extra-mods/survent/audio/demonila/Voices.ogg"
 ]

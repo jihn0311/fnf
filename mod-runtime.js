@@ -92,7 +92,7 @@ function syncModUI(){
  if($('opponent-name'))$('opponent-name').textContent=enemy;
  if($('player-name'))$('player-name').textContent=scene?'BOYFRIEND':'ECHO';
  for(const [id,name,text] of [['enemy-avatar',scene?.opponent,'N'],['player-avatar',scene?.player,'E']]){
-  const node=$(id);if(!node)continue;node.textContent=name?'':text;node.style.backgroundImage=name?'url("'+MOD_ART.characters[name].icon+'")':'';node.style.backgroundSize='contain';node.style.backgroundRepeat='no-repeat';node.style.backgroundPosition='center';
+  const node=$(id);if(!node)continue;const icon=name&&MOD_ART.characters[name]?.icon;node.textContent=icon?'':text;node.style.backgroundImage=icon?'url("'+icon+'")':'';node.style.backgroundSize='contain';node.style.backgroundRepeat='no-repeat';node.style.backgroundPosition='center';
  }
  const status=$('mod-help');
  if(status)status.textContent=modActive()?'원본 아트 · 웹 연출 재현 | 금색 링: SPACE · 보라색 PHANTOM: 피하기 · 흰색 STATIC: 화면 효과':'';
@@ -109,7 +109,7 @@ function drawLowSpecStage(t){
  if(lowSpecBackground)ctx.drawImage(lowSpecBackground,0,0);else{rect(0,0,1120,530,'#171d2b');rect(0,460,1120,70,'#101522');}
  if(song.pack){
   if(!extraState||extraState.id!==songId)extraReset();
-  if(songId==='survent-casanova')drawCasanovaActors(t);
+  if(song.pack==='survent'&&song.stage==='churchSelever')drawCasanovaActors(t);
   else if(song.pack==='survent')drawSurventActors(t);
   else if(song.pack==='impostor')drawImpostorActors(t);
   else if(songId==='virus-virus-r')extraActor('nova',t,560,465);
@@ -123,7 +123,7 @@ let lowSpecBackground=null;
 function lowSpecLayers(){
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
- if(songId==='survent-casanova')return casanovaLayers();
+ if(song.pack==='survent'&&song.stage==='churchSelever')return casanovaLayers();
  if(song.pack==='survent')return surventLayers();
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){

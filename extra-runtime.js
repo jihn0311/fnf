@@ -151,7 +151,7 @@ function extraStage(t){
  if(song.pack==='impostor'){
   drawImpostorStage(t);
  }else if(song.pack==='survent'){
-  if(songId==='survent-casanova'){
+  if(song.pack==='survent'&&song.stage==='churchSelever'){
    for(const layer of casanovaLayers())extraSprite(layer.key,t,layer.x,layer.y,layer.w,layer.h);
    const strength=casanovaEffect(t);
    if(strength>0){rect(0,0,1120,530,'rgba(0,0,0,'+(.48*strength)+')');ctx.save();ctx.globalAlpha=.85*strength;ctx.translate(250,285);ctx.rotate(t*.35);extraSprite('survent/fx/circle',t,-225,-225,450,450);ctx.restore();}
