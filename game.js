@@ -467,7 +467,8 @@ function draw(t){prepareStageResolution();
       if(note.duration){
         sustainSkin(x,y,tail,note.lane,COLORS[note.lane],endlessSkin(note.time));
       }
-      stageArrow(x,y,note.lane,36,COLORS[note.lane],true,t,note.time);if(note.type===3||note.type===2)label(note.type===3?'×':'!',x,y+5,15,'#221533');
+      if(typeof drawSonicSpecialNote==='function'&&drawSonicSpecialNote(note,x,y,t))continue;
+      stageArrow(x,y,note.lane,36,COLORS[note.lane],true,t,note.time);
     }
     ctx.restore();
     ctx.restore();

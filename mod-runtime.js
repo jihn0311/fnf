@@ -10,7 +10,9 @@ async function prepareMod(){lowSpecBackground=null;
  if(song.pack){await extraPrepare();if(song.lowSpec)buildLowSpecBackground();return;}
  const slug=modSlug(),scene=MOD_ART.scenes[slug];
  const chars=[scene.opponent,scene.player,...(slug==='triple-trouble'?song.visualTimelineByDifficulty[settings.difficulty].flatMap(p=>[p.opponent,p.player]):[])];
- const paths=[...MOD_ART.backgrounds[slug],...chars.map(c=>MOD_ART.characters[c].src)];
+ const specialTypes=new Set(Object.values(song.charts?.[settings.difficulty]||{}).flat().map(n=>n.type));
+ const specialPaths=typeof SONIC_SPECIAL_SKINS!=='undefined'?Object.entries(SONIC_SPECIAL_SKINS).filter(([type])=>specialTypes.has(Number(type))).map(([,skin])=>skin.src):[];
+ const paths=[...specialPaths,...MOD_ART.backgrounds[slug],...chars.map(c=>MOD_ART.characters[c].src)];
  // Release sprites from previous songs, keeping only the current stage.
  for(const key of modImages.keys())if(!paths.includes(key))modImages.delete(key);
  await Promise.all(paths.map(src=>{
@@ -160,4 +162,14 @@ function girlfriendPose(sheet,t){
  // A combined GF atlas contains both 15-frame dance directions.
  if(frames?.length>=28&&frames.length<=32){const half=Math.floor(frames.length/2),frame=(index%2)*half+Math.min(half-1,Math.floor(elapsed*24));return {key:'idle',elapsed:frame/24};}
  return {key:'idle',elapsed};
+}
+
+function drawSonicSpecialNote(note,x,y,t){
+ if(song.pack||!songId.startsWith('sonic-')||typeof SONIC_SPECIAL_SKINS==='undefined')return false;
+ const skin=SONIC_SPECIAL_SKINS[note.type],im=skin&&modImages.get(skin.src);
+ if(!im)return false;
+ const frames=skin.lanes[note.lane],f=frames[song.lowSpec?0:Math.floor(Math.max(0,t)*24)%frames.length];
+ const scale=72/Math.max(f.width,f.height);
+ ctx.drawImage(im,f.x,f.y,f.width,f.height,x-f.width*scale/2,y-f.height*scale/2,f.width*scale,f.height*scale);
+ return true;
 }

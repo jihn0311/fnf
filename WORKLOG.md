@@ -80,3 +80,8 @@
 - D/F/J/K counts now accumulate across songs and restarts in localStorage for this browser. Writes coalesced once per second and flushed on focus loss/pagehide to avoid synchronous storage on every note. Storage errors safely retain in-memory counting.
 - Square keycaps illuminate while their physical key is held, clearing on release/focus loss. Counts remain playing-only; repeat suppression retained.
 - test-key-persistence verifies lighting, deferred persistence, reload and song switching. test-key-counts and test-game pass. Updated cache hashes.
+
+## 2026-10-15 Sonic special-note designs
+- Replaced generic ×/! overlays with Phantom and animated Static note atlases; preload only the types used in the selected chart. Low-spec uses a still frame.
+- Source: https://github.com/hoaanhmine/Sonic-exe-full/tree/main/assets/preload/images (PHANTOMNOTE_assets and STATICNOTE_assets). Existing hit behavior unchanged.
+- Verified browser loading/drawing for all four lanes in Too Slow and Triple Trouble, normal and low-spec; inspected rendered preview; JS syntax checks passed.
