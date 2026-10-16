@@ -109,6 +109,7 @@ function showModVideo(){
 function closeModVideo(){const video=$('mod-video');video.pause();video.removeAttribute('src');video.load();$('mod-cinema').hidden=true;}
 
 function drawLowSpecStage(t){
+ if(song.pack==='mario'&&song.stagePhases){if(!extraState||extraState.id!==songId)extraReset();drawMarioStage(t);return;}
  if(lowSpecBackground)ctx.drawImage(lowSpecBackground,0,0);else{rect(0,0,1120,530,'#171d2b');rect(0,460,1120,70,'#101522');}
  if(song.pack){
   if(!extraState||extraState.id!==songId)extraReset();

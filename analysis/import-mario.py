@@ -129,3 +129,6 @@ exec((ROOT/'analysis/mario-note-skins.py').read_text(encoding='utf8'))
 (ROOT/'mario-mod.js').write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst MARIO_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],MARIO_ART[key]);\nObject.assign(EXTRA_ART.sprites,MARIO_ART.sprites);\n',encoding='utf8')
 p=ROOT/'mod-assets.json';files=read(p)+['mario-mod.js']+[ns['web'](f) for f in (ROOT/'assets/extra-mods/mario').rglob('*') if f.is_file()];p.write_text(json.dumps(list(dict.fromkeys(files)),indent=2)+'\n',encoding='utf8')
 report['songs']=len(songs);(ROOT/'analysis/mario-import-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8');print('IMPORTED',len(songs),flush=True)
+
+# Rebuild the multi-act All-Stars backgrounds after a full import.
+exec(compile((ROOT/'analysis/build-allstars-stages.py').read_text(encoding='utf8'),str(ROOT/'analysis/build-allstars-stages.py'),'exec'),{'__file__':str(ROOT/'analysis/build-allstars-stages.py')})

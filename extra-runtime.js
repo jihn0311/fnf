@@ -15,6 +15,7 @@ async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
+ if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
  // Bound concurrent image decoding to avoid a memory/CPU spike at song changes.
@@ -508,7 +509,13 @@ function agotiNoteAngle(t){
  return 0;
 }
 
-function marioLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.map(key=>({key,x:0,y:0,w:1120,h:530}));}
+function marioPhase(t){
+ let phase='act1';for(const cue of song.stagePhases||[]){if(cue.time>t)break;phase=cue.phase;}return phase;
+}
+function marioLayers(t=extraState?.at??0){
+ const scene=MOD_ART.scenes[song.sceneKey],key=scene.phaseBackgrounds?.[marioPhase(t)];
+ return (key?[key]:scene.spriteKeys).map(key=>({key,x:0,y:0,w:1120,h:530}));
+}
 function drawMarioActors(t){
  if(extraState.chars.lakitu)extraActor('lakitu',t,150,350);
  if(extraState.chars.gyromite)extraActor('gyromite',t,680,350);
@@ -516,7 +523,15 @@ function drawMarioActors(t){
  if(extraState.chars.guest)extraActor('guest',t,675,445);
  extraActor('nova',t,280,475);extraActor('echo',t,840,475);
 }
-function drawMarioStage(t){for(const l of marioLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);drawMarioActors(t);}
+function drawMarioStage(t){
+ rect(0,0,1120,530,'#000');
+ for(const l of marioLayers(t))extraSprite(l.key,0,l.x,l.y,l.w,l.h);
+ drawMarioActors(t);
+ if(!song.lowSpec&&song.stagePhases&&marioPhase(t)==='finale'){
+  const src=EXTRA_ART.sprites['mario/stage/all-stars-lightning']?.src,im=modImages.get(src);
+  if(im){const start=song.stagePhases.find(c=>c.phase==='finale').time,frame=Math.floor(Math.max(0,t-start)*24)%8;ctx.save();ctx.globalAlpha=.7;ctx.drawImage(im,frame*256,0,256,320,465,40,256,400);ctx.restore();}
+ }
+}
 function drawMarioNote(note,x,y,tail,t){
  if(song.pack!=='mario')return false;
  const skin=song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
