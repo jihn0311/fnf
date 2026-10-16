@@ -92,3 +92,9 @@
 - Imported Mario, monochrome, GB, NES, DS and Virtual note skins and used special poison/bomb/Boo/coin/water/bullet/mushroom assets. Pixel characters use their source enlargement and nearest-neighbor rendering.
 - Source stage/note reference: https://github.com/Dewott2501/Mario-Madness . Native cutscenes, minigames and custom phase triggers are not fully ported. The song description and analysis/mario-import-report.json record this limitation; opening-stage backgrounds are static composites.
 - Validation: 41 songs × normal/low at start/middle/end, all character and skin resources; 10-card filtering; actual Inst/Voices decode/play/pause/stop; settings lock; 390px menu width. Game, sustain, death-note priority and nightmare regressions passed. Visually inspected menu, Its a me, Golden Land, No Party and Paranoia. No missing character or used note-skin files.
+
+## 2026-10-16 Per-mod song progress HUD
+- Moved the time/progress display directly above the persistent D/F/J/K counters for all ten mod families and their low-spec entries. Added distinct pack colors and lightweight bar styling.
+- Remaining time accounts for playback rate, clamps countdown/end states, and updates text only when changed. Progress transforms update at bounded chart-time intervals without layout reads.
+- Mario variants use source-inspired stage colors and Mario/VCR fonts from https://github.com/Dewott2501/Mario-Madness/tree/main/assets/fonts . All packs retain the requested common bar location; these themes do not reproduce every native time gimmick.
+- Verified all ten themes, Mario variants, low-spec entries, rate/countdown/completion, mobile and fullscreen placement with test-song-progress.cjs. Existing test-game.cjs passed. Inspected mobile/fullscreen screenshots.

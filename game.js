@@ -115,6 +115,7 @@ function readSettings(){
   if(typeof syncModUI==='function')syncModUI();
   $('speed-value').textContent=settings.speed.toFixed(2)+'×';
   const chart=createChart();
+  if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:time());
   $('chart-info').textContent='내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
 }
 function targetY(){return settings.scroll==='down'?448:82;}
@@ -495,7 +496,7 @@ function draw(t){prepareStageResolution();
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
 function frame(){const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
-  draw(state==='ready'?0:t);const clockText=formatTime(Math.min(t,DURATION))+' / '+formatTime(DURATION);if($('time').textContent!==clockText)$('time').textContent=clockText;requestAnimationFrame(frame);
+  draw(state==='ready'?0:t);if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:t);requestAnimationFrame(frame);
 }
 $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pause').addEventListener('click',pause);
 $('restart').addEventListener('click',restartSong);$('stop-song').addEventListener('click',stopSong);

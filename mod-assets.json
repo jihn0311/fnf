@@ -1334,5 +1334,8 @@
   "assets/mod-icons/tainted.webp",
   "assets/mod-icons/virus.webp",
   "assets/extra-mods/mario/notes/JMMario_NOTE_assets.webp",
-  "assets/extra-mods/mario/notes/pixel-Mario_NOTE_assets.webp"
+  "assets/extra-mods/mario/notes/pixel-Mario_NOTE_assets.webp",
+  "song-progress.js",
+  "assets/fonts/mario2.ttf",
+  "assets/fonts/vcr.ttf"
 ]
