@@ -24,3 +24,5 @@ __pycache__/
 
 /analysis/impostor-atlas-cache.json
 /analysis/impostor-*.png
+
+/analysis/mario-import-cache.json

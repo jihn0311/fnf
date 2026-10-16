@@ -102,7 +102,7 @@ function createChart(difficulty = settings.difficulty, side = 'echo'){
   }
   return chart;
 }
-function setSettingsLocked(locked){for(const id of ['song','performance-mode','difficulty','scroll','rate','practice','nightmare'])$(id).disabled=locked;}
+function setSettingsLocked(locked){for(const id of ['song','performance-mode','difficulty','scroll','rate','practice','nightmare'])$(id).disabled=locked;for(const button of document.querySelectorAll?.('.mod-card, #change-mod')||[])button.disabled=locked;}
 function readSettings(){
   selectSong($('song').value);
   const available=song.charts?Object.keys(song.charts):['easy','normal','hard'];
@@ -355,8 +355,9 @@ function skinArrow(x,y,lane,size,fill,color,majin=false){
   const frame=skin[fill?'note':lit?'confirm':'idle'];
   const base=skin.idle,scale=size*2/Math.max(base.width,base.height);
   const fw=frame.frameWidth||frame.width,fh=frame.frameHeight||frame.height;
+  const smoothing=ctx.imageSmoothingEnabled;if(customNoteSkin()?.pixel)ctx.imageSmoothingEnabled=false;
   skinFrame(frame,x-fw*scale/2-frame.frameX*scale,y-fh*scale/2-frame.frameY*scale,frame.width*scale,frame.height*scale,majin);
-  return true;
+  ctx.imageSmoothingEnabled=smoothing;return true;
 }
 function sustainSkin(x,head,tail,lane,color,majin=false){
   const top=Math.max(-30,Math.min(head,tail)),bottom=Math.min(560,Math.max(head,tail));
@@ -463,6 +464,7 @@ function draw(t){prepareStageResolution();
       const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
       if(Math.max(y,tail)<-35||Math.min(y,tail)>565)continue;
       const color=note.type===3?'#bd7aff':note.type===2?'#ffffff':COLORS[note.lane];
+      if(typeof drawMarioNote==='function'&&drawMarioNote(note,x,y,tail,t))continue;
       if(note.hurt&&typeof extraDrawHurt==='function'){extraDrawHurt(note,x,y,tail);continue;}
       if(note.duration){
         sustainSkin(x,y,tail,note.lane,COLORS[note.lane],endlessSkin(note.time));
@@ -537,7 +539,27 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
+const modNames={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+let selectedMod=null;
+function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
+function buildModCards(){
+ const root=$('mod-cards');if(!root)return;root.replaceChildren();
+ for(const [family,name] of Object.entries(modNames)){
+  const tracks=Object.entries(SONGS).filter(([id,s])=>!s.lowSpec&&songFamily(id,s)===family);if(!tracks.length)continue;
+  const button=document.createElement('button');button.type='button';button.className='mod-card';button.dataset.mod=family;
+  const icon=document.createElement('img');icon.src='assets/mod-icons/'+family+'.webp';icon.alt='';icon.width=72;icon.height=72;
+  const title=document.createElement('strong');title.textContent=name;
+  const count=document.createElement('span');count.textContent=tracks.length+'곡';
+  button.append(icon,title,count);button.addEventListener('click',()=>{
+   if(!['ready','finished'].includes(state))return;selectedMod=family;
+   root.hidden=true;$('change-mod').hidden=false;$('mod-heading').textContent=name;
+   document.querySelector('.song-picker').hidden=false;rebuildSongPicker();$('song').focus();
+  });root.appendChild(button);
+ }
+ $('change-mod').addEventListener('click',()=>{if(!['ready','finished'].includes(state))return;root.hidden=false;$('change-mod').hidden=true;document.querySelector('.song-picker').hidden=true;$('mod-heading').textContent='모드를 선택하세요';root.querySelector('[data-mod="'+selectedMod+'"]')?.focus();});
+}
 function rebuildSongPicker(){
+ if(!selectedMod)return;
  const picker=$('song'),low=$('performance-mode').value==='low';
  const previous=picker.value,base=SONGS[previous]?.baseSongId||previous;
  const preferred=low?base+'-low':base;
@@ -549,14 +571,15 @@ function rebuildSongPicker(){
  let nextImpostor=0;
  for(const entry of entries){
   const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry;
-  if(!!track.lowSpec!==low)continue;
+  if(songFamily(id,track)!==selectedMod||!!track.lowSpec!==low)continue;
   const family=track.pack|| (id.startsWith('sonic-')||track.baseSongId?.startsWith('sonic-')?'sonic':'original');
-  const name={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses',agoti:'A.G.O.T.I',original:'기본 곡 / 추가 음악'}[family]||family;
+  const name=modNames[family]||family;
   if(!groups.has(name)){const group=document.createElement('optgroup');group.label=name;groups.set(name,group);picker.appendChild(group);}
   const option=document.createElement('option');option.value=id;option.textContent=track.title.replace(/ \[저사양\]$/,'');groups.get(name).appendChild(option);
  }
+ if(!picker.options.length&&low){$('performance-mode').value='normal';return rebuildSongPicker();}
  if([...picker.options].some(option=>option.value===preferred))picker.value=preferred;
  picker.dispatchEvent(new Event('input',{bubbles:true}));
 }
 $('performance-mode').addEventListener('change',rebuildSongPicker);
-if(typeof document.createElement==='function')rebuildSongPicker();
+if(typeof document.createElement==='function'){buildModCards();rebuildSongPicker();}

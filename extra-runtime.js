@@ -11,7 +11,7 @@ function extraReset(){
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
- extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.noteSkin)assets.push(song.noteSkin.src);
+ extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
@@ -29,7 +29,7 @@ function extraSound(name,volume=1,offset=0){if(song.lowSpec)return;
  const buffer=extraSoundBuffers.get(name);if(!buffer||!audio||offset>=buffer.duration)return;
  const source=audio.createBufferSource(),gain=audio.createGain();source.buffer=buffer;source.playbackRate.value=settings.rate||1;gain.gain.value=Math.max(0,Math.min(1,volume));source.connect(gain);gain.connect(master);sources.push(source);source.onended=()=>{source.disconnect();gain.disconnect();sources=sources.filter(s=>s!==source);};source.start(audio.currentTime,Math.max(0,offset));
 }
-function extraSide(value,animation=false){const v=String(value).toLowerCase();if(['bf','boyfriend','player'].includes(v))return 'echo';if(['dad','opponent'].includes(v))return 'nova';return v==='0'?(animation?'nova':'echo'):(animation?'echo':'nova');}
+function extraSide(value,animation=false){const v=String(value).toLowerCase();if(song.pack==='mario'&&['2','gf','girlfriend'].includes(v))return 'gf';if(['bf','boyfriend','player'].includes(v))return 'echo';if(['dad','opponent'].includes(v))return 'nova';return v==='0'?(animation?'nova':'echo'):(animation?'echo':'nova');}
 function extraZoom(t){const z=extraState?.zoomTween;if(!z)return extraState?.zoom||1;const p=clamp01((t-z.at)/Math.max(.00001,z.duration)),ease=p<.5?2*p*p:1-(-2*p+2)**2/2;return z.from+(z.to-z.from)*ease;}
 function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
@@ -119,11 +119,11 @@ function extraActor(side,t,x,y,black=false){
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
- const off=a.config?.[key]?.offsets||[0,0];ctx.save();ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
+ const off=a.config?.[key]?.offsets||[0,0];ctx.save();if(song.pack==='mario'&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
  if(songId==='tainted-destruction'&&t<320*BEAT&&s.chars[side].startsWith('tainted:bf_des'))ctx.scale(1.4,1.4);
  // Deathmatch character JSON describes the opponent-facing base; the player slot reverses it.
- const flip=(song.pack==='death'||song.pack==='impostor')?(!!a.flip)!==(side==='echo'):!!a.flip;
+ const flip=(song.pack==='death'||song.pack==='impostor'||song.pack==='mario')?(!!a.flip)!==(side==='echo'):!!a.flip;
  const destructionMoved=songId==='tainted-destruction'&&t>=112*BEAT;
  // Destruction BF sprites already face the opponent from the right-hand position.
  const facingFlip=((song.pack==='silly'||songId==='tainted-defeat')&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
@@ -139,7 +139,7 @@ function extraActor(side,t,x,y,black=false){
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
- }else if(song.pack==='silly'||song.pack==='survent'||songId==='tainted-defeat'||side==='gf'){
+ }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -155,7 +155,9 @@ function extraStage(t){
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
  ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(song.pack==='impostor'&&s.twist)ctx.rotate(Math.sin(beat*Math.PI)*s.twist*Math.PI/180);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
  if(s.follow)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
- if(song.pack==='impostor'){
+ if(song.pack==='mario'){
+  drawMarioStage(t);
+ }else if(song.pack==='impostor'){
   drawImpostorStage(t);
  }else if(song.pack==='agoti'){
   drawAgotiStage(t);
@@ -494,4 +496,25 @@ function agotiNoteAngle(t){
  const step=t/BEAT*4;
  for(const at of [120,248,375,632,696,824,952,1208]){const elapsed=(step-at)*BEAT/4;if(elapsed>=0&&elapsed<.6)return elapsed/.6*Math.PI*2;}
  return 0;
+}
+
+function marioLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.map(key=>({key,x:0,y:0,w:1120,h:530}));}
+function drawMarioActors(t){
+ if(extraState.chars.gf)extraActor('gf',t,560,405);
+ extraActor('nova',t,280,475);extraActor('echo',t,840,475);
+}
+function drawMarioStage(t){for(const l of marioLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);drawMarioActors(t);}
+function drawMarioNote(note,x,y,tail,t){
+ if(song.pack!=='mario')return false;
+ const skin=song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
+ const frames=skin.frames[note.lane],f=frames.note,scale=72/Math.max(frames.idle.width,frames.idle.height);
+ ctx.save();ctx.imageSmoothingEnabled=!skin.pixel;
+ if(note.duration){
+  const body=frames.body,end=frames.tail,width=body.width*scale,sign=tail>=y?1:-1,cap=Math.min(Math.abs(tail-y),end.height*scale),bodyEnd=tail-sign*cap;
+  const top=Math.max(-30,Math.min(y,bodyEnd)),bottom=Math.min(560,Math.max(y,bodyEnd));
+  if(bottom>top)ctx.drawImage(im,body.x,body.y,body.width,body.height,x-width/2,top,width,bottom-top);
+  if(cap>0&&tail>=-60&&tail<=590){ctx.save();ctx.translate(x,bodyEnd);ctx.scale(1,sign);ctx.drawImage(im,end.x,end.y,end.width,end.height,-width/2,0,width,cap);ctx.restore();}
+ }
+ const fw=f.frameWidth||f.width,fh=f.frameHeight||f.height;
+ ctx.drawImage(im,f.x,f.y,f.width,f.height,x-fw*scale/2-f.frameX*scale,y-fh*scale/2-f.frameY*scale,f.width*scale,f.height*scale);ctx.restore();return true;
 }

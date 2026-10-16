@@ -115,6 +115,7 @@ function drawLowSpecStage(t){
   if(song.pack==='survent'&&song.stage==='churchSelever')drawCasanovaActors(t);
   else if(song.pack==='survent')drawSurventActors(t);
   else if(song.pack==='agoti')drawAgotiActors(t);
+  else if(song.pack==='mario')drawMarioActors(t);
   else if(song.pack==='impostor')drawImpostorActors(t);
   else if(songId==='virus-virus-r')extraActor('nova',t,560,465);
   else{const swapped=songId==='tainted-destruction'&&t>=112*BEAT;extraActor('nova',t,swapped?835:285,465);extraActor('echo',t,swapped?285:835,465);}
@@ -130,6 +131,7 @@ function lowSpecLayers(){
  if(song.pack==='survent'&&song.stage==='churchSelever')return casanovaLayers();
  if(song.pack==='survent')return surventLayers();
  if(song.pack==='agoti')return agotiLayers();
+ if(song.pack==='mario')return marioLayers();
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);
  if(song.pack==='virus'){
  const keys=MOD_ART.scenes[song.sceneKey].spriteKeys,prefix=keys[0]?.slice(0,keys[0].lastIndexOf('/')+1)||'';

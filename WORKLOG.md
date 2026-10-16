@@ -85,3 +85,10 @@
 - Replaced generic ×/! overlays with Phantom and animated Static note atlases; preload only the types used in the selected chart. Low-spec uses a still frame.
 - Source: https://github.com/hoaanhmine/Sonic-exe-full/tree/main/assets/preload/images (PHANTOMNOTE_assets and STATICNOTE_assets). Existing hit behavior unchanged.
 - Verified browser loading/drawing for all four lanes in Too Slow and Triple Trouble, normal and low-spec; inspected rendered preview; JS syntax checks passed.
+
+## 2026-10-16 Mario’s Madness and two-step song selection
+- Added all 41 canonical audio/chart pairs from the supplied Mario’s Madness folder, including separately named old versions, with normal and low-spec entries. Imported original characters, available character-change/animation events, and source-derived opening backgrounds.
+- Added ten mod cards with icons/names/counts. Choosing a card filters the track list to that pack; Back returns to cards. Kept normal/low filtering and Impostor story ordering. Selection stays locked during play.
+- Imported Mario, monochrome, GB, NES, DS and Virtual note skins and used special poison/bomb/Boo/coin/water/bullet/mushroom assets. Pixel characters use their source enlargement and nearest-neighbor rendering.
+- Source stage/note reference: https://github.com/Dewott2501/Mario-Madness . Native cutscenes, minigames and custom phase triggers are not fully ported. The song description and analysis/mario-import-report.json record this limitation; opening-stage backgrounds are static composites.
+- Validation: 41 songs × normal/low at start/middle/end, all character and skin resources; 10-card filtering; actual Inst/Voices decode/play/pause/stop; settings lock; 390px menu width. Game, sustain, death-note priority and nightmare regressions passed. Visually inspected menu, Its a me, Golden Land, No Party and Paranoia. No missing character or used note-skin files.

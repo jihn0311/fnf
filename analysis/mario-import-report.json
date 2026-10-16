@@ -1,0 +1,271 @@
+{
+  "unsupportedEvents": {
+    "Triggers Universal": 855,
+    "Ocultar HUD": 61,
+    "Show Song": 74,
+    "Set Cam Zoom": 382,
+    "setProperty": 46,
+    "Camera Zoom Chain": 113,
+    "Add Subtitle": 332,
+    "Screen Shake Chain": 13,
+    "Change Scroll Speed": 6,
+    "": 1,
+    "Triggers Alone": 9,
+    "Set Cam Pos": 46,
+    "Triggers Apparition": 7,
+    "Triggers Bad Day": 2,
+    "Triggers Dark Forest": 5,
+    "Triggers Day Out": 2,
+    "Timebar Gimmick": 2,
+    "Triggers Golden Land": 7,
+    "Cambiar Zoom Default": 9,
+    "Sacar Lava": 105,
+    "Triggers I Hate You": 8,
+    "Turmoil Attack": 17,
+    "Char Attack": 16,
+    "Write DS": 6,
+    "Triggers Nourishing Blood": 4,
+    "Triggers Paranoia": 2,
+    "Triggers Powerdown": 11,
+    "MX salto": 25,
+    "Triggers Promotion": 13,
+    "Triggers Race Traitors": 31,
+    "Triggers Thalassophobia": 11,
+    "ycbu text": 550,
+    "Triggers Unbeatable": 123
+  },
+  "missingCharacters": [],
+  "stages": {
+    "abandoned": [
+      "mario/abandoned/Wall and buildings",
+      "mario/abandoned/Middle"
+    ],
+    "all-stars": [
+      "mario/allfinal/act1/act1_stat",
+      "mario/allfinal/act1/act1_sky",
+      "mario/allfinal/act1/act1_skyline",
+      "mario/allfinal/act1/act1_bgbuildings",
+      "mario/allfinal/act1/act1_floor"
+    ],
+    "all-stars-old": [
+      "mario/allfinal/act1/act1_stat",
+      "mario/allfinal/act1/act1_sky",
+      "mario/allfinal/act1/act1_skyline",
+      "mario/allfinal/act1/act1_bgbuildings",
+      "mario/allfinal/act1/act1_floor"
+    ],
+    "alone": [
+      "mario/LuigiBeta/Skybox",
+      "mario/LuigiBeta/BackBG",
+      "mario/LuigiBeta/Alone_Fire",
+      "mario/LuigiBeta/Alone_Fire",
+      "mario/LuigiBeta/FrontBG"
+    ],
+    "alone-old": [
+      "mario/LuigiBeta/old/Beta_Luigi_BG_Assets_2",
+      "mario/LuigiBeta/old/Beta_Luigi_BG_Assets_1",
+      "mario/LuigiBeta/old/Beta_Luigi_BG_Assets_3"
+    ],
+    "apparition": [
+      "mario/Wario/wea_mala_ctm"
+    ],
+    "apparition-old": [
+      "mario/Wario/wea_mala_ctm"
+    ],
+    "bad-day": [
+      "mario/BadMario/lumpy",
+      "mario/BadMario/couch"
+    ],
+    "dark-forest": [
+      "mario/Coronation/firstpart/FondoFondo",
+      "mario/Coronation/firstpart/Arboles",
+      "mario/Coronation/firstpart/AtrasArboles",
+      "mario/Coronation/firstpart/asdas",
+      "mario/Coronation/firstpart/Stage"
+    ],
+    "day-out": [
+      "mario/cityout/skyL",
+      "mario/cityout/buildings far",
+      "mario/cityout/road plus building",
+      "mario/cityout/buildingSide",
+      "mario/cityout/they-walkin",
+      "mario/cityout/they-walkin",
+      "mario/cityout/they-walkin"
+    ],
+    "demise": [
+      "mario/MX/demise/1/Demise_BG_suelo"
+    ],
+    "demise-old": [
+      "mario/MX/demise/1/Demise_BG_suelo"
+    ],
+    "dictator": [
+      "mario/secret/WallAndFloor",
+      "mario/secret/BackTrees",
+      "mario/secret/SkyBox"
+    ],
+    "dictator-old": [
+      "mario/secret/WallAndFloor",
+      "mario/secret/BackTrees",
+      "mario/secret/SkyBox"
+    ],
+    "forbidden-star": [
+      "mario/Wario/wea_mala_ctm"
+    ],
+    "golden-land": [
+      "mario/EXE2/normal/4",
+      "mario/EXE2/normal/3",
+      "mario/EXE2/normal/2",
+      "mario/EXE2/normal/1"
+    ],
+    "golden-land-old": [
+      "1.png"
+    ],
+    "i-hate-you": [
+      "mario/IHY/Luigi_IHY_Background_Assets_Candle",
+      "mario/IHY/Luigi_IHY_Background_Assets_Candle",
+      "mario/IHY/Ladrillos y ventanas",
+      "mario/IHY/PuenteCompleto",
+      "mario/IHY/Puente Roto"
+    ],
+    "i-hate-you-old": [
+      "mario/IHY/old/Luigi_IHY_Background_Assets_ete_sech",
+      "mario/IHY/old/Luigi_IHY_Background_Assets_Floor"
+    ],
+    "its-a-me": [
+      "mario/EXE1/Castillo fondo de hasta atras",
+      "mario/EXE1/Suelo y brillo atmosferico",
+      "mario/EXE1/Arboles y sombra"
+    ],
+    "its-a-me-old": [
+      "mario/EXE1/old/Brick3",
+      "mario/EXE1/old/Brick4",
+      "mario/EXE1/old/BricksBG1",
+      "mario/EXE1/old/Brick5",
+      "mario/EXE1/old/BricksBG2"
+    ],
+    "last-course": [
+      "mario/Turmoil/ThirdBGTrees",
+      "mario/Turmoil/SecondBGTrees",
+      "mario/Turmoil/MainFloorAndTrees",
+      "mario/Turmoil/TreeLeaves"
+    ],
+    "mario-sing-and-game-rythm-9": [
+      "mario/Somari/somari_stag1",
+      "mario/Somari/buildings_papu",
+      "mario/Somari/bgstars",
+      "mario/Somari/platform"
+    ],
+    "no-hope": [
+      "mario/star/Powerstar_Mario_BG_Assets",
+      "mario/star/Powerstar_Mario_BG_Assets",
+      "mario/star/Powerstar_Mario_v2_AssetsFINAL1"
+    ],
+    "no-party": [
+      "mario/piracy/HallyBG2",
+      "mario/piracy/HallyBG3",
+      "mario/piracy/HallyBG1"
+    ],
+    "no-party-old": [
+      "mario/piracy/HallyBG2",
+      "mario/piracy/HallyBG3",
+      "mario/piracy/HallyBG1"
+    ],
+    "nourishing-blood": [
+      "mario/dad7/start",
+      "mario/dad7/Hamster",
+      "mario/dad7/gdtitle"
+    ],
+    "oh-god-no": [
+      "mario/IHY/Luigi_IHY_Background_Assets_Candle",
+      "mario/IHY/Luigi_IHY_Background_Assets_Candle",
+      "mario/IHY/Ladrillos y ventanas",
+      "mario/IHY/PuenteCompleto",
+      "mario/IHY/Puente Roto"
+    ],
+    "overdue": [
+      "mario/TooLateBG/street/BackTrees",
+      "mario/TooLateBG/street/Front Trees",
+      "mario/TooLateBG/street/Road",
+      "mario/TooLateBG/street/car"
+    ],
+    "overdue-old": [
+      "mario/TooLateBG/street/BackTrees",
+      "mario/TooLateBG/street/Front Trees",
+      "mario/TooLateBG/street/Road",
+      "mario/TooLateBG/street/car"
+    ],
+    "paranoia": [
+      "mario/virtual/Wall Bg",
+      "mario/virtual/Back Platform",
+      "mario/virtual/Back Pipes",
+      "mario/virtual/Main Platform",
+      "mario/virtual/Front Pipes",
+      "mario/virtual/Corner top Left Pipes",
+      "mario/virtual/Corner top Left Pipes"
+    ],
+    "powerdown": [
+      "mario/MX/MXBG1_2",
+      "mario/MX/1",
+      "mario/MX/MX_BG_Assets_2",
+      "mario/MX/MX_BG_Assets_2",
+      "mario/MX/2",
+      "mario/MX/MX_BG_Assets_1",
+      "mario/MX/MX_BG_Assets_1",
+      "mario/MX/MX_BG_Assets_1"
+    ],
+    "powerdown-old": [
+      "mario/MX/old/MXBC1",
+      "mario/MX/old/MX_Background_Assets_Cloud",
+      "mario/MX/old/MX_Background_Assets_Mountain2",
+      "mario/MX/old/MXBC2",
+      "mario/MX/old/MX_Background_Assets_Luigi"
+    ],
+    "promotion": [
+      "mario/promo/promobg"
+    ],
+    "racetraitors": [
+      "mario/Races/Race_Mario_BG2",
+      "mario/Races/Race_Mario_BG3",
+      "mario/Races/Race_Mario_BG1"
+    ],
+    "racetraitors-old": [
+      "mario/Races/Race_Mario_BG2",
+      "mario/Races/Race_Mario_BG3",
+      "mario/Races/Race_Mario_BG1"
+    ],
+    "so-cool": [
+      "mario/Real/direct bg grey",
+      "mario/Real/direct bg red",
+      "mario/Real/miyamoto",
+      "mario/Real/facecam bg"
+    ],
+    "starman-slaughter": [
+      "mario/EXE1/starman/SS_sky",
+      "mario/EXE1/starman/SS_castle",
+      "mario/EXE1/starman/Starman_BG_Fire_Assets",
+      "mario/EXE1/starman/Starman_BG_Fire_Assets",
+      "mario/EXE1/starman/SS_farplatforms",
+      "mario/EXE1/starman/SS_POWblock",
+      "mario/EXE1/starman/SS_midplatforms",
+      "mario/EXE1/starman/SS_floor"
+    ],
+    "thalassophobia": [
+      "mario/lisfalse/Skybox",
+      "mario/lisfalse/Water",
+      "mario/lisfalse/Shaded_Mario_64_Eel",
+      "mario/lisfalse/Encima"
+    ],
+    "the-end": [
+      "mario/costume/PedacitoDeGris",
+      "mario/costume/Floor and Courtains",
+      "mario/costume/mesa mesa mesa que mas aplauda"
+    ],
+    "unbeatable": [
+      "mario/beatus/YouCannotBeatUS_Fellas_Assets"
+    ]
+  },
+  "limitations": [
+    "Native scripted cutscenes, minigames and phase-specific stage effects are not fully ported; backgrounds use source opening-stage composition."
+  ],
+  "songs": 41
+}
