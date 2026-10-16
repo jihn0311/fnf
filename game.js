@@ -559,6 +559,8 @@ function buildModCards(){
  }
  $('change-mod').addEventListener('click',()=>{if(!['ready','finished'].includes(state))return;root.hidden=false;$('change-mod').hidden=true;document.querySelector('.song-picker').hidden=true;$('mod-heading').textContent='모드를 선택하세요';root.querySelector('[data-mod="'+selectedMod+'"]')?.focus();});
 }
+// Source: Mario-Madness CustomFreeplayState world lists; finale follows the worlds.
+const marioStoryOrder='its-a-me starman-slaughter so-cool nourishing-blood mario-sing-and-game-rythm-9 alone oh-god-no i-hate-you thalassophobia apparition last-course dark-forest bad-day day-out dictator racetraitors no-hope golden-land no-party paranoia overdue powerdown demise promotion abandoned the-end all-stars unbeatable its-a-me-old golden-land-old i-hate-you-old powerdown-old apparition-old forbidden-star alone-old racetraitors-old dictator-old no-party-old overdue-old demise-old all-stars-old'.split(' ');
 function rebuildSongPicker(){
  if(!selectedMod)return;
  const picker=$('song'),low=$('performance-mode').value==='low';
@@ -569,9 +571,11 @@ function rebuildSongPicker(){
  const rank=id=>{const key=(SONGS[id].baseSongId||id).replace(/^impostor-/,'');const index=impostorStoryOrder.indexOf(key.toLowerCase());return index<0?impostorStoryOrder.length:index;};
  // Sort within this pack only; preserve every other pack's existing order.
  const orderedImpostor=entries.filter(([,track])=>track.pack==='impostor').sort((a,b)=>rank(a[0])-rank(b[0]));
- let nextImpostor=0;
+ const marioRank=id=>{const key=(SONGS[id].baseSongId||id).replace(/^mario-/,'');const i=marioStoryOrder.indexOf(key);return i<0?marioStoryOrder.length:i;};
+ const orderedMario=entries.filter(([,track])=>track.pack==='mario').sort((a,b)=>marioRank(a[0])-marioRank(b[0]));
+ let nextImpostor=0,nextMario=0;
  for(const entry of entries){
-  const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry;
+  const [id,track]=entry[1].pack==='impostor'?orderedImpostor[nextImpostor++]:entry[1].pack==='mario'?orderedMario[nextMario++]:entry;
   if(songFamily(id,track)!==selectedMod||!!track.lowSpec!==low)continue;
   const family=track.pack|| (id.startsWith('sonic-')||track.baseSongId?.startsWith('sonic-')?'sonic':'original');
   const name=modNames[family]||family;

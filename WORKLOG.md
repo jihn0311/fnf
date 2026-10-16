@@ -98,3 +98,8 @@
 - Remaining time accounts for playback rate, clamps countdown/end states, and updates text only when changed. Progress transforms update at bounded chart-time intervals without layout reads.
 - Mario variants use source-inspired stage colors and Mario/VCR fonts from https://github.com/Dewott2501/Mario-Madness/tree/main/assets/fonts . All packs retain the requested common bar location; these themes do not reproduce every native time gimmick.
 - Verified all ten themes, Mario variants, low-spec entries, rate/countdown/completion, mobile and fullscreen placement with test-song-progress.cjs. Existing test-game.cjs passed. Inspected mobile/fullscreen screenshots.
+
+## 2026-10-16 Mario story song order
+- Ordered Mario normal/low lists by introduction, Island, Woodland, Cosmos, Heights, Classified, then All-Stars finale. Unbeatable and legacy/extra versions follow the story.
+- Source: supplied assets/weeks/week1.json and https://github.com/Dewott2501/Mario-Madness/blob/main/source/CustomFreeplayState.hx world lists. Branching worlds are presented in the source menu order.
+- Verified all 41 imported songs occur exactly once in ordering; normal/low ranks and finale placement pass. test-mario.cjs passes menu filtering and 41 normal/low scenes, skins and loading. Updated game script cache hash.
