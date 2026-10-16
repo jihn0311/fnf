@@ -1,0 +1,2085 @@
+{
+  "mario-abandoned": [
+    {
+      "time": 106.666667,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "luigi_fountain3d",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "10",
+        ""
+      ]
+    },
+    {
+      "time": 106.666667,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf-back3d",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "10",
+        ""
+      ]
+    }
+  ],
+  "mario-all-stars": [
+    {
+      "time": 105.6,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "omega",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "0"
+      ]
+    },
+    {
+      "time": 105.6,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_behind",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "0"
+      ]
+    },
+    {
+      "time": 105.6,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "0"
+      ]
+    },
+    {
+      "time": 158.4,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "lg2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "1"
+      ]
+    },
+    {
+      "time": 158.4,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "1"
+      ]
+    },
+    {
+      "time": 159.7,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "7"
+      ]
+    },
+    {
+      "time": 164.5,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "w4r",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "2"
+      ]
+    },
+    {
+      "time": 164.5,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "2"
+      ]
+    },
+    {
+      "time": 171.2,
+      "name": "Mario Guest",
+      "v1": "guest",
+      "v2": "y0shi",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "time": 171.2,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "time": 224.0,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bfASsad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "3",
+        "0"
+      ]
+    },
+    {
+      "time": 224.0,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "gx",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "3",
+        "0"
+      ]
+    },
+    {
+      "time": 224.0,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "3",
+        "0"
+      ]
+    },
+    {
+      "time": 224.0,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "3",
+        "0"
+      ]
+    },
+    {
+      "time": 224.0,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "3",
+        "0"
+      ]
+    },
+    {
+      "time": 350.4,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_ultrafinale",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "0"
+      ]
+    },
+    {
+      "time": 350.4,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mario_ultra2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "0"
+      ]
+    },
+    {
+      "time": 350.4,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "0"
+      ]
+    },
+    {
+      "time": 454.4,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_ultrafinale2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "2"
+      ]
+    },
+    {
+      "time": 454.4,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "2"
+      ]
+    },
+    {
+      "time": 479.95,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_ultrafinale3",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "6"
+      ]
+    },
+    {
+      "time": 479.95,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mario_ultra3",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "6"
+      ]
+    },
+    {
+      "time": 479.95,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        "6"
+      ]
+    }
+  ],
+  "mario-all-stars-old": [],
+  "mario-alone": [],
+  "mario-alone-old": [],
+  "mario-apparition": [],
+  "mario-apparition-old": [],
+  "mario-bad-day": [],
+  "mario-dark-forest": [
+    {
+      "time": 72.882353,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "peachtalk1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Dark Forest",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 72.882353,
+      "name": "Play Animation",
+      "v1": "talk",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Dark Forest",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 81.878676,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "peachthe",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Dark Forest",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 105.441176,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "peachtheG",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Dark Forest",
+        "2",
+        ""
+      ]
+    }
+  ],
+  "mario-day-out": [],
+  "mario-demise": [
+    {
+      "time": 126.236842,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mx_demiseUG",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 126.236842,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_demiseUG",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 179.052632,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mx_demise",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        ""
+      ]
+    },
+    {
+      "time": 179.052632,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bf_demise",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        ""
+      ]
+    }
+  ],
+  "mario-demise-old": [],
+  "mario-dictator": [],
+  "mario-dictator-old": [],
+  "mario-forbidden-star": [],
+  "mario-golden-land": [],
+  "mario-golden-land-old": [],
+  "mario-i-hate-you": [],
+  "mario-i-hate-you-old": [],
+  "mario-its-a-me": [],
+  "mario-its-a-me-old": [],
+  "mario-last-course": [],
+  "mario-mario-sing-and-game-rythm-9": [],
+  "mario-no-hope": [
+    {
+      "time": 52.173913,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "devilmariotalk",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 52.173913,
+      "name": "Play Animation",
+      "v1": "talk",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 73.040761,
+      "name": "Alt Idle Animation",
+      "v1": "dad",
+      "v2": "-alt",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 89.736413,
+      "name": "Alt Idle Animation",
+      "v1": "dad",
+      "v2": "",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        ""
+      ]
+    }
+  ],
+  "mario-no-party": [],
+  "mario-no-party-old": [],
+  "mario-nourishing-blood": [
+    {
+      "time": 107.636364,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bfcave",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 107.636364,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "gfcave",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 107.636364,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "grandcave",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 130.909091,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "bfGD",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 130.909091,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "gfGD",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 130.909091,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "grand",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Nourishing Blood",
+        "1",
+        ""
+      ]
+    }
+  ],
+  "mario-oh-god-no": [],
+  "mario-overdue": [
+    {
+      "time": 171.789474,
+      "name": "Change Character",
+      "v1": "0",
+      "v2": "pico_run",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        ""
+      ]
+    },
+    {
+      "time": 171.789474,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        ""
+      ]
+    }
+  ],
+  "mario-overdue-old": [],
+  "mario-paranoia": [],
+  "mario-powerdown": [
+    {
+      "time": 46.896552,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mxV2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Powerdown",
+        "5",
+        ""
+      ]
+    },
+    {
+      "time": 46.896552,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "gfnew",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Powerdown",
+        "5",
+        ""
+      ]
+    }
+  ],
+  "mario-powerdown-old": [],
+  "mario-promotion": [
+    {
+      "time": 56.769231,
+      "name": "Play Animation",
+      "v1": "depression",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Promotion",
+        "5",
+        ""
+      ]
+    },
+    {
+      "time": 79.1492,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "stanley",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Promotion",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 79.1492,
+      "name": "Mario Visibility",
+      "v1": "echo",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Promotion",
+        "1",
+        ""
+      ]
+    },
+    {
+      "time": 79.1492,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Promotion",
+        "1",
+        ""
+      ]
+    }
+  ],
+  "mario-racetraitors": [
+    {
+      "time": 1.714286,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 4.433036,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "racet2"
+      ]
+    },
+    {
+      "time": 6.857143,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet3",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "racet3"
+      ]
+    },
+    {
+      "time": 8.571429,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "race",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "race"
+      ]
+    }
+  ],
+  "mario-racetraitors-old": [
+    {
+      "time": 0.923077,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "0",
+        ""
+      ]
+    },
+    {
+      "time": 1.846154,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "racet1"
+      ]
+    },
+    {
+      "time": 4.639423,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet2",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "racet2"
+      ]
+    },
+    {
+      "time": 7.384615,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "racet3",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "racet3"
+      ]
+    },
+    {
+      "time": 9.230769,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "race",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Race Traitors",
+        "1",
+        "race"
+      ]
+    }
+  ],
+  "mario-so-cool": [],
+  "mario-starman-slaughter": [
+    {
+      "time": 61.875,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "2",
+        ""
+      ]
+    },
+    {
+      "time": 121.5,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "yoshi-exe",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        ""
+      ]
+    },
+    {
+      "time": 123.34,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "peach-exe",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        ""
+      ]
+    },
+    {
+      "time": 123.34,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "4",
+        ""
+      ]
+    },
+    {
+      "time": 128.442675,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        ""
+      ]
+    },
+    {
+      "time": 185.15625,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "10",
+        ""
+      ]
+    },
+    {
+      "time": 189.5833,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "11",
+        ""
+      ]
+    },
+    {
+      "time": 189.375,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mariohorror-melt",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "12",
+        ""
+      ]
+    },
+    {
+      "time": 189.375,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "12",
+        ""
+      ]
+    },
+    {
+      "time": 189.375,
+      "name": "Play Animation",
+      "v1": "jump",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "12",
+        ""
+      ]
+    },
+    {
+      "time": 190.775,
+      "name": "Play Animation",
+      "v1": "fall",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "12",
+        ""
+      ]
+    },
+    {
+      "time": 191.125,
+      "name": "Play Animation",
+      "v1": "singDOWN",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "12",
+        ""
+      ]
+    }
+  ],
+  "mario-thalassophobia": [],
+  "mario-the-end": [
+    {
+      "time": 111.0,
+      "name": "Mario Visibility",
+      "v1": "echo",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "9.5",
+        ""
+      ]
+    },
+    {
+      "time": 111.0,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "costumedark",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "9.5",
+        ""
+      ]
+    },
+    {
+      "time": 111.0,
+      "name": "Play Animation",
+      "v1": "wahoo",
+      "v2": "dad",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "9.5",
+        ""
+      ]
+    }
+  ],
+  "mario-unbeatable": [
+    {
+      "time": 176.934231,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "hunter",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Unbeatable",
+        "2",
+        ""
+      ]
+    },
+    {
+      "time": 176.934231,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Unbeatable",
+        "2",
+        ""
+      ]
+    },
+    {
+      "time": 329.665875,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "11",
+        "4"
+      ]
+    },
+    {
+      "time": 329.665875,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "11",
+        "4"
+      ]
+    },
+    {
+      "time": 459.731434,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "24",
+        ""
+      ]
+    },
+    {
+      "time": 459.731434,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "24",
+        ""
+      ]
+    },
+    {
+      "time": 488.762903,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "16",
+        ""
+      ]
+    },
+    {
+      "time": 488.762903,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "16",
+        ""
+      ]
+    },
+    {
+      "time": 490.462149,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "0"
+      ]
+    },
+    {
+      "time": 490.462149,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "0"
+      ]
+    },
+    {
+      "time": 491.934258,
+      "name": "Mario Guest",
+      "v1": "guest",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "1"
+      ]
+    },
+    {
+      "time": 491.934258,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "1"
+      ]
+    },
+    {
+      "time": 493.406651,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "2"
+      ]
+    },
+    {
+      "time": 493.406651,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "2"
+      ]
+    },
+    {
+      "time": 494.879044,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "27",
+        "3"
+      ]
+    },
+    {
+      "time": 496.351436,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        ""
+      ]
+    },
+    {
+      "time": 496.351436,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        ""
+      ]
+    },
+    {
+      "time": 496.351436,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        ""
+      ]
+    },
+    {
+      "time": 496.351436,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        ""
+      ]
+    },
+    {
+      "time": 497.823829,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        "2"
+      ]
+    },
+    {
+      "time": 497.463399,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYSwb",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "17",
+        "1"
+      ]
+    },
+    {
+      "time": 521.385945,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "hunter",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        ""
+      ]
+    },
+    {
+      "time": 521.385945,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        ""
+      ]
+    },
+    {
+      "time": 544.944228,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        ""
+      ]
+    },
+    {
+      "time": 544.944228,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 592.056958,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 597.950363,
+      "name": "Change Character",
+      "v1": "2",
+      "v2": "hunter",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        "1"
+      ]
+    },
+    {
+      "time": 597.950363,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        "1"
+      ]
+    },
+    {
+      "time": 597.950363,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        "1"
+      ]
+    },
+    {
+      "time": 603.839933,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        "2"
+      ]
+    },
+    {
+      "time": 603.839933,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "6",
+        "2"
+      ]
+    },
+    {
+      "time": 609.729504,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYSwb",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        "1"
+      ]
+    },
+    {
+      "time": 609.729504,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        "1"
+      ]
+    },
+    {
+      "time": 609.729504,
+      "name": "Mario Guest",
+      "v1": "guest",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        "1"
+      ]
+    },
+    {
+      "time": 609.729504,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "7",
+        "1"
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 615.622909,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 617.087632,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "hunter",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "0"
+      ]
+    },
+    {
+      "time": 617.087632,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "0"
+      ]
+    },
+    {
+      "time": 617.087632,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "0"
+      ]
+    },
+    {
+      "time": 617.087632,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "0"
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 618.567694,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 620.040086,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "2"
+      ]
+    },
+    {
+      "time": 620.040086,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "2"
+      ]
+    },
+    {
+      "time": 620.040086,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "2"
+      ]
+    },
+    {
+      "time": 620.040086,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "2"
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYS",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 621.512479,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        ""
+      ]
+    },
+    {
+      "time": 622.984872,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "3"
+      ]
+    },
+    {
+      "time": 622.984872,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "3"
+      ]
+    },
+    {
+      "time": 622.984872,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "3"
+      ]
+    },
+    {
+      "time": 622.984872,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "3"
+      ]
+    },
+    {
+      "time": 625.921988,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "1"
+      ]
+    },
+    {
+      "time": 625.921988,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "1"
+      ]
+    },
+    {
+      "time": 625.921988,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "1"
+      ]
+    },
+    {
+      "time": 625.921988,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "23",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Change Character",
+      "v1": "1",
+      "v2": "mrSYSwb",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Guest",
+      "v1": "lakitu",
+      "v2": "web-lakitu",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Guest",
+      "v1": "gyromite",
+      "v2": "web-gyromite",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Visibility",
+      "v1": "lakitu",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Visibility",
+      "v1": "gyromite",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "1",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 627.394381,
+      "name": "Mario Guest",
+      "v1": "guest",
+      "v2": "koopa",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "20",
+        "1"
+      ]
+    },
+    {
+      "time": 630.343001,
+      "name": "Mario Visibility",
+      "v1": "nova",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "25",
+        ""
+      ]
+    },
+    {
+      "time": 630.343001,
+      "name": "Mario Visibility",
+      "v1": "gf",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "25",
+        ""
+      ]
+    },
+    {
+      "time": 630.343001,
+      "name": "Mario Visibility",
+      "v1": "guest",
+      "v2": "0",
+      "marioDerived": true,
+      "sourceTrigger": [
+        "Triggers Universal",
+        "25",
+        ""
+      ]
+    }
+  ]
+}

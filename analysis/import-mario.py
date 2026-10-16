@@ -23,11 +23,14 @@ def img(name):
 def character(name):
  key='mario:'+name
  if key in art['characters']:return key
- if name in cache and all((ROOT/p).exists() for p in cache[name]['pages']):
-  a=cache[name];d=read(R/'characters'/(name+'.json'));a['renderScale']=min(360/max(1,a['animations']['idle'][0]['h']),.72*max(1,d.get('scale',1)));a['pixel']=d.get('no_antialiasing',False);art['characters'][key]=a;return key
+ special={'web-lakitu':'Lakitu','web-gyromite':'Bird Up'}
  p=R/'characters'/(name+'.json')
- if not p.exists():report['missingCharacters'].append(name);return None
- d=read(p);base=img(d['image'])
+ if name in special:d={'image':'mario/beatus/YouCannotBeatUS_Fellas_Assets','animations':[{'anim':'idle','name':special[name],'fps':24,'loop':True}],'scale':1,'healthicon':'mrSYS'}
+ elif p.exists():d=read(p)
+ else:report['missingCharacters'].append(name);return None
+ if name in cache and all((ROOT/p).exists() for p in cache[name]['pages']):
+  a=cache[name];a['renderScale']=min(360/max(1,a['animations']['idle'][0]['h']),.72*max(1,d.get('scale',1)));a['pixel']=d.get('no_antialiasing',False);art['characters'][key]=a;return key
+ base=img(d['image'])
  if base is None:report['missingCharacters'].append(name+':'+d['image']);return None
  # Keep directional poses, idles and scripted animations; downscale once offline.
  a=ns['atlas'](base.with_suffix(''),'mario/characters/'+name,d,height=440)
@@ -83,7 +86,8 @@ def backdrop(stage,slug):
   canvas=panel.resize((1120,530),Image.Resampling.NEAREST)
  if stage=='nesbeat':canvas=Image.open(img('bars')).convert('RGBA').resize((1120,530),Image.Resampling.NEAREST)
  canvas.convert('RGB').save(out,quality=90);art['sprites'][key]={'src':ns['web'](out)};report['stages'][slug]=[x[4] for x in chosen];return key
-supported={'Change Character','Play Animation','Alt Idle Animation','Add Camera Zoom','Camera Follow Pos','Screen Shake','Flash Camera','Change Scroll Speed'}
+exec((ROOT/'analysis/mario-character-events.py').read_text(encoding='utf8'))
+supported={'Mario Visibility','Mario Guest','Change Character','Play Animation','Alt Idle Animation','Add Camera Zoom','Camera Follow Pos','Screen Shake','Flash Camera','Change Scroll Speed'}
 for folder in sorted((R/'data/songData').iterdir()):
  if not folder.is_dir():continue
  p=folder/(folder.name+'.json');audio=R/'songs'/folder.name
@@ -102,11 +106,12 @@ for folder in sorted((R/'data/songData').iterdir()):
  eventfile=folder/'events.json'
  if eventfile.exists():
   e=read(eventfile).get('song',{});_,extra,_=ns['chart']({**e,'bpm':s['bpm']});events+=extra
+ events+=compile_mario_events(s,events)
  chars={s['player1'],s['player2']};gf=s.get('player3') or s.get('gfVersion');gf=gf if gf not in ['gf','none',''] else None
  if gf:chars.add(gf)
  kept=[]
  for e in events:
-  if e['name']=='Change Character':chars.add(e['v2'])
+  if e['name'] in ['Change Character','Mario Guest']:chars.add(e['v2'])
   if e['name'] in supported and e['name']!='Change Scroll Speed':kept.append(e)
   else:report['unsupportedEvents'][e['name']]=report['unsupportedEvents'].get(e['name'],0)+1
  keys=[k for c in sorted(chars) if (k:=character(c))]

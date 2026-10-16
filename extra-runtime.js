@@ -7,12 +7,13 @@ function extraActive(){return !!song.pack;}
 function extraReset(){
  const scene=MOD_ART.scenes[song.sceneKey];
  extraState={id:songId,cursor:0,at:-Infinity,chars:scene?{nova:scene.opponent,echo:scene.player,gf:scene.spectator}:{},special:{},alt:{},black:0,hideHealth:false,zoom:1,zoomTween:null,bumps:[],flashes:[],shake:null,follow:null,bumpMult:1,bumpInterval:4,glitchUntil:-1,lastMisses:0,death:null};
+ if(song.pack==='mario'){extraState.marioHidden={gf:['exesequel','nesbeat'].includes(song.stage)};extraState.marioActors={};}
  extraHealthVisibility(false);
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);
- for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));}
+ for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
@@ -35,6 +36,8 @@ function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
+ case 'Mario Visibility':if(song.pack==='mario'){s.marioHidden??={};s.marioHidden[a]=b==='0';}break;
+ case 'Mario Guest':if(song.pack==='mario'&&MOD_ART.characters['mario:'+b])s.chars[a]='mario:'+b;break;
  case 'Silly':sillyEvent(e,t,quiet);break;
  case 'Change Character': {const key=song.pack+':'+b;if(MOD_ART.characters[key]){if(songId==='tainted-destruction'&&s.chars[extraSide(a)]!==key)s.invulnerableUntil=t+3*(settings.rate||1);s.chars[extraSide(a)]=key;delete s.special[extraSide(a)];extraActorLabels();}break;}
  case 'Play Animation': {const target=/^(0|1|2|bf|dad|boyfriend|opponent)$/i.test(a)?a:b,anim=target===a?b:a;s.special[extraSide(target,true)]={name:anim,at:e.time};break;}
@@ -75,6 +78,13 @@ function extraNote(note,side){
  if(!extraActive()||!extraState)return;
  if(note.noAnimation)actors[side].until=-1;
  actors[side].alt=note.alt;
+ if(song.pack==='mario'&&!note.noAnimation){
+  const type=note.sourceNoteType,guest=['allfinal','nesbeat'].includes(song.stage)?'guest':'gf';
+  const targets=type==='GF Sing'||type==='GF Duet'?['gf']:type==='Yoshi Note'?[guest]:type==='AS Bud Note'?['gf','guest']:[];
+  for(const target of targets)extraState.marioActors[target]={...actors[side]};
+  if(type==='GF Sing'||type==='Yoshi Note')actors[side].until=-1;
+ }
+
  if(side==='nova'){
   if(note.sourceNoteType==='black')extraState.shake={at:note.time,duration:.02,amount:.02};
   const beat=note.time/BEAT;
@@ -103,8 +113,8 @@ function extraSprite(key,t,x=0,y=0,w=1120,h=530,anim='idle',fps=24,loop=true){
  if(f)ctx.drawImage(im,f.x,f.y,f.w,f.h,x+f.ox*w/f.fw,y+f.oy*h/f.fh,f.w*w/f.fw,f.h*h/f.fh);else ctx.drawImage(im,x,y,w,h);
 }
 function extraActor(side,t,x,y,black=false){
- const s=extraState,a=MOD_ART.characters[s.chars[side]];if(!a)return;
- const actor=actors[side]||{lane:-1,until:-1};
+ const s=extraState,a=MOD_ART.characters[s.chars[side]];if(!a||song.pack==='mario'&&s.marioHidden?.[side])return;
+ const actor=s.marioActors?.[side]||actors[side]||{lane:-1,until:-1};
  const singUntil=(songId==='tainted-defeat')&&actor.lane>=0&&Number.isFinite(actor.at)?Math.max(actor.until,actor.at+(song.pack==='impostor'?(a.singDuration||4):6.1)*BEAT/4):actor.until;
  const singing=t<singUntil;
  // Yourself's form is controlled by transformation events, not stale chart note tags.
@@ -500,7 +510,10 @@ function agotiNoteAngle(t){
 
 function marioLayers(){return MOD_ART.scenes[song.sceneKey].spriteKeys.map(key=>({key,x:0,y:0,w:1120,h:530}));}
 function drawMarioActors(t){
+ if(extraState.chars.lakitu)extraActor('lakitu',t,150,350);
+ if(extraState.chars.gyromite)extraActor('gyromite',t,680,350);
  if(extraState.chars.gf)extraActor('gf',t,560,405);
+ if(extraState.chars.guest)extraActor('guest',t,675,445);
  extraActor('nova',t,280,475);extraActor('echo',t,840,475);
 }
 function drawMarioStage(t){for(const l of marioLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);drawMarioActors(t);}
