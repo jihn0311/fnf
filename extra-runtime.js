@@ -16,6 +16,7 @@ async function extraPrepare(){
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
+ if(song.lowSpec&&scene.presentationKeys?.pipe)assets.push(EXTRA_ART.sprites[scene.presentationKeys.pipe].src);
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
  for(const key of modImages.keys())if(!assets.includes(key))modImages.delete(key);
  // Bound concurrent image decoding to avoid a memory/CPU spike at song changes.
@@ -72,7 +73,7 @@ function extraUpdate(t,quiet=false){
  extraState.at=t;extraState.flashes=extraState.flashes.filter(f=>t<f.at+f.duration);extraState.bumps=extraState.bumps.filter(f=>t<f.at+1);
  const beat=t/BEAT;
  if(songId==='tainted-destruction'&&((beat>=112&&beat<182)||(beat>=320&&beat<388)))health=Math.max(10,health);
- extraHealthVisibility(!song.lowSpec&&extraState.hideHealth&&['playing','paused'].includes(state));
+ extraHealthVisibility(!song.lowSpec&&(extraState.hideHealth||allStarsCinemaActive(t))&&['playing','paused'].includes(state));
 }
 function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='ready'?clamp01((t-112*BEAT)/.3):0;}
 function extraNote(note,side){
@@ -220,9 +221,10 @@ function extraStage(t){
  }
  ctx.restore();
  if(songId==='tainted-destruction')extraShader(((beat>=182&&beat<320)||(beat>=382&&beat<384))?.5:beat>=388?1:0,t,false);
+ if(allStarsCinemaActive(t))return;
  const swap=extraSwap(t);label(s.chars.nova.split(':')[1].toUpperCase()+' / AUTO',265+580*swap,508,12,'#f58bc6');label('YOU / '+s.chars.echo.split(':')[1].toUpperCase(),845-580*swap,508,12,'#8cf5d9');
 }
-function extraHudAlpha(t){if(song.lowSpec)return 1;if(song.pack==='impostor')return impostorHudAlpha(t);if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
+function extraHudAlpha(t){if(allStarsCinemaActive(t))return 0;if(song.lowSpec)return 1;if(song.pack==='impostor')return impostorHudAlpha(t);if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
 function extraHud(t){
  if(!extraActive()||!extraState)return;
  const s=extraState,beat=t/BEAT,step=beat*4;
@@ -513,10 +515,13 @@ function marioPhase(t){
  let phase='act1';for(const cue of song.stagePhases||[]){if(cue.time>t)break;phase=cue.phase;}return phase;
 }
 function marioLayers(t=extraState?.at??0){
- const scene=MOD_ART.scenes[song.sceneKey],key=scene.phaseBackgrounds?.[marioPhase(t)];
+ const scene=MOD_ART.scenes[song.sceneKey];let phase=marioPhase(t);
+ if(phase==='act3'&&song.presentationCues){if(t>=allStarsCue('3:4'))phase='act3-lyrics2';else if(t>=allStarsCue('3:3'))phase='act3-lyrics1';}
+ const key=scene.phaseBackgrounds?.[phase];
  return (key?[key]:scene.spriteKeys).map(key=>({key,x:0,y:0,w:1120,h:530}));
 }
 function drawMarioActors(t){
+ if(song.presentationCues){drawAllStarsActors(t);return;}
  if(extraState.chars.lakitu)extraActor('lakitu',t,150,350);
  if(extraState.chars.gyromite)extraActor('gyromite',t,680,350);
  if(extraState.chars.gf)extraActor('gf',t,560,405);
@@ -524,8 +529,10 @@ function drawMarioActors(t){
  extraActor('nova',t,280,475);extraActor('echo',t,840,475);
 }
 function drawMarioStage(t){
+ if(drawAllStarsCinema(t))return;
  rect(0,0,1120,530,'#000');
  for(const l of marioLayers(t))extraSprite(l.key,0,l.x,l.y,l.w,l.h);
+ drawAllStarsScenery(t);
  drawMarioActors(t);
  if(!song.lowSpec&&song.stagePhases&&marioPhase(t)==='finale'){
   const src=EXTRA_ART.sprites['mario/stage/all-stars-lightning']?.src,im=modImages.get(src);
@@ -545,4 +552,63 @@ function drawMarioNote(note,x,y,tail,t){
  }
  const fw=f.frameWidth||f.width,fh=f.frameHeight||f.height;
  ctx.drawImage(im,f.x,f.y,f.width,f.height,x-fw*scale/2-f.frameX*scale,y-fh*scale/2-f.frameY*scale,f.width*scale,f.height*scale);ctx.restore();return true;
+}
+
+// All-Stars fixed wide framing, checked against the supplied full-combo video.
+function allStarsCue(key,fallback=Infinity){return song.presentationCues?.[key]??fallback;}
+function allStarsCinemaActive(t){return !!song.presentationCues&&!song.lowSpec&&((t>=allStarsCue('4:0')&&t<allStarsCue('4:15'))||t>=allStarsCue('4:7'));}
+function allStarsSprite(label,elapsed,x,y,w,h,alpha=1){
+ const key=MOD_ART.scenes[song.sceneKey].presentationKeys?.[label];if(!key)return;
+ ctx.save();ctx.globalAlpha=alpha;extraSprite(key,elapsed,x,y,w,h);ctx.restore();
+}
+function drawAllStarsCinema(t){
+ if(!allStarsCinemaActive(t))return false;
+ const ending=t>=allStarsCue('4:7');rect(0,0,1120,530,ending?'#ff0000':'#000');
+ if(!ending){
+  const at=allStarsCue('4:14'),elapsed=t-at;
+  if(elapsed>=0){const z=Math.min(1,elapsed/.8);allStarsSprite('intro',elapsed,560-560*z,265-265*z,1120*z,530*z);}
+ }else{
+  const elapsed=t-allStarsCue('4:7'),fade=clamp01((t-allStarsCue('4:8'))/4.8),scale=1-.85*clamp01((t-allStarsCue('4:8'))/7.2);
+  allStarsSprite('ending',elapsed,560-200*scale,265-135*scale,400*scale,270*scale,1-fade*fade);
+  if(t>=allStarsCue('4:9'))allStarsSprite('gameover',0,385,245,350,55,clamp01((t-allStarsCue('4:9'))/4.8));
+  if(t>=allStarsCue('4:10')){ctx.save();ctx.globalAlpha=clamp01((t-allStarsCue('4:10'))/4.8);rect(0,0,1120,530,'#000');ctx.restore();}
+ }
+ return true;
+}
+function drawAllStarsScenery(t){
+ if(!song.presentationCues)return;
+ const phase=marioPhase(t);
+ if(!song.lowSpec&&['act4','solo','finale'].includes(phase)){
+  const key=MOD_ART.scenes[song.sceneKey].presentationKeys.floaters,a=EXTRA_ART.sprites[key],frames=a?.animations?.idle||[];
+  for(let i=0;i<12&&frames.length;i++){
+   const f=frames[i%frames.length],im=modImages.get(f.src);if(!im)continue;
+   const age=t-allStarsCue('4:0'),x=((i*157-age*(35+i%3*9))%1400+1400)%1400-160,y=50+(i*89)%410,size=80+(i%4)*35;
+   ctx.save();ctx.globalAlpha=phase==='solo'?.12:.38;ctx.drawImage(im,f.x,f.y,f.w,f.h,x,y,size,size*.875);ctx.restore();
+  }
+ }
+ if(phase==='solo'&&!song.lowSpec){
+  for(const [label,cue,x] of [['memory1','4:3',90],['memory2','4:4',760]]){const age=t-allStarsCue(cue);if(age>=0){const alpha=Math.max(0,Math.min(age/4.5,(9-age)/4.5))*.4;allStarsSprite(label,0,x,65,270,220,alpha);}}
+ }
+}
+function drawAllStarsActors(t){
+ const phase=marioPhase(t),s=extraState;
+ const actor=(side,x,y,scale)=>{ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();};
+ const pipe=(x,y,w)=>allStarsSprite('pipe',0,x-w/2,y,w,w*1.02);
+ if(phase==='act1'){
+  actor('nova',270,475,1.02);actor('gf',945,475,.55);actor('echo',825,475,.55);
+ }else if(phase==='act2'){
+  const ensemble=s.chars.nova==='mario:w4r';
+  actor('nova',ensemble?220:560,ensemble?460:315,ensemble?.88:.82);
+  actor('gf',560,375,.75);actor('guest',870,455,.85);
+  pipe(560,490,170);actor('echo',560,495,.54);
+ }else if(phase==='act3'){
+  actor('nova',220,430,.62);pipe(860,455,155);actor('echo',860,460,.55);
+ }else if(phase==='act4'){
+  actor('nova',280,490,1.2);pipe(900,475,130);actor('echo',900,480,.60);
+ }else if(phase==='solo'){
+  pipe(560,470,175);actor('echo',560,475,.68);
+ }else{
+  // The native finale sprites are intentionally cropped close-ups at the frame edge.
+  actor('nova',225,650,1.45);actor('echo',835,650,1.45);
+ }
 }

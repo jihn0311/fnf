@@ -442,7 +442,7 @@ function draw(t){prepareStageResolution();
   for(let i=lo;i<opponentNotes.length;i++){const n=opponentNotes[i];if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration||0))opponentLit[n.lane]=true;}
   const visibleUntil=t+LEAD/(settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
   for(const side of ['nova','echo']){
-    if(impostorVideo)continue;
+    if(impostorVideo||typeof allStarsCinemaActive==='function'&&allStarsCinemaActive(t))continue;
     if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
     ctx.save();
     const left=laneX(0,side)-47;

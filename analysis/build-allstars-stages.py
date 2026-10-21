@@ -36,16 +36,16 @@ for asset in ['act2_scroll1','act2_pipes_far','act2_abyss_gradient','act2_pipes_
  overlay(bg,frame(prefix+'act2/'+asset),(0,-40),(1120,700))
 overlay(bg,frame(prefix+'act2/act2'),(0,0),(1120,530),.35)
 images={'act2':save(bg,'act2')}
-# Act 3: original Ultra M scenery, including the head/body/arm behind the singers.
-bg=fit(frame(prefix+'act3/Act3_Static','act3stat'))
-overlay(bg,frame(prefix+'act3/Act3_Hills','hills'),(0,365),(1120,282))
-# Native coordinates and scale; use one fixed wide camera to fit both player lanes.
-cx,cy,z=-260,420,.39
-for name,x,y,scale,anim in [('Act3_Ultra_Arm',-1175,-775,1,None),('Act3_Ultra_M',-1185,-50,1.4,'torso idle 1'),('Act3_Ultra_M_Head',-475,-210,1.1,'ultra m static head'),('Act3_Ultra_Pupils',-175,105,1,'ultra pupils')]:
- im=frame(prefix+'act3/'+name,anim);w,h=im.size
- overlay(bg,im,(round(560+(x-cx+w*(1-scale)/2)*z),round(265+(y-cy+h*(1-scale)/2)*z)),(round(w*scale*z),round(h*scale*z)))
-overlay(bg,frame(prefix+'act3/act3'),(0,0),(1120,530),.25)
-images['act3']=save(bg,'act3')
+# Act 3 body/head poses also follow the two lyric-section changes.
+for pose,head,anim,index in [('act3','Act3_Ultra_M_Head','ultra m static head',0),('act3-lyrics1','Act3_Ultra_M_Head','ultra m lyrics 1',96),('act3-lyrics2','Act3_Ultra_M_Head2','ultra m lyrics 2',96)]:
+ bg=fit(frame(prefix+'act3/Act3_Static','act3stat'))
+ overlay(bg,frame(prefix+'act3/Act3_Hills','hills'),(0,365),(1120,282))
+ cx,cy,z=-260,420,.39
+ for name,x,y,scale,animation,frameidx in [('Act3_Ultra_Arm',-1175,-775,1,None,0),('Act3_Ultra_M',-1185,-50,1.4,'torso idle 1' if pose!='act3-lyrics2' else 'torso idle 2',0),(head,-475,-210,1.1,anim,index)]:
+  im=frame(prefix+'act3/'+name,animation,frameidx);w,h=im.size
+  overlay(bg,im,(round(560+(x-cx+w*(1-scale)/2)*z),round(265+(y-cy+h*(1-scale)/2)*z)),(round(w*scale*z),round(h*scale*z)))
+ overlay(bg,frame(prefix+'act3/act3'),(0,0),(1120,530),.25)
+ images[pose]=save(bg,pose)
 # Act 4 switches from the static/ripple setting into the dark second perspective.
 bg=fit(frame(prefix+'act4/gray static','static'))
 overlay(bg,frame(prefix+'act4/bg ripple','bg ripple'),(0,195),(1120,308))
@@ -80,6 +80,40 @@ for phase,src in images.items():
 key='mario/stage/all-stars-lightning';art['sprites'][key]={'src':lightpath.relative_to(ROOT).as_posix()}
 if key not in scene['spriteKeys']:scene['spriteKeys'].append(key)
 songs['mario-all-stars']['stagePhases']=timeline
+# Reference-video corrections: compact native cinematic frames and foreground props.
+def sheet(name,anim,key,cell=(480,270),stride=3):
+ source=path(name);im=Image.open(source).convert('RGBA')
+ frames=[f.attrib for f in ET.fromstring(source.with_suffix('.xml').read_text(encoding='utf8').lstrip('\ufeff')) if f.get('name','').startswith(anim)]
+ selected=frames[::stride];w,h=cell;cols=4;rows=12;pages=[];entries=[];atlas=None
+ for i,f in enumerate(selected):
+  j=i%(cols*rows)
+  if j==0:atlas=Image.new('RGBA',(w*cols,h*min(rows,(len(selected)-i+cols-1)//cols)))
+  x,y,fw,fh=[int(f[k]) for k in ['x','y','width','height']];part=im.crop((x,y,x+fw,y+fh));full=Image.new('RGBA',(int(f.get('frameWidth',fw)),int(f.get('frameHeight',fh))))
+  full.alpha_composite(part,(-int(f.get('frameX',0)),-int(f.get('frameY',0))))
+  full=ImageOps.contain(full,cell,method=Image.Resampling.LANCZOS)
+  xx=j%cols*w;yy=j//cols*h;atlas.alpha_composite(full,(xx+(w-full.width)//2,yy+(h-full.height)//2))
+  dest=OUT/(key+'-'+str(i//(cols*rows))+'.webp');url=dest.relative_to(ROOT).as_posix()
+  entries.append({'src':url,'x':xx,'y':yy,'w':w,'h':h,'ox':0,'oy':0,'fw':w,'fh':h})
+  if j==cols*rows-1 or i==len(selected)-1:atlas.save(dest,quality=87,method=3);pages.append(url)
+ return {'pages':pages,'src':pages[0],'animations':{'idle':entries},'config':{'idle':{'fps':24/stride,'loop':False}}}
+extra={
+ 'intro':sheet(prefix+'act4/Act_4_Voiceline','thingy','all-stars-intro'),
+ 'ending':sheet(prefix+'act4/Act_4_FINALE_DEATH','Death','all-stars-ending',(400,270)),
+}
+for label,asset in [('memory1','memory'),('memory2','she got infected with the exe'),('gameover','Act_4_FINALE_Gameover'),('pipe','bf pipe final')]:
+ im=frame(prefix+'act4/'+asset);im.thumbnail((500,350),Image.Resampling.LANCZOS);dest=OUT/('all-stars-'+label+'.webp');im.save(dest,quality=90);extra[label]={'src':dest.relative_to(ROOT).as_posix()}
+# Export the ten native drifting objects in one small atlas.
+extra['floaters']=sheet(prefix+'act4/floating objects','floating objects','all-stars-floaters',(160,140),1)
+for label,data in extra.items():
+ key='mario/stage/all-stars-'+label;art['sprites'][key]=data
+ if key not in scene['spriteKeys']:scene['spriteKeys'].append(key)
+scene['presentationKeys']={k:'mario/stage/all-stars-'+k for k in extra}
+# Preserve source cue timing rather than video timestamps or wall-clock callbacks.
+cues={}
+for section in raw['notes']:
+ for n in section['sectionNotes']:
+  if float(n[1])<0 and n[2]=='Triggers Universal':cues[str(n[3])+':'+str(n[4])]=float(n[0])/1000
+songs['mario-all-stars']['presentationCues']=cues
 p.write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst MARIO_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],MARIO_ART[key]);\nObject.assign(EXTRA_ART.sprites,MARIO_ART.sprites);\n',encoding='utf8')
-p=ROOT/'mod-assets.json';files=json.loads(p.read_text())+list(images.values())+[lightpath.relative_to(ROOT).as_posix()];p.write_text(json.dumps(list(dict.fromkeys(files)),indent=2)+'\n',encoding='utf8')
+p=ROOT/'mod-assets.json';files=json.loads(p.read_text())+list(images.values())+[lightpath.relative_to(ROOT).as_posix()]+[f.relative_to(ROOT).as_posix() for f in OUT.glob('all-stars-*.webp')];p.write_text(json.dumps(list(dict.fromkeys(files)),indent=2)+'\n',encoding='utf8')
 print(json.dumps(timeline));print('Background bytes',sum((ROOT/f).stat().st_size for f in images.values()))

@@ -17,8 +17,8 @@ const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-run
     extraUpdate(at+.001,true);const keys=marioLayers(at).map(l=>l.key),loaded=keys.every(key=>modImages.has(EXTRA_ART.sprites[key].src));
     const calls=[],sprite=extraSprite;extraSprite=(key,...args)=>{calls.push(key);return sprite(key,...args);};
     try{if(low)drawLowSpecStage(at+.001);else drawMarioStage(at+.001);}finally{extraSprite=sprite;}
-    return {phase:marioPhase(at),keys,calls,loaded};
-   },{at,low});assert.equal(result.phase,phase);assert.equal(result.keys.length,1);assert.deepEqual(result.calls,result.keys);assert(result.loaded);
+    return {phase:marioPhase(at),keys,calls:calls.filter(k=>Object.values(MOD_ART.scenes[song.sceneKey].phaseBackgrounds).includes(k)),cinema:allStarsCinemaActive(at+.001),loaded};
+   },{at,low});assert.equal(result.phase,phase);assert.equal(result.keys.length,1);assert.deepEqual(result.calls,result.cinema?[]:result.keys);assert(result.loaded);
    await page.evaluate(at=>draw(at+.01),at);
    if(!low)fs.writeFileSync(process.env.TEMP+'/allstars-phase-'+phase+'.png',Buffer.from((await page.evaluate(()=>canvas.toDataURL())).split(',')[1],'base64'));
   }
