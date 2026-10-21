@@ -120,3 +120,6 @@
 - Added native Act 3 lyric poses, Act 4 intro and red ending animation, floating props and solo memory overlays using original mod assets and original chart trigger times. Hide notes and character labels during normal-mode cinematics; verified no player notes occur in those windows. Low-spec retains phase backgrounds/layout but omits animated cinematic effects.
 - Preload presentation assets before play; normal All-Stars decoded image footprint measured ~543 MiB. Cinematic sheets sample at 8 fps, Act 3 lyric poses are still frames, and fixed wide framing is an adaptation rather than full native camera/choreography reproduction.
 - Validation: reference-based normal/low layout and cinema tests, no hidden playable notes or transition-time requests, all phase-boundary checks, 840 character transition/reset checks, seven representative Mario tracks and game regression tests pass. Inspected in-game intro, ending and representative phase screenshots. Refreshed asset manifest and browser cache hashes.
+## 2026-10-21 Stronger nightmare
+- Doubled opponent-note health drain from 0.45 to 0.9 across songs. Retained minimum health 1 for opponent drain, Destruction invulnerability and player recovery 1.4. Updated setting text and game cache hash.
+- Validation: test-game.cjs passes; inspected unchanged minimum-health clamp and invulnerability guard.

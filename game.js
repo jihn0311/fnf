@@ -55,7 +55,7 @@ function updateOpponent(t){
   for(let i=chartStart(opponentNotes);i<opponentNotes.length;i++){const note=opponentNotes[i];
     if(note.time>t)break;
     if(note.done)continue;
-    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.45,Math.max(0,health-1));updateHud();}animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
+    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.9,Math.max(0,health-1));updateHud();}animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
     if(note.started&&t>=note.time+note.duration)note.done=true;
   }
 }
