@@ -123,3 +123,7 @@
 ## 2026-10-21 Stronger nightmare
 - Doubled opponent-note health drain from 0.45 to 0.9 across songs. Retained minimum health 1 for opponent drain, Destruction invulnerability and player recovery 1.4. Updated setting text and game cache hash.
 - Validation: test-game.cjs passes; inspected unchanged minimum-health clamp and invulnerability guard.
+## 2026-10-24 All-Stars chord poses and Act 3 motion
+- No Animation chart notes now skip animation initiation instead of cancelling the active pose. Apply this to player heads, sustain re-press/held poses and opponent heads, preserving scoring and health behavior. The solo chord at 456.8 contains one animated and one No Animation sustain.
+- Replaced normal Act 3 static composites with native body/head animation frames at 8 fps, starting from original phase/lyric cues. Preload atlas pages before play; low-spec retains static images and does not request the animation pages. Generator integrated into the existing stage build.
+- Validation: actual solo chord inputs in both orders, sustained pose retention, changing background frames, normal/low phase boundaries and backwards seek, no transition downloads/browser errors, 840 character-transition checks and game regressions pass. Visually inspected the lyric scene. Added ~7.2 MB encoded assets; measured full normal All-Stars decoded textures ~787 MiB, so this does not eliminate memory pressure on low-memory devices.

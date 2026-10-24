@@ -10,6 +10,24 @@ const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-run
  const samples=[40,140,170,200,280,345,355,400,458,484,510];
  for(const low of [false,true]){
   await page.evaluate(async low=>{selectSong('mario-all-stars'+(low?'-low':''));settings.difficulty='hard';await prepareMod();notes=createChart();opponentNotes=createChart('hard','nova');state='paused';},low);
+  const checked=await page.evaluate(()=>{
+   const results=[];
+   for(const order of [[1,2],[2,1]]){
+    extraUpdate(456.8,true);state='playing';audio={currentTime:456.8};startTime=0;settings.rate=1;
+    notes=song.charts.hard.echo.filter(n=>Math.abs(n.time-456.8)<.001).map(n=>({...n}));held.clear();
+    for(const lane of order)inputDown('test'+lane,lane);
+    results.push({lane:actors.echo.lane,until:actors.echo.until,both:notes.every(n=>n.holding)});
+    audio.currentTime=457;updateHeldPose(457);results.push({lane:actors.echo.lane,until:actors.echo.until});
+    held.clear();
+   }
+   state='paused';
+   const key=MOD_ART.scenes[song.sceneKey].phaseBackgrounds.act3,a=EXTRA_ART.sprites[key];
+   const f1=extraFrame(a,'idle',.1),f2=extraFrame(a,'idle',.4);
+   return {results,moving:JSON.stringify(f1)!==JSON.stringify(f2),frames:a.animations.idle.length};
+  });
+  for(const r of checked.results){assert.equal(r.lane,1,'No Animation chord must preserve singing lane');assert(r.until>=457.3);if('both' in r)assert(r.both);}
+  assert(checked.moving);assert(checked.frames>1);
+  console.log('PASS simultaneous hold input in both orders and native animated Act 3 frames');
   const before=requests;
   for(const t of samples){
    const info=await page.evaluate(t=>{

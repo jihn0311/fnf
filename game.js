@@ -55,7 +55,7 @@ function updateOpponent(t){
   for(let i=chartStart(opponentNotes);i<opponentNotes.length;i++){const note=opponentNotes[i];
     if(note.time>t)break;
     if(note.done)continue;
-    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.9,Math.max(0,health-1));updateHud();}animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
+    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.9,Math.max(0,health-1));updateHud();}if(!note.noAnimation)animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
     if(note.started&&t>=note.time+note.duration)note.done=true;
   }
 }
@@ -160,7 +160,7 @@ function updateHeldPose(t){
   const actor=actors.echo;let note=null;
   for(let i=chartStart(notes);i<notes.length;i++){
     const n=notes[i];if(n.time>t+.18*(settings.rate||1))break;
-    if(n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration){note=n;if(n.lane===actor.lane)break;}
+    if(!n.noAnimation&&n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration){note=n;if(n.lane===actor.lane)break;}
   }
   if(!note)return;
   if(actor.lane!==note.lane||actor.miss||actor.until<=t){animateSinger('echo',note.lane,t,note.time+note.duration-t);if(typeof extraNote==='function')extraNote(note,'echo');}
@@ -295,13 +295,13 @@ function findPlayableNote(t,predicate){
 function press(lane){
   if(state!=='playing')return;const t=time();flashes[lane]=t+.13;
   const continuing=findPlayableNote(t,n=>n.holding&&!n.done&&n.lane===lane&&t<n.time+n.duration);
-  if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);animateSinger('echo',lane,t,continuing.time+continuing.duration-t);return;}
+  if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);if(!continuing.noAnimation)animateSinger('echo',lane,t,continuing.time+continuing.duration-t);return;}
   const hittable=n=>!n.done&&!n.holding&&n.lane===lane&&(song.pack==='death'&&n.hurt?Math.abs((n.time-t)/(settings.rate||1))<=.045+1e-9:timingResult((n.time-t)/(settings.rate||1)).kind!=='miss');
   const note=(song.pack==='death'?findPlayableNote(t,n=>!n.hurt&&hittable(n)):null)||findPlayableNote(t,hittable);
   if(note){
     if(note.hurt&&typeof extraHurt==='function'){extraHurt(note,'hit');return;}
     note.hitOffsetMs=(t-note.time)/(settings.rate||1)*1000;
-    const {kind,value,points}=timingResult((note.time-t)/(settings.rate||1));animateSinger('echo',lane,t,Math.max(0,note.time+(note.duration||0)-t));if(typeof extraNote==='function')extraNote(note,'echo');
+    const {kind,value,points}=timingResult((note.time-t)/(settings.rate||1));if(!note.noAnimation)animateSinger('echo',lane,t,Math.max(0,note.time+(note.duration||0)-t));if(typeof extraNote==='function')extraNote(note,'echo');
     if(note.duration){note.holding=true;note.headKind=kind;note.headValue=value;note.headPoints=points;note.nextTick=Math.max(t,note.time)+.15*(settings.rate||1);judge({...note,done:false},kind,value,points);feedback=kind.toUpperCase();feedbackOffsetMs=note.hitOffsetMs;feedbackAt=t;feedbackColor=COLORS[lane];if(kind==='perfect')splash(lane);if(kind==='bad')combo=0;}
     else judge(note,kind,value,points);
   }

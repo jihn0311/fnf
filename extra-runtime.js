@@ -78,7 +78,7 @@ function extraUpdate(t,quiet=false){
 function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='ready'?clamp01((t-112*BEAT)/.3):0;}
 function extraNote(note,side){
  if(!extraActive()||!extraState)return;
- if(note.noAnimation)actors[side].until=-1;
+ if(note.noAnimation)return;
  actors[side].alt=note.alt;
  if(song.pack==='mario'&&!note.noAnimation){
   const type=note.sourceNoteType,guest=['allfinal','nesbeat'].includes(song.stage)?'guest':'gf';
@@ -111,7 +111,7 @@ function extraFrame(a,key,t,fps=24,loop=true){
 }
 function extraSprite(key,t,x=0,y=0,w=1120,h=530,anim='idle',fps=24,loop=true){
  const a=EXTRA_ART.sprites[key];if(!a)return;
- const f=extraFrame(a,anim,t,fps,loop),im=modImages.get(f?.src||a.src);if(!im)return;
+ const f=song.lowSpec&&a.staticSrc?null:extraFrame(a,anim,t,fps,loop),im=modImages.get(f?.src||a.src);if(!im)return;
  if(f)ctx.drawImage(im,f.x,f.y,f.w,f.h,x+f.ox*w/f.fw,y+f.oy*h/f.fh,f.w*w/f.fw,f.h*h/f.fh);else ctx.drawImage(im,x,y,w,h);
 }
 function extraActor(side,t,x,y,black=false){
@@ -531,7 +531,7 @@ function drawMarioActors(t){
 function drawMarioStage(t){
  if(drawAllStarsCinema(t))return;
  rect(0,0,1120,530,'#000');
- for(const l of marioLayers(t))extraSprite(l.key,0,l.x,l.y,l.w,l.h);
+ for(const l of marioLayers(t))extraSprite(l.key,allStarsBackgroundTime(t),l.x,l.y,l.w,l.h);
  drawAllStarsScenery(t);
  drawMarioActors(t);
  if(!song.lowSpec&&song.stagePhases&&marioPhase(t)==='finale'){
@@ -611,4 +611,10 @@ function drawAllStarsActors(t){
   // The native finale sprites are intentionally cropped close-ups at the frame edge.
   actor('nova',225,650,1.45);actor('echo',835,650,1.45);
  }
+}
+
+function allStarsBackgroundTime(t){
+ if(!song.presentationCues||song.lowSpec||marioPhase(t)!=='act3')return 0;
+ const start=t>=allStarsCue('3:4')?allStarsCue('3:4'):t>=allStarsCue('3:3')?allStarsCue('3:3'):allStarsCue('3:0');
+ return Math.max(0,t-start);
 }

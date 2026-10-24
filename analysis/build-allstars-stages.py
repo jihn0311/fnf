@@ -114,6 +114,7 @@ for section in raw['notes']:
  for n in section['sectionNotes']:
   if float(n[1])<0 and n[2]=='Triggers Universal':cues[str(n[3])+':'+str(n[4])]=float(n[0])/1000
 songs['mario-all-stars']['presentationCues']=cues
+exec((ROOT/'analysis/build-allstars-act3-animation.py').read_text(encoding='utf8'))
 p.write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst MARIO_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],MARIO_ART[key]);\nObject.assign(EXTRA_ART.sprites,MARIO_ART.sprites);\n',encoding='utf8')
 p=ROOT/'mod-assets.json';files=json.loads(p.read_text())+list(images.values())+[lightpath.relative_to(ROOT).as_posix()]+[f.relative_to(ROOT).as_posix() for f in OUT.glob('all-stars-*.webp')];p.write_text(json.dumps(list(dict.fromkeys(files)),indent=2)+'\n',encoding='utf8')
 print(json.dumps(timeline));print('Background bytes',sum((ROOT/f).stat().st_size for f in images.values()))
