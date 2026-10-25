@@ -156,7 +156,7 @@ function extraActor(side,t,x,y,black=false){
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
- }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||song.pack==='kapi'||songId==='tainted-defeat'||side==='gf'){
+ }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||song.pack==='kapi'||song.pack==='camellia'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -178,6 +178,9 @@ function extraStage(t){
   drawImpostorStage(t);
  }else if(song.pack==='kapi'){
   drawKapiStage(t);
+ }else if(song.pack==='camellia'){
+  for(const l of camelliaLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
+  drawCamelliaActors(t);
  }else if(song.pack==='garcello'){
   for(const l of garcelloLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
   drawGarcelloActors(t);
@@ -641,3 +644,6 @@ function drawKapiReceptor(side,lane,x,y,lit){
  const frames=skin.frames[lane],f=lit?frames.confirm:frames.idle,scale=72/Math.max(frames.idle.width,frames.idle.height);
  ctx.drawImage(im,f.x,f.y,f.width,f.height,x-(f.frameWidth||f.width)*scale/2-f.frameX*scale,y-(f.frameHeight||f.height)*scale/2-f.frameY*scale,f.width*scale,f.height*scale);return true;
 }
+
+function camelliaLayers(){return [{key:'camellia/stage/'+song.stage,x:0,y:0,w:1120,h:530}];}
+function drawCamelliaActors(t){extraActor('gf',t,565,405);extraActor('nova',t,270,480);extraActor('echo',t,870,480);}

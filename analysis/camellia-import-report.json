@@ -1,0 +1,398 @@
+{
+  "first-town-of-this-journey": {
+    "sources": {
+      "easy": "normal.json",
+      "normal": "hard.json",
+      "hard": "maniac.json"
+    },
+    "duration": 221.96875283446713,
+    "notes": {
+      "easy": {
+        "echo": 502,
+        "nova": 741
+      },
+      "normal": {
+        "echo": 582,
+        "nova": 1076
+      },
+      "hard": {
+        "echo": 828,
+        "nova": 1975
+      }
+    }
+  },
+  "liquated": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 306.86160997732424,
+    "notes": {
+      "easy": {
+        "nova": 827,
+        "echo": 518
+      },
+      "normal": {
+        "nova": 1465,
+        "echo": 697
+      },
+      "hard": {
+        "nova": 2121,
+        "echo": 919
+      }
+    }
+  },
+  "why-do-you-hate-me": {
+    "sources": {
+      "easy": "normal.json",
+      "normal": "hard.json",
+      "hard": "maniac.json"
+    },
+    "duration": 309.43303854875285,
+    "notes": {
+      "easy": {
+        "echo": 645,
+        "nova": 863
+      },
+      "normal": {
+        "echo": 1000,
+        "nova": 1325
+      },
+      "hard": {
+        "echo": 1387,
+        "nova": 2024
+      }
+    }
+  },
+  "quaoar": {
+    "sources": {
+      "easy": "normal.json",
+      "normal": "hard.json",
+      "hard": "maniac.json"
+    },
+    "duration": 288.02231292517007,
+    "notes": {
+      "easy": {
+        "echo": 776,
+        "nova": 1598
+      },
+      "normal": {
+        "echo": 1159,
+        "nova": 2033
+      },
+      "hard": {
+        "echo": 1606,
+        "nova": 2404
+      }
+    }
+  },
+  "crystallized": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 268.2812471655329,
+    "notes": {
+      "easy": {
+        "nova": 2046,
+        "echo": 898
+      },
+      "normal": {
+        "nova": 2738,
+        "echo": 1341
+      },
+      "hard": {
+        "nova": 2915,
+        "echo": 1796
+      }
+    }
+  },
+  "nacreous-snowmelt": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 443.63839002267576,
+    "notes": {
+      "easy": {
+        "nova": 2053,
+        "echo": 1531
+      },
+      "normal": {
+        "nova": 3833,
+        "echo": 2973
+      },
+      "hard": {
+        "nova": 4894,
+        "echo": 3446
+      }
+    }
+  },
+  "lioness-pride": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 292.10526077097506,
+    "notes": {
+      "easy": {
+        "nova": 731,
+        "echo": 852
+      },
+      "normal": {
+        "nova": 788,
+        "echo": 1019
+      },
+      "hard": {
+        "nova": 950,
+        "echo": 1294
+      }
+    }
+  },
+  "ghost": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 344.7414739229025,
+    "notes": {
+      "easy": {
+        "nova": 2321,
+        "echo": 1243
+      },
+      "normal": {
+        "nova": 3246,
+        "echo": 1835
+      },
+      "hard": {
+        "nova": 4121,
+        "echo": 2621
+      }
+    }
+  },
+  "ghoul": {
+    "sources": {
+      "easy": "normal.json",
+      "normal": "hard.json",
+      "hard": "maniac.osu"
+    },
+    "duration": 270.19836734693877,
+    "notes": {
+      "easy": {
+        "echo": 1420,
+        "nova": 2166
+      },
+      "normal": {
+        "echo": 2273,
+        "nova": 3436
+      },
+      "hard": {
+        "nova": 4098,
+        "echo": 2836
+      }
+    }
+  },
+  "ghost-vip": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 332.8705442176871,
+    "notes": {
+      "easy": {
+        "nova": 2507,
+        "echo": 1640
+      },
+      "normal": {
+        "nova": 4313,
+        "echo": 1929
+      },
+      "hard": {
+        "nova": 4961,
+        "echo": 2993
+      }
+    }
+  },
+  "dance-with-silence": {
+    "sources": {
+      "easy": "normal.json",
+      "normal": "hard.json",
+      "hard": "maniac.json"
+    },
+    "duration": 289.68750566893425,
+    "notes": {
+      "easy": {
+        "echo": 1144,
+        "nova": 2064
+      },
+      "normal": {
+        "echo": 1321,
+        "nova": 2149
+      },
+      "hard": {
+        "echo": 1677,
+        "nova": 2588
+      }
+    }
+  },
+  "burning-aquamarine": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 362.9732199546485,
+    "notes": {
+      "easy": {
+        "nova": 2591,
+        "echo": 2212
+      },
+      "normal": {
+        "nova": 3241,
+        "echo": 2757
+      },
+      "hard": {
+        "nova": 4188,
+        "echo": 3162
+      }
+    }
+  },
+  "tremendous": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 440.0892970521542,
+    "notes": {
+      "easy": {
+        "nova": 4242,
+        "echo": 2261
+      },
+      "normal": {
+        "nova": 6380,
+        "echo": 3405
+      },
+      "hard": {
+        "nova": 6979,
+        "echo": 4427
+      }
+    }
+  },
+  "racemization": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 312.16893424036283,
+    "notes": {
+      "easy": {
+        "nova": 2527,
+        "echo": 2019
+      },
+      "normal": {
+        "nova": 2788,
+        "echo": 2383
+      },
+      "hard": {
+        "nova": 3936,
+        "echo": 2514
+      }
+    }
+  },
+  "kisaragi": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 356.0135827664399,
+    "notes": {
+      "easy": {
+        "nova": 2849,
+        "echo": 2091
+      },
+      "normal": {
+        "nova": 3889,
+        "echo": 2831
+      },
+      "hard": {
+        "nova": 4970,
+        "echo": 3635
+      }
+    }
+  },
+  "compute it": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 266.5681859410431,
+    "notes": {
+      "easy": {
+        "nova": 2213,
+        "echo": 1749
+      },
+      "normal": {
+        "nova": 2711,
+        "echo": 2052
+      },
+      "hard": {
+        "nova": 3620,
+        "echo": 2970
+      }
+    }
+  },
+  "exit-this-earth's-atomosphere": {
+    "sources": {
+      "easy": "normal.osu",
+      "normal": "hard.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 401.94197278911565,
+    "notes": {
+      "easy": {
+        "nova": 3118,
+        "echo": 1977
+      },
+      "normal": {
+        "nova": 4536,
+        "echo": 2602
+      },
+      "hard": {
+        "nova": 5355,
+        "echo": 3012
+      }
+    }
+  },
+  "tutorial": {
+    "sources": {
+      "easy": "maniac.osu",
+      "normal": "maniac.osu",
+      "hard": "maniac.osu"
+    },
+    "duration": 60.51419501133787,
+    "notes": {
+      "easy": {
+        "nova": 675,
+        "echo": 397
+      },
+      "normal": {
+        "nova": 675,
+        "echo": 397
+      },
+      "hard": {
+        "nova": 675,
+        "echo": 397
+      }
+    }
+  }
+}

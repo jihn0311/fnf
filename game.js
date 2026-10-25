@@ -25,7 +25,7 @@ function drawCountdown(t){const cue=countdownCue(t);if(!cue||!cue.visible)return
 
 function formatTime(seconds){const n=Math.max(0,Math.floor(seconds));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
 function selectSong(id){
-  const selected=SONGS[id]?id:'midnight';song=SONGS[selected];songId=song.baseSongId||selected;BPM=song.bpm;BEAT=60/BPM;DURATION=song.duration||song.beats*BEAT;
+  const selected=SONGS[id]?id:'midnight';song=SONGS[selected];songId=song.baseSongId||selected;BPM=song.bpm;for(const option of $('difficulty')?.options||[])option.textContent=song.difficultyLabels?.[option.value]||option.value.toUpperCase();BEAT=60/BPM;DURATION=song.duration||song.beats*BEAT;
   $('track-title').textContent=song.title;$('track-meta').textContent=(song.audioSrc?'약 ':'')+BPM+' BPM · '+song.genre+' · '+formatTime(DURATION);
   $('track-number').textContent=(song.audioSrc?'YOUR TRACK / ':'ORIGINAL TRACK / ')+String(Object.keys(SONGS).indexOf(songId)+1).padStart(2,'0');
   $('song-description').textContent=song.description;
@@ -540,7 +540,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
-const modNames={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+const modNames={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
 let selectedMod=null;
 function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
 function buildModCards(){

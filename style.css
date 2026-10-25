@@ -56,3 +56,5 @@
 .song-progress[data-theme="garcello"]{--progress:#81c7ac;--progress-end:#c8e6dc;background:linear-gradient(110deg,#172e2b,#272436);border-color:#577d70;}
 
 .song-progress[data-theme=kapi]{--progress:#a8b9ff;--progress-end:#e38ddd;background:linear-gradient(100deg,#161b35,#30203a);border-color:#8178af;}
+
+.song-progress[data-theme=camellia]{--progress:#79e6fc;--progress-end:#d888ff;background:linear-gradient(110deg,#10243e,#2a143d);border-color:#6878bc;}
