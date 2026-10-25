@@ -1,0 +1,122 @@
+{
+  "wocky": {
+    "duration": 121.38290249433106,
+    "stage": "stageback",
+    "opponent": "kapi:KAPI",
+    "notes": {
+      "easy": {
+        "echo": 297,
+        "nova": 290
+      },
+      "normal": {
+        "echo": 297,
+        "nova": 290
+      },
+      "hard": {
+        "echo": 297,
+        "nova": 290
+      }
+    },
+    "events": {
+      "easy": 1,
+      "normal": 1,
+      "hard": 1
+    }
+  },
+  "beathoven": {
+    "duration": 120.74031746031746,
+    "stage": "stageBop",
+    "opponent": "kapi:KAPI",
+    "notes": {
+      "easy": {
+        "echo": 392,
+        "nova": 403
+      },
+      "normal": {
+        "echo": 392,
+        "nova": 403
+      },
+      "hard": {
+        "echo": 392,
+        "nova": 403
+      }
+    },
+    "events": {
+      "easy": 2,
+      "normal": 2,
+      "hard": 2
+    }
+  },
+  "hairball": {
+    "duration": 171.59337868480725,
+    "stage": "sunset",
+    "opponent": "kapi:KAPI_ANGRY",
+    "notes": {
+      "easy": {
+        "echo": 494,
+        "nova": 395
+      },
+      "normal": {
+        "echo": 494,
+        "nova": 395
+      },
+      "hard": {
+        "echo": 494,
+        "nova": 395
+      }
+    },
+    "events": {
+      "easy": 5,
+      "normal": 5,
+      "hard": 5
+    }
+  },
+  "nyaw": {
+    "duration": 151.5660090702948,
+    "stage": "closed",
+    "opponent": "kapi:KAPI",
+    "notes": {
+      "easy": {
+        "echo": 644,
+        "nova": 685
+      },
+      "normal": {
+        "echo": 644,
+        "nova": 685
+      },
+      "hard": {
+        "echo": 644,
+        "nova": 685
+      }
+    },
+    "events": {
+      "easy": 22,
+      "normal": 22,
+      "hard": 22
+    }
+  },
+  "flatzone": {
+    "duration": 123.03124716553287,
+    "stage": "flatfuck",
+    "opponent": "kapi:G&W",
+    "notes": {
+      "easy": {
+        "echo": 285,
+        "nova": 286
+      },
+      "normal": {
+        "echo": 285,
+        "nova": 286
+      },
+      "hard": {
+        "echo": 285,
+        "nova": 286
+      }
+    },
+    "events": {
+      "easy": 1,
+      "normal": 1,
+      "hard": 1
+    }
+  }
+}

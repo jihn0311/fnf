@@ -1,6 +1,6 @@
 'use strict';
 // Lightweight, shared location; each pack keeps its own visual identity.
-const PROGRESS_THEMES={original:'NEON DUET',sonic:'SONIC.EXE',virus:'VIRUS R',death:'DEATHMATCH',tainted:'TAINTED FATE',silly:'SILLY BILLY',impostor:'IMPOSTOR V4',survent:'MID-FIGHT MASSES',agoti:'A.G.O.T.I',garcello:'SMOKE ’EM OUT STRUGGLE',mario:'MARIO’S MADNESS'};
+const PROGRESS_THEMES={original:'NEON DUET',sonic:'SONIC.EXE',virus:'VIRUS R',death:'DEATHMATCH',tainted:'TAINTED FATE',silly:'SILLY BILLY',impostor:'IMPOSTOR V4',survent:'MID-FIGHT MASSES',agoti:'A.G.O.T.I',kapi:'ARCADE SHOWDOWN',garcello:'SMOKE ’EM OUT STRUGGLE',mario:'MARIO’S MADNESS'};
 let progressNodes=null,progressThemeKey='',progressText='',progressPercent=-1;
 function updateSongProgress(chartTime){
  if(!progressNodes){const root=document.getElementById('song-progress');if(!root)return;progressNodes={root,brand:document.getElementById('progress-brand'),title:document.getElementById('progress-title'),label:document.getElementById('remaining-label'),time:document.getElementById('time'),track:document.getElementById('song-progress-track'),fill:document.getElementById('song-progress-fill')};}

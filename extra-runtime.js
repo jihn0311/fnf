@@ -12,7 +12,7 @@ function extraReset(){
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
- extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);
+ extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
@@ -127,9 +127,9 @@ function extraActor(side,t,x,y,black=false){
  if(!a.animations[key]&&singing)key='sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane];
  let elapsed=singing?t-(actor.at??t):Math.max(0,t)%BEAT;
  if(singing&&actor.miss)key=missAnimationKey(a,actor.lane)||key;
- if(side==='gf'&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
+ if((side==='gf'||song.pack==='kapi'&&a.animations.danceLeft)&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
  const special=s.special[side];
- if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&!singing)){key=special.name;elapsed=t-special.at;}}
+ if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
  const off=a.config?.[key]?.offsets||[0,0];ctx.save();if(song.pack==='mario'&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
@@ -148,10 +148,15 @@ function extraActor(side,t,x,y,black=false){
   const offsetScale=a.scale/(a.nativeScale||1);
   const originX=-idle.w/2-idle.ox+idleOff[0]*offsetScale,originY=-idle.h-idle.oy+idleOff[1]*offsetScale;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
+ }else if(song.pack==='kapi'&&s.chars[side]==='kapi:G&W'){
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.w/2,-f.h,f.w,f.h);
+ }else if(song.pack==='kapi'){
+  const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
- }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||songId==='tainted-defeat'||side==='gf'){
+ }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||song.pack==='kapi'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -171,6 +176,8 @@ function extraStage(t){
   drawMarioStage(t);
  }else if(song.pack==='impostor'){
   drawImpostorStage(t);
+ }else if(song.pack==='kapi'){
+  drawKapiStage(t);
  }else if(song.pack==='garcello'){
   for(const l of garcelloLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
   drawGarcelloActors(t);
@@ -542,9 +549,9 @@ function drawMarioStage(t){
   if(im){const start=song.stagePhases.find(c=>c.phase==='finale').time,frame=Math.floor(Math.max(0,t-start)*24)%8;ctx.save();ctx.globalAlpha=.7;ctx.drawImage(im,frame*256,0,256,320,465,40,256,400);ctx.restore();}
  }
 }
-function drawMarioNote(note,x,y,tail,t){
- if(song.pack!=='mario')return false;
- const skin=song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
+function drawMarioNote(note,x,y,tail,t,side='echo'){
+ if(!['mario','kapi'].includes(song.pack))return false;
+ const skin=song.pack==='kapi'&&side==='echo'?song.playerNoteSkin:song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
  const frames=skin.frames[note.lane],f=frames.note,scale=72/Math.max(frames.idle.width,frames.idle.height);
  ctx.save();ctx.imageSmoothingEnabled=!skin.pixel;
  if(note.duration){
@@ -624,3 +631,13 @@ function allStarsBackgroundTime(t){
 
 function garcelloLayers(){return [{key:'garcello/stage/'+song.stage,x:0,y:0,w:1120,h:530}];}
 function drawGarcelloActors(t){extraActor('gf',t,560,415);extraActor('nova',t,270,475);extraActor('echo',t,850,475);}
+
+function kapiLayers(){return MOD_ART.scenes[song.sceneKey].layers;}
+function drawKapiActors(t){extraActor('gf',t,560,405);extraActor('nova',t,270,475);extraActor('echo',t,850,475);}
+function drawKapiStage(t){rect(0,0,1120,530,'#17131f');for(const l of kapiLayers().filter(l=>!l.front))extraSprite(l.key,t,l.x,l.y,l.w,l.h,'idle',l.fps,true);drawKapiActors(t);for(const l of kapiLayers().filter(l=>l.front))extraSprite(l.key,t,l.x,l.y,l.w,l.h,'idle',l.fps,true);}
+function drawKapiReceptor(side,lane,x,y,lit){
+ if(song.pack!=='kapi')return false;
+ const skin=side==='echo'?song.playerNoteSkin:song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
+ const frames=skin.frames[lane],f=lit?frames.confirm:frames.idle,scale=72/Math.max(frames.idle.width,frames.idle.height);
+ ctx.drawImage(im,f.x,f.y,f.width,f.height,x-(f.frameWidth||f.width)*scale/2-f.frameX*scale,y-(f.frameHeight||f.height)*scale/2-f.frameY*scale,f.width*scale,f.height*scale);return true;
+}
