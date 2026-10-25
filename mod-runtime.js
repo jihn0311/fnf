@@ -115,6 +115,7 @@ function drawLowSpecStage(t){
   if(!extraState||extraState.id!==songId)extraReset();
   if(song.pack==='survent'&&song.stage==='churchSelever')drawCasanovaActors(t);
   else if(song.pack==='survent')drawSurventActors(t);
+  else if(song.pack==='garcello')drawGarcelloActors(t);
   else if(song.pack==='agoti')drawAgotiActors(t);
   else if(song.pack==='mario')drawMarioActors(t);
   else if(song.pack==='impostor')drawImpostorActors(t);
@@ -131,6 +132,7 @@ function lowSpecLayers(){
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
  if(song.pack==='survent'&&song.stage==='churchSelever')return casanovaLayers();
  if(song.pack==='survent')return surventLayers();
+ if(song.pack==='garcello')return garcelloLayers();
  if(song.pack==='agoti')return agotiLayers();
  if(song.pack==='mario')return marioLayers();
  if(song.pack==='impostor')return impostorLayers().filter(l=>l.alpha>0);

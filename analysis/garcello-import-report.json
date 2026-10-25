@@ -1,0 +1,94 @@
+{
+  "headache": {
+    "duration": 107.0,
+    "opponent": "garcello:garcello",
+    "trimmedAfterAudio": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0
+    },
+    "notes": {
+      "easy": {
+        "echo": 180,
+        "nova": 215
+      },
+      "normal": {
+        "echo": 180,
+        "nova": 215
+      },
+      "hard": {
+        "echo": 198,
+        "nova": 233
+      }
+    }
+  },
+  "nerves": {
+    "duration": 115.2,
+    "opponent": "garcello:garcellotired",
+    "trimmedAfterAudio": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0
+    },
+    "notes": {
+      "easy": {
+        "echo": 178,
+        "nova": 195
+      },
+      "normal": {
+        "echo": 178,
+        "nova": 195
+      },
+      "hard": {
+        "echo": 212,
+        "nova": 231
+      }
+    }
+  },
+  "release": {
+    "duration": 144.0,
+    "opponent": "garcello:garcellodead",
+    "trimmedAfterAudio": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0
+    },
+    "notes": {
+      "easy": {
+        "echo": 252,
+        "nova": 267
+      },
+      "normal": {
+        "echo": 252,
+        "nova": 267
+      },
+      "hard": {
+        "echo": 318,
+        "nova": 345
+      }
+    }
+  },
+  "fading": {
+    "duration": 43.2,
+    "opponent": "garcello:garcelloghosty",
+    "trimmedAfterAudio": {
+      "easy": 335,
+      "normal": 335,
+      "hard": 335
+    },
+    "notes": {
+      "easy": {
+        "echo": 47,
+        "nova": 53
+      },
+      "normal": {
+        "echo": 47,
+        "nova": 53
+      },
+      "hard": {
+        "echo": 47,
+        "nova": 53
+      }
+    }
+  }
+}

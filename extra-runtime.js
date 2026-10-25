@@ -151,7 +151,7 @@ function extraActor(side,t,x,y,black=false){
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
- }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||songId==='tainted-defeat'||side==='gf'){
+ }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -171,6 +171,9 @@ function extraStage(t){
   drawMarioStage(t);
  }else if(song.pack==='impostor'){
   drawImpostorStage(t);
+ }else if(song.pack==='garcello'){
+  for(const l of garcelloLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
+  drawGarcelloActors(t);
  }else if(song.pack==='agoti'){
   drawAgotiStage(t);
  }else if(song.pack==='survent'){
@@ -618,3 +621,6 @@ function allStarsBackgroundTime(t){
  const start=t>=allStarsCue('3:4')?allStarsCue('3:4'):t>=allStarsCue('3:3')?allStarsCue('3:3'):allStarsCue('3:0');
  return Math.max(0,t-start);
 }
+
+function garcelloLayers(){return [{key:'garcello/stage/'+song.stage,x:0,y:0,w:1120,h:530}];}
+function drawGarcelloActors(t){extraActor('gf',t,560,415);extraActor('nova',t,270,475);extraActor('echo',t,850,475);}
