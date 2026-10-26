@@ -58,3 +58,5 @@
 .song-progress[data-theme=kapi]{--progress:#a8b9ff;--progress-end:#e38ddd;background:linear-gradient(100deg,#161b35,#30203a);border-color:#8178af;}
 
 .song-progress[data-theme=camellia]{--progress:#79e6fc;--progress-end:#d888ff;background:linear-gradient(110deg,#10243e,#2a143d);border-color:#6878bc;}
+
+.key-settings{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0}.key-settings button{padding:10px 18px;border:1px solid #596477;border-radius:8px;background:#202638;color:#fff;cursor:pointer}.key-settings button:focus-visible{outline:2px solid #8cf5d9}.key-settings p{width:100%;margin:0;color:#a7b7cd;font-size:13px}

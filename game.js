@@ -2,7 +2,25 @@
 const canvas = document.querySelector('#stage'), ctx = canvas.getContext('2d');
 const $ = id => document.getElementById(id);
 const COLORS = ['#c24b99','#00ffff','#00f000','#f9393f'];
-const KEYS = {ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3,d:0,f:1,j:2,k:3};
+const KEYS = {ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3};
+let playKeys=['d','f','j','k'],bindingLane=null;
+try{const saved=JSON.parse(localStorage.getItem('fnf-play-keys-v1'));if(Array.isArray(saved)&&saved.length===4&&new Set(saved).size===4&&saved.every(k=>typeof k==='string'&&/^[a-z0-9]$/.test(k)))playKeys=saved;}catch{}
+function inputKey(e){return /^Key[A-Z]$/.test(e.code||'')?e.code.slice(3).toLowerCase():/^Digit[0-9]$/.test(e.code||'')?e.code.slice(5):e.key.length===1?e.key.toLowerCase():e.key;}
+function applyPlayKeys(){
+ for(const key of Object.keys(KEYS))if(!key.startsWith('Arrow'))delete KEYS[key];
+ playKeys.forEach((key,lane)=>{KEYS[key]=lane;});
+}
+applyPlayKeys();
+function showPlayKeys(){
+ playKeys.forEach((key,i)=>{
+  const button=$('bind-'+i);if(button)button.textContent=['←','↓','↑','→'][i]+' '+(bindingLane===i?'키 입력…':key.toUpperCase());
+  const cap=$('keycap-'+['d','f','j','k'][i])?.querySelector?.('kbd');if(cap)cap.textContent=key.toUpperCase();
+  const touch=document.querySelector?.('[data-lane="'+i+'"] kbd');if(touch)touch.textContent=key.toUpperCase();
+ });
+ if($('hint'))$('hint').textContent='방향키 또는 '+playKeys.map(k=>k.toUpperCase()).join(' · ');
+}
+function savePlayKeys(){applyPlayKeys();held.clear();refreshButtons();showPlayKeys();try{localStorage.setItem('fnf-play-keys-v1',JSON.stringify(playKeys));}catch{}}
+
 const SONGS = {
   midnight:{title:'Midnight Circuit',bpm:120,beats:96,genre:'SYNTH POP',description:'네온빛 도시의 콜 앤 리스폰스',roots:[130.81,103.83,155.56,116.54],scale:[0,3,7,10],chord:[1,1.1892,1.4983],pattern:[0,1,2,3,2,1,0,2,3,1,2,0,1,3,2,1],parts:['nova','echo','nova','echo','duet','nova','echo','duet','nova','echo','duet'],voice:'triangle',sky:['#151c30','#253044']},
   sunrise:{title:'Peach Sunrise',bpm:100,beats:112,genre:'DREAM POP',description:'따뜻한 메이저 화음과 여유로운 그루브',roots:[130.81,174.61,146.83,196],scale:[0,4,7,11],chord:[1,1.2599,1.4983],pattern:[2,1,3,0,1,3,2,0,3,2,0,1,2,0,3,1],parts:['nova','echo','nova','echo','duet','duet','nova','echo','nova','echo','duet','nova','duet'],voice:'sine',sky:['#362238','#754950']},
@@ -121,7 +139,7 @@ function readSettings(){
 function targetY(){return settings.scroll==='down'?448:82;}
 function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
 function laneHeld(lane){for(const value of held.values())if(value===lane)return true;return false;}
-function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));for(const key of ['d','f','j','k'])$('keycap-'+key)?.classList.toggle('active',held.has('key:'+key));}
+function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));for(const key of ['d','f','j','k'])$('keycap-'+key)?.classList.toggle('active',held.has('key:'+playKeys[['d','f','j','k'].indexOf(key)]));}
 const keyCountStorage='fnf-key-counts-v1';
 let keyPressCounts=[0,0,0,0],keyCountSaveTimer=null;
 try{const saved=JSON.parse(localStorage.getItem(keyCountStorage));if(Array.isArray(saved)&&saved.length===4)keyPressCounts=saved.map(n=>Number.isSafeInteger(n)&&n>=0?n:0);}catch{}
@@ -131,7 +149,7 @@ function queueKeyCountSave(){if(keyCountSaveTimer===null&&typeof setTimeout==='f
 showKeyPressCounts();window.addEventListener('pagehide',saveKeyPressCounts);
 function inputDown(source,lane){
   if(held.has(source))return;
-  if(state==='playing'&&source==='key:'+['d','f','j','k'][lane]){keyPressCounts[lane]++;queueKeyCountSave();const node=$('count-'+['d','f','j','k'][lane]);if(node)node.textContent=String(keyPressCounts[lane]);}
+  if(state==='playing'&&source==='key:'+playKeys[lane]){keyPressCounts[lane]++;queueKeyCountSave();const node=$('count-'+['d','f','j','k'][lane]);if(node)node.textContent=String(keyPressCounts[lane]);}
   if(state==='playing')updateNotes(time());
   const wasHeld=laneHeld(lane);held.set(source,lane);refreshButtons();
   if(!wasHeld)press(lane);
@@ -227,7 +245,7 @@ function stopSong(){
   $('overline').textContent='SELECT YOUR TRACK';$('title').textContent='곡을 멈췄어요.';
   $('description').textContent='다른 곡을 고르거나 같은 곡을 처음부터 시작하세요.';
   $('start').innerHTML='플레이 시작 <span>↗</span>';$('start').disabled=false;
-  $('hint').textContent='방향키 또는 D · F · J · K';$('status').textContent='READY TO PLAY';
+  showPlayKeys();$('status').textContent='READY TO PLAY';
   $('overlay').classList.remove('hidden');$('song').focus?.();$('song').scrollIntoView?.({block:'center',behavior:'smooth'});
 }
 async function loadTrackAudio(track){
@@ -454,7 +472,7 @@ function draw(t){prepareStageResolution();
       const offset=typeof modOffset==='function'?modOffset(lane,side,t):{x:0,y:0};const x=laneX(lane,side)+offset.x;
       if(lit)rect(x-38,targetY()-43,76,86,COLORS[lane]+'22');
       if(!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY()+offset.y,lit)))stageArrow(x,targetY()+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
-      if(side==='echo')label(['D','F','J','K'][lane],x,settings.scroll==='down'?492:33,10,'#a7b7cd');
+      if(side==='echo')label(playKeys[lane].toUpperCase(),x,settings.scroll==='down'?492:33,10,'#a7b7cd');
     }
     ctx.save();ctx.beginPath();ctx.rect(left,0,366,490);ctx.clip();
     const chart=side==='nova'?opponentNotes:notes;
@@ -502,12 +520,12 @@ $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pau
 $('restart').addEventListener('click',restartSong);$('stop-song').addEventListener('click',stopSong);
 $('sound').addEventListener('click',()=>{muted=!muted;if(master)master.gain.value=muted?0:.65;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');});
 document.addEventListener('keydown',e=>{
-  const key=e.key.length===1?e.key.toLowerCase():e.key;
+  const key=inputKey(e);
   if(key==='Escape'||(key==='Enter'&&['playing','paused'].includes(state))){e.preventDefault();if(!e.repeat)pause();return;}
   if(e.target?.matches?.('select,input,button')&&state!=='playing')return;
   if(KEYS[key]!==undefined){e.preventDefault();if(!e.repeat)inputDown('key:'+key,KEYS[key]);}
 });
-document.addEventListener('keyup',e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;inputUp('key:'+key);});
+document.addEventListener('keyup',e=>{const key=inputKey(e);inputUp('key:'+key);});
 for(const button of document.querySelectorAll('[data-lane]')){
   button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);inputDown('pointer:'+e.pointerId,Number(button.dataset.lane));});
   for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,e=>inputUp('pointer:'+e.pointerId));
@@ -515,7 +533,7 @@ for(const button of document.querySelectorAll('[data-lane]')){
 function loseFocus(){saveKeyPressCounts();if(state==='loading')pauseAfterLoad=true;if(state==='playing')pause();held.clear();refreshButtons();}
 window.addEventListener('blur',loseFocus);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)loseFocus();});
-for(const id of ['song','difficulty','scroll','speed','rate'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';$('hint').textContent='방향키 또는 D · F · J · K';$('status').textContent='READY TO PLAY';}}});
+for(const id of ['song','difficulty','scroll','speed','rate'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';showPlayKeys();$('status').textContent='READY TO PLAY';}}});
 function changeScrollSpeed(value){
  const speed=Math.min(5,Math.max(.25,Number(value)||1));settings.speed=speed;
  $('speed').value=String(speed);$('speed-number').value=String(speed);$('speed-value').textContent=speed.toFixed(2)+'×';
@@ -588,3 +606,16 @@ function rebuildSongPicker(){
 }
 $('performance-mode').addEventListener('change',rebuildSongPicker);
 if(typeof document.createElement==='function'){buildModCards();rebuildSongPicker();}
+
+for(let i=0;i<4;i++)$('bind-'+i)?.addEventListener('click',()=>{if(state==='playing')pause();bindingLane=i;held.clear();refreshButtons();showPlayKeys();$('binding-message').textContent='사용할 영문자나 숫자 키를 누르세요. Esc: 취소';});
+$('reset-bindings')?.addEventListener('click',()=>{if(state==='playing')pause();bindingLane=null;playKeys=['d','f','j','k'];savePlayKeys();$('binding-message').textContent='기본 키로 돌아왔습니다. 누른 횟수는 방향별로 유지됩니다.';});
+document.addEventListener('keydown',e=>{
+ if(bindingLane===null)return;
+ e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;
+ const key=inputKey(e);
+ if(key==='Escape'){bindingLane=null;showPlayKeys();$('binding-message').textContent='변경을 취소했습니다.';return;}
+ if(e.ctrlKey||e.altKey||e.metaKey||!/^[a-z0-9]$/.test(key)){$('binding-message').textContent='영문자 A~Z 또는 숫자 0~9를 선택하세요.';return;}
+ if(playKeys.some((k,i)=>k===key&&i!==bindingLane)){$('binding-message').textContent='다른 방향에서 사용 중인 키입니다. 다른 키를 누르세요.';return;}
+ playKeys[bindingLane]=key;bindingLane=null;savePlayKeys();$('binding-message').textContent='저장했습니다. 방향키도 그대로 사용할 수 있습니다.';
+},true);
+showPlayKeys();
