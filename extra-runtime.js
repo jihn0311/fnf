@@ -24,6 +24,7 @@ async function extraPrepare(){
  const worker=async()=>{while(next<pending.length){const src=pending[next++];await new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});loaded++;if(state==='loading')$('start').textContent='이미지 준비 중… '+loaded+'/'+pending.length;}};
  const results=await Promise.allSettled(Array.from({length:Math.min(3,pending.length)},worker));
  const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+ if(song.pack==='kapi'&&!song.lowSpec)prepareKapiStage();
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
  if(song.pack==='impostor'&&!song.lowSpec)await prepareImpostorVideos();
  if(!song.lowSpec&&(song.pack==='tainted'||song.pack==='silly'))await Promise.all(Object.entries(EXTRA_ART.sounds).map(async([name,src])=>{if(!extraSoundBuffers.has(name)){const response=await fetch(src);if(!response.ok)throw Error('효과음 로드 실패: '+src);extraSoundBuffers.set(name,await audio.decodeAudioData(await response.arrayBuffer()));}}));
@@ -131,7 +132,7 @@ function extraActor(side,t,x,y,black=false){
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
- const off=a.config?.[key]?.offsets||[0,0];ctx.save();if(song.pack==='mario'&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
+ const off=a.config?.[key]?.offsets||[0,0];ctx.save();if((song.pack==='mario'||song.pack==='kapi')&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
  if(songId==='tainted-destruction'&&t<320*BEAT&&s.chars[side].startsWith('tainted:bf_des'))ctx.scale(1.4,1.4);
  // Deathmatch character JSON describes the opponent-facing base; the player slot reverses it.
@@ -637,7 +638,28 @@ function drawGarcelloActors(t){extraActor('gf',t,560,415);extraActor('nova',t,27
 
 function kapiLayers(){return MOD_ART.scenes[song.sceneKey].layers;}
 function drawKapiActors(t){extraActor('gf',t,560,405);extraActor('nova',t,270,475);extraActor('echo',t,850,475);}
-function drawKapiStage(t){rect(0,0,1120,530,'#17131f');for(const l of kapiLayers().filter(l=>!l.front))extraSprite(l.key,t,l.x,l.y,l.w,l.h,'idle',l.fps,true);drawKapiActors(t);for(const l of kapiLayers().filter(l=>l.front))extraSprite(l.key,t,l.x,l.y,l.w,l.h,'idle',l.fps,true);}
+let kapiStageCache=[];
+function prepareKapiStage(){
+ kapiStageCache=[false,true].map(front=>({layers:kapiLayers().filter(l=>!!l.front===front),canvas:Object.assign(document.createElement('canvas'),{width:1120,height:530}),signature:null}));
+ for(const group of kapiStageCache)updateKapiStageCache(group,0);
+}
+function updateKapiStageCache(group,t){
+ const frames=group.layers.map(l=>extraFrame(EXTRA_ART.sprites[l.key],'idle',t,l.fps,true));
+ const signature=frames.map(f=>f?`${f.src}:${f.x}:${f.y}`:'static').join('|');
+ if(signature===group.signature)return;
+ const c=group.canvas.getContext('2d');c.clearRect(0,0,1120,530);c.imageSmoothingEnabled=song.stage!=='school';
+ group.layers.forEach((l,i)=>{const a=EXTRA_ART.sprites[l.key],f=frames[i],im=modImages.get(f?.src||a.src);if(!im)return;
+  if(f)c.drawImage(im,f.x,f.y,f.w,f.h,l.x+f.ox*l.w/f.fw,l.y+f.oy*l.h/f.fh,f.w*l.w/f.fw,f.h*l.h/f.fh);
+  else c.drawImage(im,l.x,l.y,l.w,l.h);
+ });group.signature=signature;
+}
+function drawKapiStage(t){
+ rect(0,0,1120,530,'#17131f');
+ for(const group of kapiStageCache)updateKapiStageCache(group,t);
+ if(kapiStageCache[0])ctx.drawImage(kapiStageCache[0].canvas,0,0);
+ drawKapiActors(t);
+ if(kapiStageCache[1])ctx.drawImage(kapiStageCache[1].canvas,0,0);
+}
 function drawKapiReceptor(side,lane,x,y,lit){
  if(song.pack!=='kapi')return false;
  const skin=side==='echo'?song.playerNoteSkin:song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;

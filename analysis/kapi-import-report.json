@@ -118,5 +118,101 @@
       "normal": 1,
       "hard": 1
     }
+  },
+  "meowgen": {
+    "duration": 175.63124716553287,
+    "stage": "stage",
+    "opponent": "kapi:dad",
+    "notes": {
+      "easy": {
+        "echo": 548,
+        "nova": 553
+      },
+      "normal": {
+        "echo": 548,
+        "nova": 553
+      },
+      "hard": {
+        "echo": 548,
+        "nova": 553
+      }
+    },
+    "events": {
+      "easy": 1,
+      "normal": 1,
+      "hard": 1
+    }
+  },
+  "scratch-post": {
+    "duration": 156.69551020408164,
+    "stage": "stage",
+    "opponent": "kapi:dad",
+    "notes": {
+      "easy": {
+        "echo": 689,
+        "nova": 666
+      },
+      "normal": {
+        "echo": 689,
+        "nova": 666
+      },
+      "hard": {
+        "echo": 689,
+        "nova": 666
+      }
+    },
+    "events": {
+      "easy": 117,
+      "normal": 117,
+      "hard": 117
+    }
+  },
+  "sanctuary": {
+    "duration": 162.58680272108845,
+    "stage": "mall",
+    "opponent": "kapi:parents-christmas",
+    "notes": {
+      "easy": {
+        "echo": 473,
+        "nova": 489
+      },
+      "normal": {
+        "echo": 473,
+        "nova": 489
+      },
+      "hard": {
+        "echo": 473,
+        "nova": 489
+      }
+    },
+    "events": {
+      "easy": 20,
+      "normal": 20,
+      "hard": 20
+    }
+  },
+  "pyoro": {
+    "duration": 141.81818594104308,
+    "stage": "school",
+    "opponent": "kapi:senpai",
+    "notes": {
+      "easy": {
+        "echo": 555,
+        "nova": 0
+      },
+      "normal": {
+        "echo": 555,
+        "nova": 0
+      },
+      "hard": {
+        "echo": 555,
+        "nova": 0
+      }
+    },
+    "events": {
+      "easy": 6,
+      "normal": 6,
+      "hard": 6
+    }
   }
 }

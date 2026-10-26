@@ -50,7 +50,7 @@ def adobe(folder,defs,out):
   if d['id'] not in syms:continue
   frames=[];timeline=syms[d['id']];indices=d.get('indices') or list(range(length(timeline)))
   for n in indices[::2]:
-   res=[];off=d.get('offsets',[0,0]);walk(timeline,n,[1,0,0,1,-off[0],-off[1]],res);frames.append(res)
+   res=[];off=d.get('offsets',[0,0]);walk(timeline,min(n,length(timeline)-1),[1,0,0,1,-off[0],-off[1]],res);frames.append(res)
    for name,m in res:
     w,h=parts[name].size;A,B,C,D,E,F=m
     for u,v in [(0,0),(w,0),(0,h),(w,h)]:xs.append(A*u+C*v+E);ys.append(B*u+D*v+F)

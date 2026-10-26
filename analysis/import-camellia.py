@@ -66,3 +66,13 @@ for slug in order:
 (root/'camellia-mod.js').write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst CAMELLIA_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],CAMELLIA_ART[key]);\nObject.assign(EXTRA_ART.sprites,CAMELLIA_ART.sprites);\n',encoding='utf8')
 (root/'analysis/camellia-import-report.json').write_text(json.dumps(report,indent=2),encoding='utf8')
 p=root/'mod-assets.json';files=ns['read'](p)+['camellia-mod.js','assets/mod-icons/camellia.webp']+[ns['web'](f) for f in (root/'assets/extra-mods/camellia').rglob('*') if f.is_file()];p.write_text(json.dumps(list(dict.fromkeys(files)),indent=2),encoding='utf8')
+
+# Version regenerated images independently of the script cache.
+import hashlib
+from functools import lru_cache
+@lru_cache(None)
+def image_version(path):return hashlib.sha256((root/path).read_bytes()).hexdigest()[:12]
+p=root/"camellia-mod.js"
+s=p.read_text(encoding='utf8')
+s=re.sub(r'"(assets/extra-mods/camellia/[^"?]+\.webp)"',lambda m:'"'+m[1]+'?v='+image_version(m[1])+'"',s)
+p.write_text(s,encoding='utf8')
