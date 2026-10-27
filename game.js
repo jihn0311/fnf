@@ -1,5 +1,6 @@
 'use strict';
-const canvas = document.querySelector('#stage'), ctx = canvas.getContext('2d');
+const canvas = document.querySelector('#stage');
+let ctx = canvas.getContext('2d');
 const $ = id => document.getElementById(id);
 const COLORS = ['#c24b99','#00ffff','#00f000','#f9393f'];
 const KEYS = {ArrowLeft:0,ArrowDown:1,ArrowUp:2,ArrowRight:3};
@@ -450,7 +451,9 @@ const flashEndCache=new WeakMap();
 function opponentFlashEnds(chart){
  let ends=flashEndCache.get(chart);if(!ends){ends=[];let end=-Infinity;for(const n of chart){end=Math.max(end,n.time+Math.max(.15,n.duration||0));ends.push(end);}flashEndCache.set(chart,ends);}return ends;
 }
-function draw(t){prepareStageResolution();
+// Stage animation runs at 30 fps independently of the full-rate note layer.
+let sceneCanvas=null,sceneFrame=null,sceneSong=null,sceneState=null;
+function drawScene(t){
   ctx.clearRect(0,0,1120,530);const bg=ctx.createLinearGradient(0,0,0,530);bg.addColorStop(0,song.sky[0]);bg.addColorStop(1,song.sky[1]);ctx.fillStyle=bg;ctx.fillRect(0,0,1120,530);
   if(typeof modActive==='function'&&modActive()){drawModStage(t);}else{
   ctx.fillStyle='#a5b8d755';for(let i=0;i<38;i++)ctx.fillRect((i*193)%1120,(i*71)%260,2,2);
@@ -464,6 +467,21 @@ function draw(t){prepareStageResolution();
   character(280,274,'#f58bc6',true,t);character(843,274,'#8cf5d9',false,t);
   label('NOVA / AUTO',265,508,12,'#f58bc6');label('ECHO / YOU',850,508,12,'#8cf5d9');
   }
+}
+function drawCachedScene(t){
+ if(song.lowSpec||typeof document.createElement!=='function'){drawScene(t);return;}
+ if(!sceneCanvas){sceneCanvas=document.createElement('canvas');sceneCanvas.width=1120;sceneCanvas.height=530;}
+ const tick=Math.floor(t*30/(settings.rate||1));
+ if(state!=='playing'||sceneFrame!==tick||sceneSong!==song||sceneState!==state){
+  const main=ctx;
+  try{ctx=sceneCanvas.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='medium';drawScene(t);}
+  finally{ctx=main;}
+  sceneFrame=tick;sceneSong=song;sceneState=state;
+ }
+ ctx.clearRect(0,0,1120,530);ctx.drawImage(sceneCanvas,0,0,1120,530);
+}
+function draw(t){prepareStageResolution();
+  drawCachedScene(t);
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);
   const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);
   ctx.save();if(typeof extraHudAlpha==='function')ctx.globalAlpha=extraHudAlpha(t);

@@ -163,3 +163,7 @@
 - Cap normal canvas scale at 1.25, use medium image resampling, and reduce once to logical resolution after sustained slow animation frames (15/45 over 22ms). Ignore pauses/tab stalls and never raise resolution again mid-song; reset budget on song start. This reduces rendering pressure without time-smoothing or delaying judgments/notes.
 - Headless Edge 1920px/DPR2 forced-readback probe averages: Nyaw 51.7→27.7ms, Ghost 37.2→21.0ms, Casanova 76.3→49.6ms; includes first-frame costs and readback, not a user-device FPS claim. User-specific song/segment not yet provided.
 - Validation: test-scroll-stability.cjs, test-game.cjs and test-dense-notes.cjs pass; audio-time-linear note movement, fallback/hysteresis, paused frames and dense 160-note drawing verified.
+
+## 2026-10-27 All-song scroll follow-up
+- User reports all normal songs remain severe. Split the scene pass from note rendering: render normal backgrounds/characters into a fixed logical-resolution canvas at 30 fps, reuse between ticks, and continue drawing notes/judgments on every animation frame using audio time. Existing effects remain; character/stage motion now has 30 fps cadence. Pause/seek/song changes invalidate the scene; restore drawing context in finally. Low-spec path unchanged.
+- Validation: scene-cache browser checks on Nyaw/Ghost/Casanova show 60 stage paints versus 120 note frames, pause/seek invalidation and restored main context. Gameplay, dense-note and scroll-budget tests pass. This reduces common stage work; smoothness on the user's hardware still needs confirmation.
