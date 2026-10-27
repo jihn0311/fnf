@@ -520,6 +520,7 @@ $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pau
 $('restart').addEventListener('click',restartSong);$('stop-song').addEventListener('click',stopSong);
 $('sound').addEventListener('click',()=>{muted=!muted;if(master)master.gain.value=muted?0:.65;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');});
 document.addEventListener('keydown',e=>{
+  if($('key-settings-dialog')?.open)return;
   const key=inputKey(e);
   if(key==='Escape'||(key==='Enter'&&['playing','paused'].includes(state))){e.preventDefault();if(!e.repeat)pause();return;}
   if(e.target?.matches?.('select,input,button')&&state!=='playing')return;
@@ -619,3 +620,12 @@ document.addEventListener('keydown',e=>{
  playKeys[bindingLane]=key;bindingLane=null;savePlayKeys();$('binding-message').textContent='저장했습니다. 방향키도 그대로 사용할 수 있습니다.';
 },true);
 showPlayKeys();
+
+$('open-key-settings')?.addEventListener('click',()=>{
+ if(state==='playing')pause();if(state==='loading')pauseAfterLoad=true;
+ bindingLane=null;held.clear();refreshButtons();showPlayKeys();
+ $('binding-message').textContent='버튼을 누른 뒤 원하는 영문자·숫자 키를 누르세요. 자동 저장됩니다.';
+ $('key-settings-dialog').showModal();
+});
+$('close-key-settings')?.addEventListener('click',()=>$('key-settings-dialog').close());
+$('key-settings-dialog')?.addEventListener('close',()=>{bindingLane=null;held.clear();refreshButtons();showPlayKeys();});

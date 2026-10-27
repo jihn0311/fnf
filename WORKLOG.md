@@ -153,3 +153,7 @@
 ## 2026-10-27 Configurable play keys
 - Added four key-binding buttons accepting physical letter/number keys, duplicate rejection, Escape cancellation and default reset. Persist bindings in localStorage; retain arrow aliases, pause shortcuts and per-lane cumulative counts. Update keycaps, touch buttons, hint and lane labels. Rebinding pauses active play and releases held inputs.
 - Validation: game regression and browser rebinding/persistence/counter/release/arrow/reset checks pass. Refreshed script/style cache hashes.
+
+## 2026-10-27 Visible key settings entry
+- Added highlighted keyboard settings button beside Sound. Move existing controls into a labelled native modal with close button/Escape and automatic focus handling. Opening during play pauses; modal input does not trigger gameplay.
+- Validation: browser open/close, rebinding, persistence, pause-on-open and default reset checks plus game regression pass. Refreshed cache hashes.
