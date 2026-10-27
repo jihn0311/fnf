@@ -272,6 +272,7 @@ function playTrackBuffer(buffer,when){
 }
 async function start(){
   if(state==='loading')return;
+  resetRenderBudget();
   showPauseActions(false);$('pause').disabled=true;stopSources();
   state='loading';pausedTime=0;pauseAfterLoad=false;readSettings();setSettingsLocked(true);$('start').disabled=true;$('start').textContent='음원 준비 중…';$('status').textContent='LOADING';
   try{
@@ -421,16 +422,29 @@ function character(x,y,color,isNova,t){
   ctx.restore();
 }
 let stageDisplayWidth=0;
+let renderScaleLimit=1.25,renderFrameAt=null,renderSamples=[];
+function resetRenderBudget(){renderScaleLimit=1.25;renderFrameAt=null;renderSamples=[];}
+function trackRenderBudget(timestamp){
+ if(state!=='playing'||song.lowSpec||!Number.isFinite(timestamp)){renderFrameAt=null;renderSamples=[];return;}
+ const delta=renderFrameAt===null?0:timestamp-renderFrameAt;renderFrameAt=timestamp;
+ // Ignore tab stalls. Lower only once per song; never oscillate quality mid-song.
+ if(delta>0&&delta<150)renderSamples.push(delta);
+ if(renderSamples.length>=45){
+  const slow=renderSamples.filter(ms=>ms>22).length;
+  if(slow>=15)renderScaleLimit=1;
+  renderSamples=[];
+ }
+}
 function measureStage(){stageDisplayWidth=canvas.getBoundingClientRect?.().width||1120;}
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(measureStage).observe(canvas);
 window.addEventListener('resize',measureStage);
 function prepareStageResolution(){
  if(!stageDisplayWidth)measureStage();
  const width=stageDisplayWidth;
- const ratio=song.lowSpec?1:Math.min(2,Math.max(1,width*(window.devicePixelRatio||1)/1120));
+ const ratio=song.lowSpec?1:Math.min(renderScaleLimit,Math.max(1,width*(window.devicePixelRatio||1)/1120));
  const w=Math.round(1120*ratio),h=Math.round(530*ratio);
  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
- ctx.setTransform(w/1120,0,0,h/530,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality=song.lowSpec?'medium':'high';
+ ctx.setTransform(w/1120,0,0,h/530,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='medium';
 }
 const flashEndCache=new WeakMap();
 function opponentFlashEnds(chart){
@@ -513,7 +527,7 @@ function draw(t){prepareStageResolution();
   rect(0,527,1120*Math.max(0,t)/DURATION,3,'#8cf5d9');
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
-function frame(){const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
+function frame(timestamp){trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
   draw(state==='ready'?0:t);if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:t);requestAnimationFrame(frame);
 }
 $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pause').addEventListener('click',pause);

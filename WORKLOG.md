@@ -157,3 +157,9 @@
 ## 2026-10-27 Visible key settings entry
 - Added highlighted keyboard settings button beside Sound. Move existing controls into a labelled native modal with close button/Escape and automatic focus handling. Opening during play pauses; modal input does not trigger gameplay.
 - Validation: browser open/close, rebinding, persistence, pause-on-open and default reset checks plus game regression pass. Refreshed cache hashes.
+
+## 2026-10-27 Normal-mode scroll frame pressure
+- Investigated note positioning: movement uses absolute audio time; general modes do not periodically alter speed. Retained native Impostor scroll events and special lane motion. High-DPI normal rendering previously used four times the logical pixels.
+- Cap normal canvas scale at 1.25, use medium image resampling, and reduce once to logical resolution after sustained slow animation frames (15/45 over 22ms). Ignore pauses/tab stalls and never raise resolution again mid-song; reset budget on song start. This reduces rendering pressure without time-smoothing or delaying judgments/notes.
+- Headless Edge 1920px/DPR2 forced-readback probe averages: Nyaw 51.7→27.7ms, Ghost 37.2→21.0ms, Casanova 76.3→49.6ms; includes first-frame costs and readback, not a user-device FPS claim. User-specific song/segment not yet provided.
+- Validation: test-scroll-stability.cjs, test-game.cjs and test-dense-notes.cjs pass; audio-time-linear note movement, fallback/hysteresis, paused frames and dense 160-note drawing verified.
