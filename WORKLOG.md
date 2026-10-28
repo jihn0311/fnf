@@ -167,3 +167,7 @@
 ## 2026-10-27 All-song scroll follow-up
 - User reports all normal songs remain severe. Split the scene pass from note rendering: render normal backgrounds/characters into a fixed logical-resolution canvas at 30 fps, reuse between ticks, and continue drawing notes/judgments on every animation frame using audio time. Existing effects remain; character/stage motion now has 30 fps cadence. Pause/seek/song changes invalidate the scene; restore drawing context in finally. Low-spec path unchanged.
 - Validation: scene-cache browser checks on Nyaw/Ghost/Casanova show 60 stage paints versus 120 note frames, pause/seek invalidation and restored main context. Gameplay, dense-note and scroll-budget tests pass. This reduces common stage work; smoothness on the user's hardware still needs confirmation.
+
+## 2026-10-28 Kapi GF hair
+- Kapi GF danceLeft index 30 accidentally selected Hair Landing0000 because the importer matched every GF Dancing Beat prefix. Prefer the exact numbered animation group and map Kapi's out-of-range dance index to its last dance pose. Native hair artwork preserved. Exact grouping also prevents extra hair animations entering the additional-song GF sheets.
+- Validation: first left dance frame equals last right dance pose, all dance frames visible; inspected dance contact sheet. All nine Kapi tracks normal/low and memory/cache/transition browser checks pass.

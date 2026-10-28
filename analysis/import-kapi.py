@@ -2,7 +2,11 @@ from pathlib import Path
 import json,re,xml.etree.ElementTree as ET
 from PIL import Image
 root=Path(__file__).resolve().parent.parent;ROOT=root
-helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)};exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0],ns)
+helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)}
+helper_source=helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0]
+# A dance prefix also matches Hair Landing/Blowing; prefer its numbered group.
+helper_source=helper_source.replace("matches=[f for f in frames if f['name'].startswith(a['name'])]", "matches=[f for f in frames if re.sub(r'\\d+$','',f['name']).strip()==a['name']] or [f for f in frames if f['name'].startswith(a['name'])]")
+exec(helper_source,ns)
 def safe_xml(path):
  text=Path(path).read_text(encoding='utf-8-sig');return ET.ElementTree(ET.fromstring(re.sub(r'&(?!#?[A-Za-z0-9]+;)', '&amp;', text)))
 ns['ET'].parse=safe_xml
@@ -19,6 +23,10 @@ for name in ['KAPI','KAPI_ANGRY','KAPIBOYFRIEND','KAPIGIRLFRIEND','G&W','dad','b
  cp=r/'characters'/(name+'.json');d=ns['read'](cp if cp.exists() else native/'characters'/(name+'.json'));d['animations']=[a for a in d['animations'] if 'miss' not in a['anim'].lower() and not any(x in a['anim'].lower() for x in ['death','attack','dodge'])]
  if not any(v['anim']=='idle' for v in d['animations']):d['animations'].insert(0,{**next(v for v in d['animations'] if v['anim']=='danceLeft'),'anim':'idle'})
  if name in ['KAPIGIRLFRIEND','gf','gf-christmas','gf-pixel']:d['animations']=[a for a in d['animations'] if a['anim'] in ['idle','danceLeft','danceRight']]
+ # This sheet has 30 dance frames, so index 30 must use the last dance pose.
+ if name=='KAPIGIRLFRIEND':
+  for animation in d['animations']:
+   if animation['name']=='GF Dancing Beat':animation['indices']=[min(i,29) for i in animation.get('indices',[])]
  target=280 if name in ['KAPIGIRLFRIEND','KAPIBOYFRIEND','gf','bf','gf-christmas'] else 400
  a=ns['atlas'](img(d['image']).with_suffix(''),'kapi/characters/'+name,d,height=target);a['renderScale']=1.05 if name in ['KAPI','KAPI_ANGRY'] else .68 if name=='G&W' else .55;a['flip']=False if name=='KAPIBOYFRIEND' else d.get('flip_x',False)
  a['renderScale']*=480/target
