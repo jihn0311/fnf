@@ -171,3 +171,8 @@
 ## 2026-10-28 Kapi GF hair
 - Kapi GF danceLeft index 30 accidentally selected Hair Landing0000 because the importer matched every GF Dancing Beat prefix. Prefer the exact numbered animation group and map Kapi's out-of-range dance index to its last dance pose. Native hair artwork preserved. Exact grouping also prevents extra hair animations entering the additional-song GF sheets.
 - Validation: first left dance frame equals last right dance pose, all dance frames visible; inspected dance contact sheet. All nine Kapi tracks normal/low and memory/cache/transition browser checks pass.
+
+## 2026-10-28 Play either side and bot mode
+- Added pre-song player-part selection (BF/right or opponent/left) and bot toggle. Controlled chart, input animations, held poses, note rendering, lane keys, splashes and synthesized voice sides follow the selection; the other original character/chart plays automatically. Source staging and note-effect sides remain unchanged. Controls lock during playback.
+- Bot handles every due playable head at zero timing error and holds through sustain ticks, including chords/late frames; skips hurt/phantom traps and ignores manual gameplay input. It does not inflate physical key counts. Results/lane labels identify bot play.
+- Validation: gameplay and key-binding regressions; manual opponent control/automatic BF, both bot sides, chord holds/late-frame completion/trap avoidance/count isolation unit checks; Nyaw/Ghost browser checks for both sides, all-perfect results, locked controls and marked results pass.

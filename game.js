@@ -59,6 +59,8 @@ let settings = {difficulty:'normal',scroll:'up',speed:2.5,rate:1}, resumeGraceUn
 let splashes = [], opponentNotes=[], voiceEvents=[], voiceIndex=0;
 const actors={nova:{lane:-1,until:-1,miss:false},echo:{lane:-1,until:-1,miss:false}};
 
+function playerSide(){return settings.playSide==='nova'?'nova':'echo';}
+function autoSide(){return playerSide()==='echo'?'nova':'echo';}
 function sectionAt(t){if(song.sections){const section=song.sections.find(s=>t>=s.start&&t<s.end);return section?section.mode:t<song.sections[0].start?'intro':'outro';}const beat=Math.round(t/BEAT*1e8)/1e8;return beat<8?'intro':beat>=song.beats-4?'outro':song.parts[Math.floor((beat-8)/8)];}
 function sings(side,t){const part=sectionAt(t);return part===side||part==='duet';}
 function laneX(lane,side='echo'){if(song.pack==='silly'&&extraState?.middle&&side==='echo')return 425+lane*90;const swap=typeof tripleActive==='function'&&tripleActive()?tripleSwap():typeof extraSwap==='function'?extraSwap():0;return (side==='nova'?135+580*swap:715-580*swap)+lane*90;}
@@ -74,13 +76,13 @@ function updateOpponent(t){
   for(let i=chartStart(opponentNotes);i<opponentNotes.length;i++){const note=opponentNotes[i];
     if(note.time>t)break;
     if(note.done)continue;
-    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.9,Math.max(0,health-1));updateHud();}if(!note.noAnimation)animateSinger('nova',note.lane,note.time,note.duration);actors.nova.character=note.character||0;if(typeof extraNote==='function')extraNote(note,'nova');}
+    if(!note.started&&t>=note.time){note.started=true;if($('nightmare')?.checked&&!(typeof destructionInvulnerable==='function'&&destructionInvulnerable(t))){health-=Math.min(.9,Math.max(0,health-1));updateHud();}if(!note.noAnimation)animateSinger(autoSide(),note.lane,note.time,note.duration);actors[autoSide()].character=note.character||0;if(typeof extraNote==='function')extraNote(note,autoSide());}
     if(note.started&&t>=note.time+note.duration)note.done=true;
   }
 }
 function buildVoices(){
   if(song.audioSrc){voiceEvents=[];voiceIndex=0;return;}
-  voiceEvents=[...notes.map(n=>({...n,side:'echo'})),...opponentNotes.map(n=>({...n,side:'nova'}))].sort((a,b)=>a.time-b.time);voiceIndex=0;
+  voiceEvents=[...notes.map(n=>({...n,side:playerSide()})),...opponentNotes.map(n=>({...n,side:autoSide()}))].sort((a,b)=>a.time-b.time);voiceIndex=0;
 }
 function scheduleVoices(){
   if(song.audioSrc)return;
@@ -106,7 +108,7 @@ function timingResult(delta){
 }
 function splash(lane){if(song.lowSpec)return;splashes.push({lane,at:time()});}
 
-function createChart(difficulty = settings.difficulty, side = 'echo'){
+function createChart(difficulty = settings.difficulty, side = playerSide()){
   if(song.charts)return song.charts[difficulty][side].map(note=>({...note,done:false,holding:false}));
   const chart=[], blockedUntil=[-1,-1,-1,-1];
   const step=difficulty==='easy'?2:difficulty==='hard'?.5:1;
@@ -121,21 +123,21 @@ function createChart(difficulty = settings.difficulty, side = 'echo'){
   }
   return chart;
 }
-function setSettingsLocked(locked){for(const id of ['song','performance-mode','difficulty','scroll','rate','practice','nightmare'])$(id).disabled=locked;for(const button of document.querySelectorAll?.('.mod-card, #change-mod')||[])button.disabled=locked;}
+function setSettingsLocked(locked){for(const id of ['song','performance-mode','difficulty','scroll','rate','practice','nightmare','play-side','bot-mode'])$(id).disabled=locked;for(const button of document.querySelectorAll?.('.mod-card, #change-mod')||[])button.disabled=locked;}
 function readSettings(){
   selectSong($('song').value);
   const available=song.charts?Object.keys(song.charts):['easy','normal','hard'];
   for(const option of ($('difficulty').options||[]))option.disabled=!available.includes(option.value);
   if(!available.includes($('difficulty').value))$('difficulty').value=song.defaultDifficulty||available[0];
   if(song.sectionsByDifficulty)song.sections=song.sectionsByDifficulty[$('difficulty').value];
-  settings={difficulty:$('difficulty').value,scroll:$('scroll').value,speed:Math.min(5,Math.max(.25,Number($('speed').value)||1)),rate:Number($('rate').value)||1};
+  settings={playSide:$('play-side')?.value==='nova'?'nova':'echo',bot:!!$('bot-mode')?.checked,difficulty:$('difficulty').value,scroll:$('scroll').value,speed:Math.min(5,Math.max(.25,Number($('speed').value)||1)),rate:Number($('rate').value)||1};
   if(song.bpmByDifficulty){BPM=song.bpmByDifficulty[settings.difficulty];BEAT=60/BPM;}
   $('track-meta').textContent='원곡 '+BPM+' BPM (1×) · 현재 '+Number((BPM*settings.rate).toFixed(2))+' BPM ('+settings.rate+'×) · '+formatTime(DURATION/settings.rate);
   if(typeof syncModUI==='function')syncModUI();
   $('speed-value').textContent=settings.speed.toFixed(2)+'×';
   const chart=createChart();
   if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:time());
-  $('chart-info').textContent='내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
+  $('chart-info').textContent=(settings.bot?'BOT · ':'')+(playerSide()==='nova'?'상대 파트 · ':'보프 파트 · ')+'내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
 }
 function targetY(){return settings.scroll==='down'?448:82;}
 function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
@@ -149,6 +151,7 @@ function saveKeyPressCounts(){if(keyCountSaveTimer!==null){clearTimeout(keyCount
 function queueKeyCountSave(){if(keyCountSaveTimer===null&&typeof setTimeout==='function')keyCountSaveTimer=setTimeout(saveKeyPressCounts,1000);}
 showKeyPressCounts();window.addEventListener('pagehide',saveKeyPressCounts);
 function inputDown(source,lane){
+  if(settings.bot&&state==='playing')return;
   if(held.has(source))return;
   if(state==='playing'&&source==='key:'+playKeys[lane]){keyPressCounts[lane]++;queueKeyCountSave();const node=$('count-'+['d','f','j','k'][lane]);if(node)node.textContent=String(keyPressCounts[lane]);}
   if(state==='playing')updateNotes(time());
@@ -162,7 +165,7 @@ function sustainTick(note,kind){
 function updateSustain(note,t){
   const end=note.time+note.duration,interval=.15*(settings.rate||1);
   while(note.nextTick<end&&note.nextTick<=t){
-    if(note.nextTick>resumeGraceUntil||laneHeld(note.lane))sustainTick(note,laneHeld(note.lane)?note.headKind:'miss');
+    if(note.nextTick>resumeGraceUntil||settings.bot||laneHeld(note.lane))sustainTick(note,(settings.bot||laneHeld(note.lane))?note.headKind:'miss');
     note.nextTick+=interval;
   }
   if(t>=end){note.done=true;note.holding=false;}
@@ -176,16 +179,29 @@ function inputUp(source){
   }
 }
 function updateHeldPose(t){
-  const actor=actors.echo;let note=null;
+  const actor=actors[playerSide()];let note=null;
   for(let i=chartStart(notes);i<notes.length;i++){
     const n=notes[i];if(n.time>t+.18*(settings.rate||1))break;
-    if(!n.noAnimation&&n.holding&&!n.done&&laneHeld(n.lane)&&t<n.time+n.duration){note=n;if(n.lane===actor.lane)break;}
+    if(!n.noAnimation&&n.holding&&!n.done&&(settings.bot||laneHeld(n.lane))&&t<n.time+n.duration){note=n;if(n.lane===actor.lane)break;}
   }
   if(!note)return;
-  if(actor.lane!==note.lane||actor.miss||actor.until<=t){animateSinger('echo',note.lane,t,note.time+note.duration-t);if(typeof extraNote==='function')extraNote(note,'echo');}
+  if(actor.lane!==note.lane||actor.miss||actor.until<=t){animateSinger(playerSide(),note.lane,t,note.time+note.duration-t);if(typeof extraNote==='function')extraNote(note,playerSide());}
   else actor.until=Math.max(actor.until,note.time+note.duration);
 }
+function updateBot(t){
+ for(let i=chartStart(notes);i<notes.length;i++){
+  const note=notes[i];if(note.time>t)break;if(note.done||note.holding)continue;
+  // Avoid traps; autoplay hits only playable notes, including simultaneous heads.
+  if(note.hurt||(!song.pack&&note.type===3)){note.done=true;continue;}
+  note.hitOffsetMs=0;flashes[note.lane]=t+.13;
+  if(!note.noAnimation)animateSinger(playerSide(),note.lane,note.time,note.duration||0);
+  if(typeof extraNote==='function')extraNote(note,playerSide());
+  if(note.duration){note.holding=true;note.headKind='perfect';note.headValue=1;note.headPoints=500;note.nextTick=note.time+.15*(settings.rate||1);judge({...note,done:false},'perfect',1,500);}
+  else judge(note,'perfect',1,500);
+ }
+}
 function updateNotes(t){
+  if(settings.bot)updateBot(t);
   for(let i=chartStart(notes);i<notes.length;i++){const note=notes[i];
     if(note.time>t)break;
     if(note.done)continue;
@@ -288,7 +304,7 @@ async function start(){
     const buffers=song.audioSrc?await Promise.all([loadTrackAudio(song),...voiceSources.map(audioSrc=>loadTrackAudio({audioSrc}))]):[];
     const buffer=buffers[0];
     if(buffer)DURATION=Math.max(...buffers.map(b=>b.duration));
-    notes=createChart();opponentNotes=createChart(settings.difficulty,'nova');buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
+    notes=createChart();opponentNotes=createChart(settings.difficulty,autoSide());buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
     startTime=audio.currentTime+5*BEAT/(settings.rate||1)+.05;for(const stem of buffers)playTrackBuffer(stem,startTime);
     countdownBuffers.forEach((sound,i)=>playTrackBuffer(sound,startTime-(4-i)*BEAT/(settings.rate||1)));
     state='playing';$('overlay').classList.add('hidden');$('pause').disabled=false;$('pause').innerHTML='일시정지 <kbd>ESC / Enter</kbd>';$('status').textContent='LIVE / '+song.title.toUpperCase();updateHud();
@@ -313,15 +329,15 @@ function findPlayableNote(t,predicate){
   for(let i=chartStart(notes);i<notes.length;i++){const note=notes[i];if(note.time>until)break;if(predicate(note))return note;}
 }
 function press(lane){
-  if(state!=='playing')return;const t=time();flashes[lane]=t+.13;
+  if(state!=='playing'||settings.bot)return;const t=time();flashes[lane]=t+.13;
   const continuing=findPlayableNote(t,n=>n.holding&&!n.done&&n.lane===lane&&t<n.time+n.duration);
-  if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);if(!continuing.noAnimation)animateSinger('echo',lane,t,continuing.time+continuing.duration-t);return;}
+  if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);if(!continuing.noAnimation)animateSinger(playerSide(),lane,t,continuing.time+continuing.duration-t);return;}
   const hittable=n=>!n.done&&!n.holding&&n.lane===lane&&(song.pack==='death'&&n.hurt?Math.abs((n.time-t)/(settings.rate||1))<=.045+1e-9:timingResult((n.time-t)/(settings.rate||1)).kind!=='miss');
   const note=(song.pack==='death'?findPlayableNote(t,n=>!n.hurt&&hittable(n)):null)||findPlayableNote(t,hittable);
   if(note){
     if(note.hurt&&typeof extraHurt==='function'){extraHurt(note,'hit');return;}
     note.hitOffsetMs=(t-note.time)/(settings.rate||1)*1000;
-    const {kind,value,points}=timingResult((note.time-t)/(settings.rate||1));if(!note.noAnimation)animateSinger('echo',lane,t,Math.max(0,note.time+(note.duration||0)-t));if(typeof extraNote==='function')extraNote(note,'echo');
+    const {kind,value,points}=timingResult((note.time-t)/(settings.rate||1));if(!note.noAnimation)animateSinger(playerSide(),lane,t,Math.max(0,note.time+(note.duration||0)-t));if(typeof extraNote==='function')extraNote(note,playerSide());
     if(note.duration){note.holding=true;note.headKind=kind;note.headValue=value;note.headPoints=points;note.nextTick=Math.max(t,note.time)+.15*(settings.rate||1);judge({...note,done:false},kind,value,points);feedback=kind.toUpperCase();feedbackOffsetMs=note.hitOffsetMs;feedbackAt=t;feedbackColor=COLORS[lane];if(kind==='perfect')splash(lane);if(kind==='bad')combo=0;}
     else judge(note,kind,value,points);
   }
@@ -348,7 +364,7 @@ function finish(failed=false){
   showPauseActions(false);
   pausedTime=failed?time():DURATION;state='finished';stopSources();setSettingsLocked(false);held.clear();refreshButtons();$('pause').disabled=true;$('status').textContent=failed?'GAME OVER':'TRACK COMPLETE';
   const accuracy=judged?earned/judged*100:0,rank=accuracy>=95?'S':accuracy>=85?'A':accuracy>=70?'B':accuracy>=50?'C':'D';
-  $('overline').textContent=failed?'GAME OVER / HEALTH EMPTY':song.title+' / '+settings.difficulty.toUpperCase()+' / RANK '+rank;$('title').textContent=failed?'다시, 리듬을 잡아봐.':'너의 리듬, '+rank+' 랭크.';
+  $('overline').textContent=failed?'GAME OVER / HEALTH EMPTY':(settings.bot?'BOT · 자동 플레이 / ':'')+(playerSide()==='nova'?'상대 파트 / ':'보프 파트 / ')+song.title+' / '+settings.difficulty.toUpperCase()+' / RANK '+rank;$('title').textContent=failed?'다시, 리듬을 잡아봐.':'너의 리듬, '+rank+' 랭크.';
   $('description').innerHTML=`점수 ${score.toLocaleString()} · 정확도 ${accuracy.toFixed(1)}%<br>최대 콤보 ${maxCombo} · 놓친 노트 ${hits.miss}<br>PERFECT ${hits.perfect} / GOOD ${hits.good} / BAD ${hits.bad} / MISS ${hits.miss}`;
   $('start').innerHTML='다시 플레이 <span>↗</span>';$('hint').textContent='다시 도전해서 최고 기록을 만들어 보세요.';$('overlay').classList.remove('hidden');
   if(typeof extraFinish==='function')extraFinish(failed);
@@ -485,7 +501,8 @@ function draw(t){prepareStageResolution();
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);
   const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);
   ctx.save();if(typeof extraHudAlpha==='function')ctx.globalAlpha=extraHudAlpha(t);
-  const opponentLit=[false,false,false,false];
+  const opponentLit=[false,false,false,false],botLit=[false,false,false,false];
+  if(settings.bot)for(let i=chartStart(notes);i<notes.length;i++){const n=notes[i];if(n.time>t)break;if(n.holding&&!n.done)botLit[n.lane]=true;}
   // Prefix end times retain long holds while skipping old receptor flashes.
   const ends=opponentFlashEnds(opponentNotes);let lo=0,hi=ends.length;
   while(lo<hi){const mid=(lo+hi)>>>1;if(ends[mid]<=t)lo=mid+1;else hi=mid;}
@@ -496,22 +513,23 @@ function draw(t){prepareStageResolution();
     if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
     ctx.save();
     const left=laneX(0,side)-47;
+    label(side===playerSide()?(settings.bot?'BOT · 자동':'PLAYER · 직접 연주'):'AUTO',laneX(1,side)+45,18,11,side===playerSide()?'#8cf5d9':'#a7b7cd');
     const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,['survent-casanova','survent-gospel'].includes(songId)?'#080e1d55':'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
     ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);
     for(let lane=0;lane<4;lane++){
       const activeOpponent=opponentLit[lane];
-      const lit=state==='playing'&&t>=0&&(side==='nova'?activeOpponent:(flashes[lane]>t||laneHeld(lane)));
+      const lit=state==='playing'&&t>=0&&(side===autoSide()?activeOpponent:(flashes[lane]>t||laneHeld(lane)||botLit[lane]));
       const offset=typeof modOffset==='function'?modOffset(lane,side,t):{x:0,y:0};const x=laneX(lane,side)+offset.x;
       if(lit)rect(x-38,targetY()-43,76,86,COLORS[lane]+'22');
       if(!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY()+offset.y,lit)))stageArrow(x,targetY()+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
-      if(side==='echo')label(playKeys[lane].toUpperCase(),x,settings.scroll==='down'?492:33,10,'#a7b7cd');
+      if(side===playerSide())label(playKeys[lane].toUpperCase(),x,settings.scroll==='down'?492:33,10,'#a7b7cd');
     }
     ctx.save();ctx.beginPath();ctx.rect(left,0,366,490);ctx.clip();
-    const chart=side==='nova'?opponentNotes:notes;
+    const chart=side===autoSide()?opponentNotes:notes;
     for(let i=chartStart(chart);i<chart.length;i++){const note=chart[i];
       if(note.time>visibleUntil)break;
       if(note.done)continue;
-      const holding=side==='nova'?note.started:note.holding;
+      const holding=side===autoSide()?note.started:note.holding;
       const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
       if(Math.max(y,tail)<-35||Math.min(y,tail)>565)continue;
       const color=note.type===3?'#bd7aff':note.type===2?'#ffffff':COLORS[note.lane];
@@ -528,7 +546,7 @@ function draw(t){prepareStageResolution();
   }
   splashes=splashes.filter(effect=>t-effect.at<.45);
   for(const effect of splashes){
-    const age=Math.max(0,t-effect.at),progress=age/.45,x=laneX(effect.lane),y=targetY();
+    const age=Math.max(0,t-effect.at),progress=age/.45,x=laneX(effect.lane,playerSide()),y=targetY();
     ctx.save();ctx.globalAlpha=1-progress;ctx.strokeStyle=COLORS[effect.lane];ctx.lineWidth=3*(1-progress)+1;
     ctx.beginPath();ctx.arc(x,y,25+progress*45,0,Math.PI*2);ctx.stroke();
     for(let i=0;i<10;i++){
@@ -566,7 +584,7 @@ for(const button of document.querySelectorAll('[data-lane]')){
 function loseFocus(){saveKeyPressCounts();if(state==='loading')pauseAfterLoad=true;if(state==='playing')pause();held.clear();refreshButtons();}
 window.addEventListener('blur',loseFocus);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)loseFocus();});
-for(const id of ['song','difficulty','scroll','speed','rate'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';showPlayKeys();$('status').textContent='READY TO PLAY';}}});
+for(const id of ['song','difficulty','scroll','speed','rate','play-side','bot-mode'])$(id).addEventListener('input',()=>{if(state==='ready'||state==='finished'){const previous=song;readSettings();if(previous!==song){state='ready';pausedTime=0;notes=[];opponentNotes=[];voiceEvents=[];voiceIndex=0;score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};splashes=[];feedback='';feedbackOffsetMs=null;actors.nova.until=actors.echo.until=-1;updateHud();$('title').textContent='새로운 비트, 새로운 무대.';$('description').textContent=song.description+' · 오른쪽 노트를 연주하세요.';$('overline').textContent='YOUR STAGE IS WAITING';$('start').innerHTML='플레이 시작 <span>↗</span>';showPlayKeys();$('status').textContent='READY TO PLAY';}}});
 function changeScrollSpeed(value){
  const speed=Math.min(5,Math.max(.25,Number(value)||1));settings.speed=speed;
  $('speed').value=String(speed);$('speed-number').value=String(speed);$('speed-value').textContent=speed.toFixed(2)+'×';
