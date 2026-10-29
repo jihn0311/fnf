@@ -176,3 +176,10 @@
 - Added pre-song player-part selection (BF/right or opponent/left) and bot toggle. Controlled chart, input animations, held poses, note rendering, lane keys, splashes and synthesized voice sides follow the selection; the other original character/chart plays automatically. Source staging and note-effect sides remain unchanged. Controls lock during playback.
 - Bot handles every due playable head at zero timing error and holds through sustain ticks, including chords/late frames; skips hurt/phantom traps and ignores manual gameplay input. It does not inflate physical key counts. Results/lane labels identify bot play.
 - Validation: gameplay and key-binding regressions; manual opponent control/automatic BF, both bot sides, chord holds/late-frame completion/trap avoidance/count isolation unit checks; Nyaw/Ghost browser checks for both sides, all-perfect results, locked controls and marked results pass.
+
+## 2026-10-29 QT mod
+- Imported six native tracks (including the 10.8-second Terminate intro), available source difficulties, audio, character atlases and three backgrounds. Added separate QT dodge/no-dodge cards, each with normal/low variants. Safe charts remove hurt notes and attacks.
+- Native attack timestamps drive SPACE/touch dodge warnings. Failure and hurt-note input cost 10 health out of 100, never an immediate-death command. Bots dodge automatically. Late/unseen warnings and frame stalls waive attack damage.
+- Preload character/attack art, backgrounds and warning audio before play; fixed-resolution dodge rendering, cached stage and bounded attack cursor reduce runtime work. Exact dance-frame groups avoid GF hair animation contamination.
+- Native cinematics, pincer/TV choreography and engine-specific effects are not fully ported; stage framing is adapted. Zero lag cannot be guaranteed.
+- Validation: 24 song/safe/low combinations, chart bounds, audio decode, assets, 10% single damage, successful dodge, stall/unseen warning protection, bot and hurt-note checks; gameplay/play-side tests.

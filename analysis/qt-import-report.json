@@ -1,0 +1,82 @@
+{
+  "carefree": {
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard",
+      "harder"
+    ],
+    "attacks": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0,
+      "harder": 0
+    },
+    "duration": 162.72950113378684
+  },
+  "careless": {
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard",
+      "harder"
+    ],
+    "attacks": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0,
+      "harder": 0
+    },
+    "duration": 144.00569160997733
+  },
+  "censory-overload": {
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard",
+      "harder"
+    ],
+    "attacks": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0,
+      "harder": 0
+    },
+    "duration": 331.73356009070295
+  },
+  "terminate": {
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard",
+      "harder"
+    ],
+    "attacks": {
+      "easy": 0,
+      "normal": 0,
+      "hard": 0,
+      "harder": 0
+    },
+    "duration": 10.810816326530611
+  },
+  "termination": {
+    "difficulties": [
+      "normal",
+      "hard"
+    ],
+    "attacks": {
+      "normal": 90,
+      "hard": 53
+    },
+    "duration": 320.00281179138324
+  },
+  "cessation": {
+    "difficulties": [
+      "normal"
+    ],
+    "attacks": {
+      "normal": 0
+    },
+    "duration": 182.77832199546486
+  }
+}

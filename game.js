@@ -133,7 +133,7 @@ function readSettings(){
   settings={playSide:$('play-side')?.value==='nova'?'nova':'echo',bot:!!$('bot-mode')?.checked,difficulty:$('difficulty').value,scroll:$('scroll').value,speed:Math.min(5,Math.max(.25,Number($('speed').value)||1)),rate:Number($('rate').value)||1};
   if(song.bpmByDifficulty){BPM=song.bpmByDifficulty[settings.difficulty];BEAT=60/BPM;}
   $('track-meta').textContent='원곡 '+BPM+' BPM (1×) · 현재 '+Number((BPM*settings.rate).toFixed(2))+' BPM ('+settings.rate+'×) · '+formatTime(DURATION/settings.rate);
-  if(typeof syncModUI==='function')syncModUI();
+  if(typeof syncModUI==='function')syncModUI();if($('qt-dodge'))$('qt-dodge').hidden=!song.qtDodge;
   $('speed-value').textContent=settings.speed.toFixed(2)+'×';
   const chart=createChart();
   if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:time());
@@ -458,7 +458,7 @@ window.addEventListener('resize',measureStage);
 function prepareStageResolution(){
  if(!stageDisplayWidth)measureStage();
  const width=stageDisplayWidth;
- const ratio=song.lowSpec?1:Math.min(renderScaleLimit,Math.max(1,width*(window.devicePixelRatio||1)/1120));
+ const ratio=(song.lowSpec||song.qtDodge)?1:Math.min(renderScaleLimit,Math.max(1,width*(window.devicePixelRatio||1)/1120));
  const w=Math.round(1120*ratio),h=Math.round(530*ratio);
  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
  ctx.setTransform(w/1120,0,0,h/530,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='medium';
@@ -559,11 +559,11 @@ function draw(t){prepareStageResolution();
   if(state==='playing')drawCountdown(t);
   if(t-feedbackAt<.65&&feedback){label(feedback,560,166,19,feedbackColor);if(/^(PERFECT|GOOD|BAD|MISS)/.test(feedback))label(timingOffsetText(feedbackOffsetMs),560,184,12,'#d5deec');if(combo>1){label(String(combo),560,222,29,'#ffffff');label('COMBO',560,239,9,'#8c9bb0');}}
   ctx.restore();
-  if(typeof drawModHud==='function')drawModHud(t);
+  if(typeof drawModHud==='function')drawModHud(t);if(typeof drawQTHud==='function')drawQTHud(t);
   rect(0,527,1120*Math.max(0,t)/DURATION,3,'#8cf5d9');
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
-function frame(timestamp){trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
+function frame(timestamp){trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(typeof updateQT==='function')updateQT(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
   draw(state==='ready'?0:t);if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:t);requestAnimationFrame(frame);
 }
 $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pause').addEventListener('click',pause);
@@ -609,7 +609,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
-const modNames={sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+const modNames={qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
 let selectedMod=null;
 function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
 function buildModCards(){

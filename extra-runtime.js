@@ -12,7 +12,7 @@ function extraReset(){
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
 async function extraPrepare(){
- extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
+ extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(typeof qtActive==='function'&&qtActive())for(const name of ['Normal','Cute','Error'])assets.push(EXTRA_ART.sprites['qt/stage/'+name].src);if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
@@ -24,6 +24,7 @@ async function extraPrepare(){
  const worker=async()=>{while(next<pending.length){const src=pending[next++];await new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});loaded++;if(state==='loading')$('start').textContent='이미지 준비 중… '+loaded+'/'+pending.length;}};
  const results=await Promise.allSettled(Array.from({length:Math.min(3,pending.length)},worker));
  const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+ if(typeof qtActive==='function'&&qtActive())await prepareQT();
  if(song.pack==='kapi'&&!song.lowSpec)prepareKapiStage();
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
  if(song.pack==='impostor'&&!song.lowSpec)await prepareImpostorVideos();
@@ -39,10 +40,11 @@ function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
+ case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Mario Visibility':if(song.pack==='mario'){s.marioHidden??={};s.marioHidden[a]=b==='0';}break;
  case 'Mario Guest':if(song.pack==='mario'&&MOD_ART.characters['mario:'+b])s.chars[a]='mario:'+b;break;
  case 'Silly':sillyEvent(e,t,quiet);break;
- case 'Change Character': {const key=song.pack+':'+b;if(MOD_ART.characters[key]){if(songId==='tainted-destruction'&&s.chars[extraSide(a)]!==key)s.invulnerableUntil=t+3*(settings.rate||1);s.chars[extraSide(a)]=key;delete s.special[extraSide(a)];extraActorLabels();}break;}
+ case 'Change Character': {const key=(song.pack==='qt-safe'?'qt':song.pack)+':'+b;if(MOD_ART.characters[key]){if(songId==='tainted-destruction'&&s.chars[extraSide(a)]!==key)s.invulnerableUntil=t+3*(settings.rate||1);s.chars[extraSide(a)]=key;delete s.special[extraSide(a)];extraActorLabels();}break;}
  case 'Play Animation': {const target=/^(0|1|2|bf|dad|boyfriend|opponent)$/i.test(a)?a:b,anim=target===a?b:a;s.special[extraSide(target,true)]={name:anim,at:e.time};break;}
  case 'Alt Idle Animation':s.alt[extraSide(a,true)]=b;break;
  case 'Cam Zoom Tween':s.zoomTween={from:extraZoom(e.time),to:Math.max(.35,Math.min(2.8,Number(a)||1)),at:e.time,duration:Math.max(0,Number(b)||0)};break;
@@ -151,13 +153,13 @@ function extraActor(side,t,x,y,black=false){
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
  }else if(song.pack==='kapi'&&s.chars[side]==='kapi:G&W'){
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.w/2,-f.h,f.w,f.h);
- }else if(song.pack==='kapi'){
+ }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
- }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||song.pack==='kapi'||song.pack==='camellia'||songId==='tainted-defeat'||side==='gf'){
+ }else if(song.pack==='silly'||song.pack==='survent'||song.pack==='mario'||song.pack==='garcello'||song.pack==='kapi'||song.pack==='camellia'||song.pack==='qt'||song.pack==='qt-safe'||songId==='tainted-defeat'||side==='gf'){
   const anchor=a.animations.idle[0],ratio=a.config?.[key]?.frameScale||1;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox*ratio-off[0]*a.scale,-anchor.fh+f.oy*ratio-off[1]*a.scale,f.w*ratio,f.h*ratio);
  }else ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-off[0]*a.scale,-f.fh+f.oy-off[1]*a.scale,f.w,f.h);ctx.restore();
@@ -179,6 +181,7 @@ function extraStage(t){
   drawImpostorStage(t);
  }else if(song.pack==='kapi'){
   drawKapiStage(t);
+ }else if(typeof qtActive==='function'&&qtActive()){drawQTStage(t);
  }else if(song.pack==='camellia'){
   for(const l of camelliaLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
   drawCamelliaActors(t);
@@ -273,7 +276,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;
@@ -318,7 +321,7 @@ function extraHurt(note,kind){
  if(!note.hurt)return false;
  note.done=true;note.holding=false;
  if(kind!=='miss'){
-  health=Math.max(0,health-15);combo=0;score-=100;judged++;hits.miss++;
+  health=Math.max(0,health-(typeof qtActive==='function'&&qtActive()?10:15));combo=0;score-=100;judged++;hits.miss++;
   feedback='HURT · MISS';feedbackOffsetMs=null;feedbackAt=time();feedbackColor='#ff4d6a';
   
   extraState.flashes.push({at:time(),duration:.35,color:'#e90000',alpha:.4});updateHud();
@@ -387,6 +390,7 @@ function impostorEvent(e,t){
  const s=extraState,a=e.v1,b=e.v2,n=Number(a)||0;
  const flash=(color='#fff',duration=.35,alpha=1)=>s.flashes.push({at:e.time,color,duration,alpha});
  switch(e.name){
+ case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Alter Camera Bop':s.bumpMult=Number.isFinite(Number(a))?Number(a):1;s.bumpInterval=Math.max(1,Number(b)||4);break;
  case 'Extra Cam Zoom':s.zoom=1+n;break;
  case 'Camera Twist':s.twist=Number(b)?n:0;break;

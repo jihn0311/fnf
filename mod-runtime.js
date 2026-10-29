@@ -109,6 +109,7 @@ function showModVideo(){
 function closeModVideo(){const video=$('mod-video');video.pause();video.removeAttribute('src');video.load();$('mod-cinema').hidden=true;}
 
 function drawLowSpecStage(t){
+ if(typeof qtActive==='function'&&qtActive()){drawQTStage(t);return;}
  if(song.pack==='mario'&&song.stagePhases){if(!extraState||extraState.id!==songId)extraReset();drawMarioStage(t);return;}
  if(lowSpecBackground)ctx.drawImage(lowSpecBackground,0,0);else{rect(0,0,1120,530,'#171d2b');rect(0,460,1120,70,'#101522');}
  if(song.pack){
@@ -130,6 +131,7 @@ function drawLowSpecStage(t){
 
 let lowSpecBackground=null;
 function lowSpecLayers(){
+ if(typeof qtActive==='function'&&qtActive())return qtLayers();
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
  if(song.pack==='survent'&&song.stage==='churchSelever')return casanovaLayers();
