@@ -26,3 +26,5 @@ __pycache__/
 /analysis/impostor-*.png
 
 /analysis/mario-import-cache.json
+
+/assets/extra-mods/dustin/character-cache.json

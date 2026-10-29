@@ -1,0 +1,308 @@
+{
+  "limitations": [
+    "Mechanics-light adaptation: no dodge/minigames, madness/karma gauges, scripted lethal attacks, note displacement, shaders, videos or dialogue. Native charts, audio and explicit character-change events retained. Script-only scene choreography is not reproduced."
+  ],
+  "missing": [
+    "character poop warrior diagonal",
+    "character rose diagonal"
+  ],
+  "perseverance": {
+    "notes": {
+      "hard": {
+        "nova": 563,
+        "echo": 517
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 248.80416666666667
+  },
+  "kinemorto": {
+    "notes": {
+      "hard": {
+        "nova": 475,
+        "echo": 510
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 3,
+    "duration": 192.85714583333333
+  },
+  "cornered": {
+    "notes": {
+      "hard": {
+        "nova": 589,
+        "echo": 643
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 9,
+    "duration": 307.62864583333334
+  },
+  "heatwave": {
+    "notes": {
+      "hard": {
+        "nova": 628,
+        "echo": 667
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 309.9687528344671
+  },
+  "avulsion": {
+    "notes": {
+      "hard": {
+        "nova": 385,
+        "echo": 368
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 3,
+    "duration": 209.63635416666668
+  },
+  "broken-reality": {
+    "notes": {
+      "hard": {
+        "nova": 1321,
+        "echo": 1283
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 8,
+    "duration": 455.33564583333333
+  },
+  "the-uprising": {
+    "notes": {
+      "hard": {
+        "nova": 580,
+        "echo": 668
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 7,
+    "duration": 279.25351473922905
+  },
+  "you-are": {
+    "notes": {
+      "hard": {
+        "nova": 726,
+        "echo": 805
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 14,
+    "duration": 273.68433106575964
+  },
+  "haunted": {
+    "notes": {
+      "hard": {
+        "nova": 504,
+        "echo": 551
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 11,
+    "duration": 292.96875
+  },
+  "bonetravaganza": {
+    "notes": {
+      "hard": {
+        "nova": 795,
+        "echo": 1100
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 8,
+    "duration": 349.2
+  },
+  "homie-cide": {
+    "notes": {
+      "hard": {
+        "nova": 751,
+        "echo": 843
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 7,
+    "duration": 291.10414965986394
+  },
+  "thermal-shock": {
+    "notes": {
+      "hard": {
+        "nova": 767,
+        "echo": 753
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 9,
+    "duration": 270.8442403628118
+  },
+  "overthrone": {
+    "notes": {
+      "hard": {
+        "nova": 864,
+        "echo": 843
+      }
+    },
+    "removedHazards": {
+      "hard": 216
+    },
+    "characters": 4,
+    "duration": 244.32056689342403
+  },
+  "redscreen": {
+    "notes": {
+      "hard": {
+        "nova": 695,
+        "echo": 766
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 7,
+    "duration": 237.22426303854874
+  },
+  "bargain": {
+    "notes": {
+      "hard": {
+        "nova": 402,
+        "echo": 413
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 151.26544217687075
+  },
+  "genocides": {
+    "notes": {
+      "hard": {
+        "nova": 717,
+        "echo": 674
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 208.27358333333333
+  },
+  "inopia": {
+    "notes": {
+      "hard": {
+        "nova": 632,
+        "echo": 612
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 6,
+    "duration": 264.2922902494331
+  },
+  "lorem-ipsum": {
+    "notes": {
+      "hard": {
+        "nova": 470,
+        "echo": 440
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 334.5001458333333
+  },
+  "psychopath": {
+    "notes": {
+      "hard": {
+        "nova": 634,
+        "echo": 674
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 5,
+    "duration": 268.8990476190476
+  },
+  "red-demon-o": {
+    "notes": {
+      "hard": {
+        "nova": 312,
+        "echo": 315
+      }
+    },
+    "removedHazards": {
+      "hard": 21
+    },
+    "characters": 4,
+    "duration": 241.06410416666668
+  },
+  "uncreate": {
+    "notes": {
+      "hard": {
+        "nova": 507,
+        "echo": 482
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 3,
+    "duration": 180.30263038548753
+  },
+  "vindication": {
+    "notes": {
+      "hard": {
+        "nova": 562,
+        "echo": 917
+      }
+    },
+    "removedHazards": {
+      "hard": 168
+    },
+    "characters": 5,
+    "duration": 239.0
+  },
+  "yolo": {
+    "notes": {
+      "hard": {
+        "nova": 736,
+        "echo": 700
+      }
+    },
+    "removedHazards": {
+      "hard": 0
+    },
+    "characters": 4,
+    "duration": 212.03290249433107
+  }
+}

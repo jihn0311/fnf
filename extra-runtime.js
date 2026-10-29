@@ -8,6 +8,7 @@ function extraReset(){
  const scene=MOD_ART.scenes[song.sceneKey];
  extraState={id:songId,cursor:0,at:-Infinity,chars:scene?{nova:scene.opponent,echo:scene.player,gf:scene.spectator}:{},special:{},alt:{},black:0,hideHealth:false,zoom:1,zoomTween:null,bumps:[],flashes:[],shake:null,follow:null,bumpMult:1,bumpInterval:4,glitchUntil:-1,lastMisses:0,death:null};
  if(song.pack==='mario'){extraState.marioHidden={gf:['exesequel','nesbeat'].includes(song.stage)};extraState.marioActors={};}
+ if(song.pack==='dustin')dustinReset();
  extraHealthVisibility(false);
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
@@ -40,6 +41,7 @@ function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
+ case 'Dustin Character':dustinCharacterEvent(e);break;
  case 'QT TV':if(qtActive()&&qtState)qtState.tv=Number(a)||0;break;
  case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Mario Visibility':if(song.pack==='mario'){s.marioHidden??={};s.marioHidden[a]=b==='0';}break;
@@ -83,7 +85,7 @@ function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='rea
 function extraNote(note,side){
  if(!extraActive()||!extraState)return;
  if(note.noAnimation)return;
- actors[side].alt=note.alt;
+ actors[side].alt=note.alt;if(song.pack==='dustin')dustinNote(note,side);
  if(song.pack==='mario'&&!note.noAnimation){
   const type=note.sourceNoteType,guest=['allfinal','nesbeat'].includes(song.stage)?'guest':'gf';
   const targets=type==='GF Sing'||type==='GF Duet'?['gf']:type==='Yoshi Note'?[guest]:type==='AS Bud Note'?['gf','guest']:[];
@@ -160,7 +162,7 @@ function extraActor(side,t,x,y,black=false){
   const ratio=a.scale/base.scale;ctx.scale(1/ratio,1/ratio);
   const originX=(-anchor.w/2-anchor.ox+anchorOff[0]*base.scale)*ratio,originY=(-anchor.h-anchor.oy+anchorOff[1]*base.scale)*ratio;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
- }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'){
+ }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='agoti'){
@@ -183,7 +185,8 @@ function extraStage(t){
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
  ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(song.pack==='impostor'&&s.twist)ctx.rotate(Math.sin(beat*Math.PI)*s.twist*Math.PI/180);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
  if(s.follow&&!fixedAllStars)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
- if(song.pack==='mario'){
+ if(song.pack==='dustin'){drawDustinStage(t);
+ }else if(song.pack==='mario'){
   drawMarioStage(t);
  }else if(song.pack==='impostor'){
   drawImpostorStage(t);
@@ -284,7 +287,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='dustin'){if(help)help.textContent='Dustin · 경량 연주판 · 원본 음원/채보 · 회피·별도 게이지·함정·화면 왜곡 제외';return;}if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;
@@ -398,6 +401,7 @@ function impostorEvent(e,t){
  const s=extraState,a=e.v1,b=e.v2,n=Number(a)||0;
  const flash=(color='#fff',duration=.35,alpha=1)=>s.flashes.push({at:e.time,color,duration,alpha});
  switch(e.name){
+ case 'Dustin Character':dustinCharacterEvent(e);break;
  case 'QT TV':if(qtActive()&&qtState)qtState.tv=Number(a)||0;break;
  case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Alter Camera Bop':s.bumpMult=Number.isFinite(Number(a))?Number(a):1;s.bumpInterval=Math.max(1,Number(b)||4);break;

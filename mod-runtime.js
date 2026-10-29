@@ -119,6 +119,7 @@ function drawLowSpecStage(t){
   else if(song.pack==='kapi')drawKapiActors(t);
   else if(song.pack==='camellia')drawCamelliaActors(t);
   else if(song.pack==='garcello')drawGarcelloActors(t);
+  else if(song.pack==='dustin')drawDustinActors(t);
   else if(song.pack==='agoti')drawAgotiActors(t);
   else if(song.pack==='mario')drawMarioActors(t);
   else if(song.pack==='impostor')drawImpostorActors(t);
@@ -131,6 +132,7 @@ function drawLowSpecStage(t){
 
 let lowSpecBackground=null;
 function lowSpecLayers(){
+ if(song.pack==='dustin')return dustinLayers();
  if(typeof qtActive==='function'&&qtActive())return qtLayers();
  const full=key=>({key,x:0,y:0,w:1120,h:530});
  if(!song.pack)return MOD_ART.backgrounds[modSlug()].map(src=>({src,x:0,y:0,w:1120,h:530}));
