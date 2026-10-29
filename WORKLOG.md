@@ -189,3 +189,8 @@
 - All Stars precomposed 1120x530 scenes now retain fixed framing rather than receiving generic zoom/follow/shake transforms a second time. Phase changes and existing foreground effects remain.
 - Extend song playback selector through 16x and bound settings to 0.5–16.
 - Validation: six All Stars phases in normal/low, gameplay regressions, both controlled-side native skins, 16x AudioBufferSource rate and fixed framing across phases passed.
+
+## 2026-10-29 QT supplied video comparison
+- Sampled supplied 12:17 QT video; readable opening shows smaller actors and native left/right TVs. Reduced actor scales and restored native TV layer (also preloaded in low mode). Imported native BF dodge animation, triggered on manual/bot dodge, and prevented its pose from remaining indefinitely. Versioned QT asset URLs after atlas changes. Dialogue excluded.
+- Reference file has mp4_data_incomplete metadata and invalid NAL data in later sections; 480s extraction fails, so late saw choreography could not be verified from this video. No claim of full-video fidelity. Existing 10% damage and stall protections retained.
+- Validation: 24 normal/safe/low combinations, audio decode/chart bounds/asset checks, dodge damage/protection and bot checks pass; opening stage screenshot inspected.
