@@ -130,7 +130,7 @@ function readSettings(){
   for(const option of ($('difficulty').options||[]))option.disabled=!available.includes(option.value);
   if(!available.includes($('difficulty').value))$('difficulty').value=song.defaultDifficulty||available[0];
   if(song.sectionsByDifficulty)song.sections=song.sectionsByDifficulty[$('difficulty').value];
-  settings={playSide:$('play-side')?.value==='nova'?'nova':'echo',bot:!!$('bot-mode')?.checked,difficulty:$('difficulty').value,scroll:$('scroll').value,speed:Math.min(5,Math.max(.25,Number($('speed').value)||1)),rate:Number($('rate').value)||1};
+  settings={playSide:$('play-side')?.value==='nova'?'nova':'echo',bot:!!$('bot-mode')?.checked,difficulty:$('difficulty').value,scroll:$('scroll').value,speed:Math.min(5,Math.max(.25,Number($('speed').value)||1)),rate:Math.min(16,Math.max(.5,Number($('rate').value)||1))};
   if(song.bpmByDifficulty){BPM=song.bpmByDifficulty[settings.difficulty];BEAT=60/BPM;}
   $('track-meta').textContent='원곡 '+BPM+' BPM (1×) · 현재 '+Number((BPM*settings.rate).toFixed(2))+' BPM ('+settings.rate+'×) · '+formatTime(DURATION/settings.rate);
   if(typeof syncModUI==='function')syncModUI();if($('qt-dodge'))$('qt-dodge').hidden=!song.qtDodge;

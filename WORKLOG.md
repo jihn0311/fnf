@@ -183,3 +183,9 @@
 - Preload character/attack art, backgrounds and warning audio before play; fixed-resolution dodge rendering, cached stage and bounded attack cursor reduce runtime work. Exact dance-frame groups avoid GF hair animation contamination.
 - Native cinematics, pincer/TV choreography and engine-specific effects are not fully ported; stage framing is adapted. Zero lag cannot be guaranteed.
 - Validation: 24 song/safe/low combinations, chart bounds, audio decode, assets, 10% single damage, successful dodge, stall/unseen warning protection, bot and hurt-note checks; gameplay/play-side tests.
+
+## 2026-10-29 Kapi colors, All Stars framing, playback speed
+- Apply native Kapi BFNOTES to the controlled side, including opponent-play selection, for heads/sustains/receptors. Original right-side skin was already present.
+- All Stars precomposed 1120x530 scenes now retain fixed framing rather than receiving generic zoom/follow/shake transforms a second time. Phase changes and existing foreground effects remain.
+- Extend song playback selector through 16x and bound settings to 0.5–16.
+- Validation: six All Stars phases in normal/low, gameplay regressions, both controlled-side native skins, 16x AudioBufferSource rate and fixed framing across phases passed.

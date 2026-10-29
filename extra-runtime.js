@@ -170,11 +170,12 @@ function extraStage(t){
  // Opaque base covers transparent finale layers and camera margins.
  if(songId==='tainted-destruction'&&step>=1566)rect(0,0,1120,530,'#000');
  const pulse=Math.exp(-(Math.max(0,beat)%s.bumpInterval)*5)*.012*s.bumpMult;
- const zoom=Math.max(.6,Math.min(1.6,1+(extraZoom(t)-1)*.35+Math.min(.3,s.bumps.reduce((v,b)=>v+b.amount*Math.exp(-(t-b.at)*9),0))+pulse));
- const shaking=s.shake&&t<s.shake.at+s.shake.duration;const shake=shaking?s.shake.amount*530:0;
+ const fixedAllStars=!!song.presentationCues;
+ const zoom=fixedAllStars?1:Math.max(.6,Math.min(1.6,1+(extraZoom(t)-1)*.35+Math.min(.3,s.bumps.reduce((v,b)=>v+b.amount*Math.exp(-(t-b.at)*9),0))+pulse));
+ const shaking=s.shake&&t<s.shake.at+s.shake.duration;const shake=shaking&&!fixedAllStars?s.shake.amount*530:0;
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
  ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(song.pack==='impostor'&&s.twist)ctx.rotate(Math.sin(beat*Math.PI)*s.twist*Math.PI/180);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
- if(s.follow)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
+ if(s.follow&&!fixedAllStars)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
  if(song.pack==='mario'){
   drawMarioStage(t);
  }else if(song.pack==='impostor'){
@@ -559,7 +560,7 @@ function drawMarioStage(t){
 }
 function drawMarioNote(note,x,y,tail,t,side='echo'){
  if(!['mario','kapi'].includes(song.pack))return false;
- const skin=song.pack==='kapi'&&side==='echo'?song.playerNoteSkin:song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
+ const skin=song.pack==='kapi'&&side===playerSide()?song.playerNoteSkin:song.specialNoteSkins?.[note.sourceNoteType]||song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
  const frames=skin.frames[note.lane],f=frames.note,scale=72/Math.max(frames.idle.width,frames.idle.height);
  ctx.save();ctx.imageSmoothingEnabled=!skin.pixel;
  if(note.duration){
@@ -666,7 +667,7 @@ function drawKapiStage(t){
 }
 function drawKapiReceptor(side,lane,x,y,lit){
  if(song.pack!=='kapi')return false;
- const skin=side==='echo'?song.playerNoteSkin:song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
+ const skin=side===playerSide()?song.playerNoteSkin:song.noteSkin,im=modImages.get(skin?.src);if(!im)return false;
  const frames=skin.frames[lane],f=lit?frames.confirm:frames.idle,scale=72/Math.max(frames.idle.width,frames.idle.height);
  ctx.drawImage(im,f.x,f.y,f.width,f.height,x-(f.frameWidth||f.width)*scale/2-f.frameX*scale,y-(f.frameHeight||f.height)*scale/2-f.frameY*scale,f.width*scale,f.height*scale);return true;
 }
