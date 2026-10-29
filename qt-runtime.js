@@ -2,12 +2,12 @@
 function qtActive(){return song.pack==='qt'||song.pack==='qt-safe';}
 let qtState=null,qtAlertBuffer=null;
 async function prepareQT(){
- qtState={attacks:(song.qtAttacks?.[settings.difficulty]||[]).map(at=>({at,done:false,dodged:false,warned:false})),cursor:0,last:null,flashUntil:-1,protectedUntil:-1,bg:song.stage};
+ qtState={attacks:(song.qtAttackCues?.[settings.difficulty]||song.qtAttacks?.[settings.difficulty]||[]).map(c=>({...typeof c==='number'?{at:c}:c,done:false,dodged:false,warned:false})),cursor:0,last:null,flashUntil:-1,protectedUntil:-1,bg:song.stage,tv:0};
  if(song.qtDodge&&!qtAlertBuffer&&audio){const response=await fetch(QT_ART.sounds['qt-alert']);if(!response.ok)throw Error('QT 경고음 준비 실패');qtAlertBuffer=await audio.decodeAudioData(await response.arrayBuffer());}
 }
 function qtLayers(){return [{key:'qt/stage/'+(qtState?.bg||song.stage),x:0,y:0,w:1120,h:530}];}
 function drawQTActors(t){for(const [side,x,y,scale] of [['gf',560,350,.8],['nova',285,455,.76],['echo',855,455,.76]]){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();}}
-function drawQTStage(t){extraSprite(qtLayers()[0].key,0,0,0,1120,530);extraSprite('qt/stage/tv',0,65,300,990,175);drawQTActors(t);}
+function drawQTStage(t){extraSprite(qtLayers()[0].key,0,0,0,1120,530);if(song.lowSpec)extraSprite('qt/stage/tv',0,65,300,990,175);else extraSprite('qt/tv',t,65,300,990,175,String(qtState?.tv||0));drawQTActors(t);}
 function qtDamage(){health=Math.max(0,health-10);qtState.flashUntil=time()+.3*(settings.rate||1);updateHud();}
 function updateQT(t){
  if(!qtActive()||!qtState||!song.qtDodge||state!=='playing')return;
@@ -15,11 +15,11 @@ function updateQT(t){
  while(q.cursor<q.attacks.length&&q.attacks[q.cursor].done)q.cursor++;
  for(let i=q.cursor;i<q.attacks.length;i++){
   const a=q.attacks[i];if(a.at>t+.65*rate)break;if(a.done)continue;
-  if(!a.warned){a.warned=true;a.warnAt=t;if(qtAlertBuffer&&audio&&master){const node=audio.createBufferSource(),gain=audio.createGain();node.buffer=qtAlertBuffer;gain.gain.value=.5;node.connect(gain);gain.connect(master);node.start();node.onended=()=>{node.disconnect();gain.disconnect();sources=sources.filter(s=>s!==node);};sources.push(node);}}
+  if(!a.warned&&t>=(a.warn??a.at-.65*rate)){a.warned=true;a.warnAt=t;if(qtAlertBuffer&&audio&&master){const node=audio.createBufferSource(),gain=audio.createGain();node.buffer=qtAlertBuffer;gain.gain.value=.5;node.connect(gain);gain.connect(master);node.start();node.onended=()=>{node.disconnect();gain.disconnect();sources=sources.filter(s=>s!==node);};sources.push(node);}}
   if(settings.bot&&t>=a.at&&!a.dodged){a.dodged=true;qtDodgePose(t);}
   // A stalled frame must not turn an unseen/expired warning into damage.
   if(stalled&&a.at<=t+.18*rate){a.done=true;q.protectedUntil=t+.8*rate;continue;}
-  if(t>a.at+.18*rate){a.done=true;if(!a.dodged){if(a.warnAt>a.at-.25*rate)q.protectedUntil=t+.8*rate;else qtDamage();}}
+  if(t>a.at+.18*rate){a.done=true;if(!a.dodged){if(a.warnAt==null||a.warnAt>a.at-Math.min(.25*rate,Math.max(.04,(a.at-(a.warn??a.at-.65*rate))*.8)))q.protectedUntil=t+.8*rate;else qtDamage();}}
  }
 }
 function qtDodgePose(t){if(extraState?.chars?.echo&&MOD_ART.characters[extraState.chars.echo]?.animations.dodge)extraState.special.echo={name:'dodge',at:t};}
@@ -30,8 +30,10 @@ function dodgeQT(){
 }
 function drawQTHud(t){
  if(!qtActive()||!song.qtDodge||!qtState)return;
- const a=qtState.attacks.slice(qtState.cursor,qtState.cursor+4).find(a=>!a.done&&a.at-t<=.65*(settings.rate||1)&&t<=a.at+.18*(settings.rate||1)&&!a.dodged);
+ const a=qtState.attacks.slice(qtState.cursor,qtState.cursor+4).find(a=>!a.done&&t>=(a.warn??a.at-.65*(settings.rate||1))&&t<=a.at+.18*(settings.rate||1)&&!a.dodged);
  const strike=qtState.attacks.slice(Math.max(0,qtState.cursor-4),qtState.cursor+4).find(a=>t>=a.at&&t<a.at+.25*(settings.rate||1));
+ const preparing=qtState.attacks.slice(qtState.cursor,qtState.cursor+4).find(a=>a.prepare!=null&&t>=a.prepare&&t<a.at);
+ if(preparing&&!song.lowSpec)extraSprite('qt/saw',t-preparing.prepare,650,245,390,230,'prepare',24,false);
  if(strike&&!song.lowSpec)extraSprite('qt/saw',(t-strike.at)/(settings.rate||1),760,285,280,200);
  if(a){if(!song.lowSpec)extraSprite('qt/alert',Math.max(0,t-(a.at-.65)),875,185,100,100);rect(386,218,348,70,'#17121fee');label('⚠ SPACE · 회피',560,250,23,'#ffbf58');label('실패 시 체력 −10%',560,273,13,'#fff');}
  if(t<qtState.flashUntil)label('회피 실패 · 체력 −10%',560,307,18,'#ff6688');

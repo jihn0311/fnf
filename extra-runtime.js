@@ -40,6 +40,7 @@ function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
+ case 'QT TV':if(qtActive()&&qtState)qtState.tv=Number(a)||0;break;
  case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Mario Visibility':if(song.pack==='mario'){s.marioHidden??={};s.marioHidden[a]=b==='0';}break;
  case 'Mario Guest':if(song.pack==='mario'&&MOD_ART.characters['mario:'+b])s.chars[a]='mario:'+b;break;
@@ -391,6 +392,7 @@ function impostorEvent(e,t){
  const s=extraState,a=e.v1,b=e.v2,n=Number(a)||0;
  const flash=(color='#fff',duration=.35,alpha=1)=>s.flashes.push({at:e.time,color,duration,alpha});
  switch(e.name){
+ case 'QT TV':if(qtActive()&&qtState)qtState.tv=Number(a)||0;break;
  case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
  case 'Alter Camera Bop':s.bumpMult=Number.isFinite(Number(a))?Number(a):1;s.bumpInterval=Math.max(1,Number(b)||4);break;
  case 'Extra Cam Zoom':s.zoom=1+n;break;

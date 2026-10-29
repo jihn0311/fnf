@@ -194,3 +194,9 @@
 - Sampled supplied 12:17 QT video; readable opening shows smaller actors and native left/right TVs. Reduced actor scales and restored native TV layer (also preloaded in low mode). Imported native BF dodge animation, triggered on manual/bot dodge, and prevented its pose from remaining indefinitely. Versioned QT asset URLs after atlas changes. Dialogue excluded.
 - Reference file has mp4_data_incomplete metadata and invalid NAL data in later sections; 480s extraction fails, so late saw choreography could not be verified from this video. No claim of full-video fidelity. Existing 10% damage and stall protections retained.
 - Validation: 24 normal/safe/low combinations, audio decode/chart bounds/asset checks, dodge damage/protection and bot checks pass; opening stage screenshot inspected.
+
+## 2026-10-29 QT readable 360p reference
+- Supplied 360p reference decodes through the later saw/blue-screen passages. Compared late-stage contact sheet and 480s frame. Imported native TV atlas with event-driven idle/watchout/instructions/good-luck/attention/eye states; low mode retains static TVs.
+- Attack warnings now use KB_Alert timestamps and prepare animation uses KB_AttackPrepare, rather than a fixed 0.65-second warning. Attack timing, 10-health damage and stall/unseen-warning protection retained. Late-warning tolerance accounts for the shorter native warning.
+- Dialogue omitted as requested. Pincer choreography and other engine-specific scene effects remain simplified, not a complete original-engine reproduction.
+- Validation: all 24 QT song/variant/low combinations, audio and asset validation, damage/dodge/bot/protection checks passed; stage screenshot inspected.
