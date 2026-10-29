@@ -34,7 +34,7 @@ function extraSound(name,volume=1,offset=0){if(song.lowSpec)return;
  const buffer=extraSoundBuffers.get(name);if(!buffer||!audio||offset>=buffer.duration)return;
  const source=audio.createBufferSource(),gain=audio.createGain();source.buffer=buffer;source.playbackRate.value=settings.rate||1;gain.gain.value=Math.max(0,Math.min(1,volume));source.connect(gain);gain.connect(master);sources.push(source);source.onended=()=>{source.disconnect();gain.disconnect();sources=sources.filter(s=>s!==source);};source.start(audio.currentTime,Math.max(0,offset));
 }
-function extraSide(value,animation=false){const v=String(value).toLowerCase();if(song.pack==='mario'&&['2','gf','girlfriend'].includes(v))return 'gf';if(['bf','boyfriend','player'].includes(v))return 'echo';if(['dad','opponent'].includes(v))return 'nova';return v==='0'?(animation?'nova':'echo'):(animation?'echo':'nova');}
+function extraSide(value,animation=false){const v=String(value).toLowerCase();if(['gf','girlfriend'].includes(v)||(['mario','qt','qt-safe'].includes(song.pack)&&v==='2'))return 'gf';if(['bf','boyfriend','player'].includes(v))return 'echo';if(['dad','opponent'].includes(v))return 'nova';return v==='0'?(animation?'nova':'echo'):(animation?'echo':'nova');}
 function extraZoom(t){const z=extraState?.zoomTween;if(!z)return extraState?.zoom||1;const p=clamp01((t-z.at)/Math.max(.00001,z.duration)),ease=p<.5?2*p*p:1-(-2*p+2)**2/2;return z.from+(z.to-z.from)*ease;}
 function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
@@ -131,7 +131,7 @@ function extraActor(side,t,x,y,black=false){
  if(!a.animations[key]&&singing)key='sing'+['LEFT','DOWN','UP','RIGHT'][actor.lane];
  let elapsed=singing?t-(actor.at??t):Math.max(0,t)%BEAT;
  if(singing&&actor.miss)key=missAnimationKey(a,actor.lane)||key;
- if((side==='gf'||song.pack==='kapi'&&a.animations.danceLeft)&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
+ if((side==='gf'||(song.pack==='kapi'||((song.pack==='qt'||song.pack==='qt-safe')&&side==='nova'))&&a.animations.danceLeft)&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&song.pack!=='qt'&&song.pack!=='qt-safe'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
@@ -154,6 +154,12 @@ function extraActor(side,t,x,y,black=false){
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*offsetScale,originY+f.oy-off[1]*offsetScale,f.w,f.h);
  }else if(song.pack==='kapi'&&s.chars[side]==='kapi:G&W'){
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.w/2,-f.h,f.w,f.h);
+ }else if((song.pack==='qt'||song.pack==='qt-safe')&&s.chars[side]?.startsWith('qt:kb')){
+  // All KB forms use the same native position/scale; normalize against the base sheet.
+  const base=MOD_ART.characters['qt:kb'],anchor=base.animations.singLEFT[0],anchorOff=base.config.singLEFT.offsets;
+  const ratio=a.scale/base.scale;ctx.scale(1/ratio,1/ratio);
+  const originX=(-anchor.w/2-anchor.ox+anchorOff[0]*base.scale)*ratio,originY=(-anchor.h-anchor.oy+anchorOff[1]*base.scale)*ratio;
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);

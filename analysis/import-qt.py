@@ -1,7 +1,7 @@
 from pathlib import Path
 import json,re,hashlib
 from PIL import Image,ImageOps
-root=Path(__file__).resolve().parent.parent;r=Path('C:/Users/kht80/Desktop/fnf qt/assets');h=root/'analysis/import-extra-mods.py';ns={'__file__':str(h)};helper_source=h.read_text(encoding='utf-8-sig').split('for pack,folder in')[0];helper_source=helper_source.replace("matches=[f for f in frames if f['name'].startswith(a['name'])]","matches=[f for f in frames if re.sub(r'\\d+$','',f['name']).strip()==a['name']] or [f for f in frames if f['name'].startswith(a['name'])]");exec(helper_source,ns);art=ns['ART'];songs={};report={}
+root=Path(__file__).resolve().parent.parent;r=Path('C:/Users/kht80/Desktop/fnf/fnf qt/assets');h=root/'analysis/import-extra-mods.py';ns={'__file__':str(h)};helper_source=h.read_text(encoding='utf-8-sig').split('for pack,folder in')[0];helper_source=helper_source.replace("matches=[f for f in frames if f['name'].startswith(a['name'])]","matches=[f for f in frames if re.sub(r'\\d+$','',f['name']).strip()==a['name']] or [f for f in frames if f['name'].startswith(a['name'])]");exec(helper_source,ns);art=ns['ART'];songs={};report={}
 tv_states={0:'TV_Idle',1:'TV_Watchout',2:'TV_Instructions-Normal',3:'TV_GoodLuck',4:'TV_Attention',5:'TV_eyeLeft'}
 slugs=['carefree','careless','censory-overload','terminate','termination','cessation']
 chars=['bf','gf','qt','qt-nervous','kb','qt-kb','bf-404','gf-404','kb-404','kb-404-angry']

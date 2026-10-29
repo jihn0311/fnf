@@ -200,3 +200,8 @@
 - Attack warnings now use KB_Alert timestamps and prepare animation uses KB_AttackPrepare, rather than a fixed 0.65-second warning. Attack timing, 10-health damage and stall/unseen-warning protection retained. Late-warning tolerance accounts for the shorter native warning.
 - Dialogue omitted as requested. Pincer choreography and other engine-specific scene effects remain simplified, not a complete original-engine reproduction.
 - Validation: all 24 QT song/variant/low combinations, audio and asset validation, damage/dodge/bot/protection checks passed; stage screenshot inspected.
+
+## 2026-10-29 QT late Termination character fix
+- Reproduced at 210 seconds: Change Character gf targeted nova, replacing KB with GF-404. Recognize named girlfriend slots and QT numeric GF slot; tested transformation at 190.28s, restoration at 225s, and backward seek.
+- Normalize KB variant atlas scales and anchors to the base native pose; use danceLeft/danceRight for KB idle instead of the synthetic singing-left idle. Updated moved source folder path.
+- Validation: 24 QT variants plus exact transformed/restored slot assertions and damage protection tests passed; late-stage screenshot inspected against supplied 360p reference.
