@@ -16,7 +16,7 @@ async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(typeof qtActive==='function'&&qtActive())for(const name of ['Normal','Cute','Error','tv'])assets.push(EXTRA_ART.sprites['qt/stage/'+name].src);if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
- if(song.pack==='dustin')for(const key of scene.spriteKeys)assets.push(EXTRA_ART.sprites[key].src);
+ if(song.pack==='dustin'||song.pack==='corruption')for(const key of scene.spriteKeys)assets.push(EXTRA_ART.sprites[key].src);
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
  if(song.lowSpec&&scene.presentationKeys?.pipe)assets.push(EXTRA_ART.sprites[scene.presentationKeys.pipe].src);
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
@@ -26,6 +26,7 @@ async function extraPrepare(){
  const worker=async()=>{while(next<pending.length){const src=pending[next++];await new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{await im.decode();modImages.set(src,im);resolve();}catch(error){reject(error);}};im.onerror=()=>reject(Error('모드 이미지 로드 실패: '+src));im.src=src;});loaded++;if(state==='loading')$('start').textContent='이미지 준비 중… '+loaded+'/'+pending.length;}};
  const results=await Promise.allSettled(Array.from({length:Math.min(3,pending.length)},worker));
  const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+ await prepareCorruptionVideo();
  if(typeof qtActive==='function'&&qtActive())await prepareQT();
  if(song.pack==='kapi'&&!song.lowSpec)prepareKapiStage();
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
@@ -42,6 +43,7 @@ function extraEvent(e,t,quiet=false){
  const s=extraState,a=e.v1,b=e.v2;
  if(song.pack==='impostor'&&impostorEvent(e,t))return;
  switch(e.name){
+ case 'Corruption Background':if(song.pack==='corruption')s.corruptionBackground=a;break;
  case 'Dustin Character':dustinCharacterEvent(e);break;
  case 'QT TV':if(qtActive()&&qtState)qtState.tv=Number(a)||0;break;
  case 'QT Background':if(qtActive()&&qtState)qtState.bg=Number(a)>=2?'Error':song.stage;break;
@@ -138,11 +140,11 @@ function extraActor(side,t,x,y,black=false){
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&song.pack!=='qt'&&song.pack!=='qt-safe'&&!singing)){key=special.name;elapsed=t-special.at;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
- const off=a.config?.[key]?.offsets||[0,0];ctx.save();if((song.pack==='mario'||song.pack==='kapi')&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
+ const off=a.config?.[key]?.offsets||[0,0];ctx.save();if((song.pack==='mario'||song.pack==='kapi'||song.pack==='corruption')&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
  if(songId==='tainted-destruction'&&t<320*BEAT&&s.chars[side].startsWith('tainted:bf_des'))ctx.scale(1.4,1.4);
  // Deathmatch character JSON describes the opponent-facing base; the player slot reverses it.
- const flip=(song.pack==='death'||song.pack==='impostor'||song.pack==='mario')?(!!a.flip)!==(side==='echo'):!!a.flip;
+ const flip=(song.pack==='death'||song.pack==='impostor'||song.pack==='mario'||song.pack==='corruption')?(!!a.flip)!==(side==='echo'):!!a.flip;
  const destructionMoved=songId==='tainted-destruction'&&t>=112*BEAT;
  // Destruction BF sprites already face the opponent from the right-hand position.
  const facingFlip=((song.pack==='silly'||songId==='tainted-defeat')&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
@@ -163,7 +165,7 @@ function extraActor(side,t,x,y,black=false){
   const ratio=a.scale/base.scale;ctx.scale(1/ratio,1/ratio);
   const originX=(-anchor.w/2-anchor.ox+anchorOff[0]*base.scale)*ratio,originY=(-anchor.h-anchor.oy+anchorOff[1]*base.scale)*ratio;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
- }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'){
+ }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='agoti'){
@@ -186,7 +188,8 @@ function extraStage(t){
  const bounce=songId==='tainted-crush'&&beat>=64&&beat<96;
  ctx.save();ctx.translate(560+Math.sin(t*177)*shake,265+Math.cos(t*137)*shake);ctx.scale(zoom,zoom);if(song.pack==='impostor'&&s.twist)ctx.rotate(Math.sin(beat*Math.PI)*s.twist*Math.PI/180);if(bounce)ctx.rotate((Math.floor(beat)%2?1:-1)*.035*Math.exp(-(beat%1)*4));ctx.translate(-560,-265);
  if(s.follow&&!fixedAllStars)ctx.translate(Math.max(-60,Math.min(60,(600-s.follow.x)*.08)),Math.max(-30,Math.min(30,(350-s.follow.y)*.05)));
- if(song.pack==='dustin'){drawDustinStage(t);
+ if(song.pack==='corruption'){drawCorruptionStage(t);
+ }else if(song.pack==='dustin'){drawDustinStage(t);
  }else if(song.pack==='mario'){
   drawMarioStage(t);
  }else if(song.pack==='impostor'){
@@ -288,7 +291,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='dustin'){if(help)help.textContent='Dustin · 경량 연주판 · 원본 음원/채보 · 회피·별도 게이지·함정·화면 왜곡 제외';return;}if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='corruption'){if(help)help.textContent='Corruption+ · 6곡 · 원본 음원/채보 · 캐릭터 전환 · 무대 웹 재구성 · 일부 영상·왜곡·입력 방해 연출 생략';return;}if(song.pack==='dustin'){if(help)help.textContent='Dustin · 경량 연주판 · 원본 음원/채보 · 회피·별도 게이지·함정·화면 왜곡 제외';return;}if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;

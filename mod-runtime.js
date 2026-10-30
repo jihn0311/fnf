@@ -109,6 +109,7 @@ function showModVideo(){
 function closeModVideo(){const video=$('mod-video');video.pause();video.removeAttribute('src');video.load();$('mod-cinema').hidden=true;}
 
 function drawLowSpecStage(t){
+ if(song.pack==='corruption'){drawCorruptionStage(t);return;}
  if(song.pack==='dustin'){drawDustinStage(t);return;}
  if(typeof qtActive==='function'&&qtActive()){drawQTStage(t);return;}
  if(song.pack==='mario'&&song.stagePhases){if(!extraState||extraState.id!==songId)extraReset();drawMarioStage(t);return;}
@@ -133,6 +134,7 @@ function drawLowSpecStage(t){
 
 let lowSpecBackground=null;
 function lowSpecLayers(){
+ if(song.pack==='corruption')return corruptionLayers();
  if(song.pack==='dustin')return dustinLayers();
  if(typeof qtActive==='function'&&qtActive())return qtLayers();
  const full=key=>({key,x:0,y:0,w:1120,h:530});

@@ -609,7 +609,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
-const modNames={dustin:'Dustin · 경량 연주판',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+const modNames={corruption:'Corruption+',dustin:'Dustin · 경량 연주판',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
 let selectedMod=null;
 function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
 function buildModCards(){

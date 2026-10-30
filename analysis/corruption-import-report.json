@@ -1,0 +1,144 @@
+{
+  "opening": {
+    "duration": 98.62367346938775,
+    "vocals": false,
+    "notes": {
+      "normal": {
+        "echo": 742,
+        "nova": 0
+      },
+      "easy": {
+        "echo": 522,
+        "nova": 0
+      }
+    },
+    "characters": [
+      "corruption:bf-pixel"
+    ],
+    "stages": [
+      "school"
+    ]
+  },
+  "null-and-void": {
+    "duration": 106.0559410430839,
+    "vocals": true,
+    "notes": {
+      "normal": {
+        "echo": 289,
+        "nova": 271
+      },
+      "easy": {
+        "echo": 283,
+        "nova": 271
+      }
+    },
+    "characters": [
+      "corruption:bf-pixel",
+      "corruption:bf-pixelFront",
+      "corruption:senpaiBack",
+      "corruption:senpaiBackFirst",
+      "corruption:senpaiNull"
+    ],
+    "stages": [
+      "school"
+    ]
+  },
+  "chkdsk": {
+    "duration": 187.08893424036282,
+    "vocals": true,
+    "notes": {
+      "normal": {
+        "echo": 1215,
+        "nova": 1202
+      },
+      "easy": {
+        "echo": 1107,
+        "nova": 1202
+      }
+    },
+    "characters": [
+      "corruption:bf-pixel",
+      "corruption:bf-pixel-dive",
+      "corruption:bf-pixelFront",
+      "corruption:spiritBack",
+      "corruption:spiritSad"
+    ],
+    "stages": [
+      "school",
+      "tunnel"
+    ]
+  },
+  "access-denied": {
+    "duration": 211.41562358276644,
+    "vocals": true,
+    "notes": {
+      "normal": {
+        "echo": 498,
+        "nova": 674
+      },
+      "easy": {
+        "echo": 498,
+        "nova": 674
+      }
+    },
+    "characters": [
+      "corruption:bf-pixel",
+      "corruption:glitchBf",
+      "corruption:nullAccess",
+      "corruption:senpai",
+      "corruption:senpai-angry",
+      "corruption:spiritBackGray"
+    ],
+    "stages": [
+      "access",
+      "building",
+      "glitch",
+      "replay"
+    ]
+  },
+  "bloodlust": {
+    "duration": 231.91231292517006,
+    "vocals": true,
+    "notes": {
+      "normal": {
+        "echo": 508,
+        "nova": 501
+      }
+    },
+    "characters": [
+      "corruption:gfDark",
+      "corruption:gfNorm",
+      "corruption:gfRage",
+      "corruption:gfRun",
+      "corruption:gfSpooked",
+      "corruption:momCorrupt",
+      "corruption:momFront",
+      "corruption:momFrontSecond",
+      "corruption:momSpider"
+    ],
+    "stages": [
+      "forest",
+      "street",
+      "street-alt"
+    ]
+  },
+  "pretence": {
+    "duration": 195.5,
+    "vocals": true,
+    "notes": {
+      "normal": {
+        "echo": 289,
+        "nova": 392
+      }
+    },
+    "characters": [
+      "corruption:falseThorn",
+      "corruption:ftBf",
+      "corruption:player"
+    ],
+    "stages": [
+      "pretence",
+      "pretence-forest"
+    ]
+  }
+}
