@@ -74,8 +74,8 @@ def character(name):
    a['animations'][key].append(packed[token])
  save();a['src']=a['pages'][0];art['characters']['dustin:'+name]=a;cached[name]=a;cache.write_text(json.dumps(cached),encoding='utf8');print('CHAR',name,flush=True);return True
 
-def stage(name):
- key='dustin/stage/'+name
+def stage(name,view):
+ key='dustin/stage/'+view['id']
  if key in art['sprites']:return key
  p=resolve('data/stages/'+name+'.xml');layers=[]
  if p.exists():
@@ -93,12 +93,29 @@ def stage(name):
    z=float(node.get('scale',1));layers.append((im,float(node.get('x',0)),float(node.get('y',0)),z))
  if layers:
   # Flatten initial native background layers once; keep a fixed, lightweight scene.
-  x0=min(x for _,x,y,z in layers);y0=min(y for _,x,y,z in layers);x1=max(x+im.width*z for im,x,y,z in layers);y1=max(y+im.height*z for im,x,y,z in layers);factor=min(1400/max(1,x1-x0),800/max(1,y1-y0));bg=Image.new('RGBA',(max(1,round((x1-x0)*factor)),max(1,round((y1-y0)*factor))),'#151625')
+  factor=view['scale'];bg=Image.new('RGBA',(1120,530),'#151625')
   for im,x,y,z in layers:
-   im=im.resize((max(1,round(im.width*z*factor)),max(1,round(im.height*z*factor))),Image.Resampling.LANCZOS);bg.alpha_composite(im,(round((x-x0)*factor),round((y-y0)*factor)))
-  bg=ImageOps.fit(bg,(1120,530),method=Image.Resampling.LANCZOS)
+   im=im.resize((max(1,round(im.width*z*factor)),max(1,round(im.height*z*factor))),Image.Resampling.LANCZOS)
+   bg.alpha_composite(im,(round((x-view['left'])*factor),round((y-view['top'])*factor)))
  else:bg=Image.new('RGB',(1120,530),'#151625');report['missing'].append('background '+name)
- dest=out/'stage'/(name+'.webp');dest.parent.mkdir(parents=True,exist_ok=True);bg.convert('RGB').save(dest,quality=86);art['sprites'][key]={'src':url(dest)};return key
+ dest=out/'stage'/(view['id']+'.webp');dest.parent.mkdir(parents=True,exist_ok=True);bg.convert('RGB').save(dest,quality=86);art['sprites'][key]={'src':url(dest)};return key
+def layout(stage,initial,lines,names,sid):
+ p=resolve('data/stages/'+stage+'.xml');d=xml(p) if p.exists() else ET.Element('stage');slots=[]
+ for i,line in enumerate(lines):
+  role=line.get('position','dad');aliases=['bf','boyfriend','player'] if role in ['boyfriend','bf','player'] else ['gf','girlfriend'] if role in ['gf','girlfriend'] else ['dad','opponent']
+  node=next((n for n in d if n.tag in aliases),ET.Element(aliases[0]));default=(770,450) if aliases[0]=='bf' else (400,130) if aliases[0]=='gf' else (100,100)
+  bx,by=float(node.get('x',default[0])),float(node.get('y',default[1]));slot={}
+  for name in names:
+   a=art['characters'].get('dustin:'+name);cp=resolve('data/characters/'+name+'.xml')
+   if not a or not cp.exists():continue
+   c=xml(cp);z=float(node.get('scale',c.get('scale',1)));f=a['animations']['idle'][0];off=a['config'].get('idle',{}).get('offsets',[0,0]);x=bx+float(c.get('x',0));y=by+float(c.get('y',0))
+   # Native trimmed idle bounds, offsets and scale share the stage coordinate system.
+   left=x+(f['ox']/a['scale']-off[0])*z;top=y+(f['oy']/a['scale']-off[1])*z;w=f['w']/a['scale']*z;h=f['h']/a['scale']*z
+   slot['dustin:'+name]={'x':left+w/2,'y':top+h,'z':z,'w':w,'h':h,'hidden':float(node.get('alpha',1))==0}
+  slots.append(slot)
+ main=[slots[i].get('dustin:'+initial[i]) for i,l in enumerate(lines) if i==0 or l.get('type')==1];main=[a for a in main if a];left=min(a['x']-a['w']/2 for a in main);right=max(a['x']+a['w']/2 for a in main);top=min(a['y']-a['h'] for a in main);floor=max(a['y'] for a in main);scale=min(920/max(1,right-left),350/max(1,floor-top),.8)
+ return {'id':sid,'scale':scale,'left':(left+right)/2-560/scale,'top':floor-460/scale,'slots':slots}
+
 order=['perseverance','kinemorto','cornered','heatwave','avulsion','broken-reality','the-uprising','you-are','haunted','bonetravaganza','homie-cide','thermal-shock','overthrone','redscreen']
 order+=sorted(p.name for p in (r/'songs').iterdir() if p.is_dir() and p.name not in order)
 for slug in order:
@@ -133,16 +150,19 @@ for slug in order:
     else:seen[key]=n
    notes[side]=list(seen.values())
   diff=path.stem;charts[diff]=notes;allevents[diff]=converted;allsections[diff]=[{'start':0,'end':duration,'mode':'duet'}];removed[diff]=dropped
- sid='dustin-'+slug;bg=stage(d['stage']);used=['dustin:'+n for n in names if 'dustin:'+n in art['characters']];spectator=next((valid[i] for i,l in enumerate(lines) if l.get('type')==2 and valid[i]),None)
- art['scenes'][sid]={'opponent':'dustin:'+enemy,'player':'dustin:'+player,'spectator':'dustin:'+spectator if spectator else None,'characters':used,'spriteKeys':[bg],'dustinLines':['dustin:'+n if n else None for n in valid]};art['backgrounds'][sid]=[]
+ sid='dustin-'+slug;view=layout(d['stage'],initial,lines,names,sid);bg=stage(d['stage'],view);used=['dustin:'+n for n in names if 'dustin:'+n in art['characters']];spectator=next((valid[i] for i,l in enumerate(lines) if l.get('type')==2 and valid[i]),None)
+ art['scenes'][sid]={'opponent':'dustin:'+enemy,'player':'dustin:'+player,'spectator':'dustin:'+spectator if spectator else None,'characters':used,'spriteKeys':[bg],'dustinLines':['dustin:'+n if n else None for n in valid],'dustinView':view};art['backgrounds'][sid]=[]
  # Skip unused cinematic actors when preloading.
  active={i for i,l in enumerate(lines) if l.get('type')!=2 and (i==0 or l.get('type')==1 or l.get('notes'))}
  if spectator:active.add(initial.index(spectator))
  needed={initial[i] for i in active}|{e['params'][1] for e in events if e['name']=='Change Character' and e['params'][0] in active}
  art['scenes'][sid]['characters']=['dustin:'+n for n in sorted(needed) if 'dustin:'+n in art['characters']]
  default='hard' if 'hard' in charts else next(iter(charts));song={'title':'Dustin · '+meta.get('displayName',slug),'pack':'dustin','sceneKey':sid,'stage':d['stage'],'bpm':meta['bpm'],'duration':duration,'beats':duration*meta['bpm']/60,'defaultDifficulty':default,'charts':charts,'events':allevents,'sections':allsections[default],'sectionsByDifficulty':allsections,'audioSrc':ns['copy'](inst,'dustin/audio/'+slug),'originalSpeed':d.get('scrollSpeed',1),'sky':['#141521','#272031'],'description':'경량 연주판 · 복잡한 기믹/화면 효과 제외 · 원본 음원·채보·캐릭터 교체','genre':'DUSTIN','dustinPlayerLine':next(i for i,l in enumerate(lines) if l.get('type')==1)}
- if (audiofolder/'Voices.ogg').exists():song['voiceSrc']=ns['copy'](audiofolder/'Voices.ogg','dustin/audio/'+slug)
+ voices=[f for f in audiofolder.glob('*.ogg') if f.name.lower().startswith('voices') and '-final hours' not in f.name.lower()]
+ if voices:song['voiceSources']=[ns['copy'](f,'dustin/audio/'+slug) for f in voices]
  songs[sid]=song;report[slug]={'notes':{d:{s:len(n) for s,n in c.items()} for d,c in charts.items()},'removedHazards':removed,'characters':len(used),'duration':duration};print('SONG',slug,flush=True)
+# Lightweight native pixel-hall phase used by Perseverance.
+px=resolve('images/stages/ruins_exit/pixel/pillars.png');im=Image.open(px).convert('RGBA');im=ImageOps.contain(im,(1000,500),method=Image.Resampling.NEAREST);bg=Image.new('RGBA',(1120,530),'black');bg.alpha_composite(im,((1120-im.width)//2,(530-im.height)//2));dest=out/'stage/perseverance-pixel.webp';bg.convert('RGB').save(dest,lossless=True);art['sprites']['dustin/pixel-hall']={'src':url(dest)};art['scenes']['dustin-perseverance']['spriteKeys'].append('dustin/pixel-hall')
 # Native promotional image serves as the mod selector icon.
 im=Image.open(r/'dustin-header.webp');im=ImageOps.fit(im,(180,180));im.save(root/'assets/mod-icons/dustin.webp',quality=88)
 (root/'dustin-mod.js').write_text('Object.assign(MOD_SONGS,'+json.dumps(songs,separators=(',',':'))+');\nconst DUSTIN_ART='+json.dumps(art,separators=(',',':'))+';\nfor(const key of ["characters","backgrounds","videos","scenes"])Object.assign(MOD_ART[key],DUSTIN_ART[key]);\nObject.assign(EXTRA_ART.sprites,DUSTIN_ART.sprites);\n',encoding='utf8')

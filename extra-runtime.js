@@ -16,6 +16,7 @@ async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(typeof qtActive==='function'&&qtActive())for(const name of ['Normal','Cute','Error','tv'])assets.push(EXTRA_ART.sprites['qt/stage/'+name].src);if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
  for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
+ if(song.pack==='dustin')for(const key of scene.spriteKeys)assets.push(EXTRA_ART.sprites[key].src);
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
  if(song.lowSpec&&scene.presentationKeys?.pipe)assets.push(EXTRA_ART.sprites[scene.presentationKeys.pipe].src);
  if(song.lowSpec)for(const layer of lowSpecLayers()){const src=lowSpecLayerSource(layer).src;if(src)assets.push(src);}
