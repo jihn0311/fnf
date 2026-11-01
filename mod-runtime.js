@@ -21,7 +21,7 @@ async function prepareMod(){lowSpecBackground=null;
  }));
  if(song.lowSpec)buildLowSpecBackground();
 }
-function modOffset(lane,side,t){if(song.lowSpec)return {x:0,y:0};
+function modOffset(lane,side,t){if(song.lowSpec)return {x:0,y:0};if(typeof dustinFull==='function'&&dustinFull())return dustinOffset(lane,side,t);
  if(songId==='agoti-a.g.o.t.i')return {x:0,y:10*Math.cos((t/BEAT+(lane+(side==='echo'?4:0))*.25)*Math.PI)};
  if(modSlug()!=='too-slow')return {x:0,y:0};
  const step=t*song.bpm/60*4,phase=(t*song.bpm/84+(lane+(side==='echo'?4:0))*.25)*Math.PI;

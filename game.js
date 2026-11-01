@@ -32,6 +32,7 @@ if(typeof MOD_SONGS!=='undefined')Object.assign(SONGS,MOD_SONGS);
 if(typeof MOD_SONGS!=='undefined')for(const [id,track] of Object.entries(MOD_SONGS)){
  if(track.pack==='impostor'&&typeof document.createElement==='function'){const original=document.createElement('option');original.value=id;original.textContent=track.title;$('song').appendChild(original);}
  const lowId=id+'-low';SONGS[lowId]={...track,baseSongId:id,lowSpec:true,title:track.title+' [저사양]',description:track.description+' · 특수효과 없는 저사양 버전'};
+ if(track.pack==='dustin')track.description='일반 모드 · 원본 컷신·무대 연출·특수노트·전용 기믹 복원';
  if(typeof document.createElement==='function'){const option=document.createElement('option');option.value=lowId;option.textContent=SONGS[lowId].title;$('song').appendChild(option);}
 }
 let songId='midnight',song=SONGS[songId],BPM=song.bpm,BEAT=60/BPM,DURATION=song.duration||song.beats*BEAT;
@@ -109,7 +110,7 @@ function timingResult(delta){
 function splash(lane){if(song.lowSpec)return;splashes.push({lane,at:time()});}
 
 function createChart(difficulty = settings.difficulty, side = playerSide()){
-  if(song.charts)return song.charts[difficulty][side].map(note=>({...note,done:false,holding:false}));
+  if(song.charts){const extra=typeof dustinFull==='function'&&dustinFull()?(dustinData()?.hazards[difficulty]?.[side]||[]):[];return [...song.charts[difficulty][side],...extra].sort((a,b)=>a.time-b.time).map(note=>({...note,...(typeof dustinFull==='function'&&dustinFull()?{dustinSkin:dustinSkinAt(note.time)}:{}),done:false,holding:false}));}
   const chart=[], blockedUntil=[-1,-1,-1,-1];
   const step=difficulty==='easy'?2:difficulty==='hard'?.5:1;
   for(let beat=8;beat<song.beats-4;beat+=step){
@@ -139,8 +140,8 @@ function readSettings(){
   if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:time());
   $('chart-info').textContent=(settings.bot?'BOT · ':'')+(playerSide()==='nova'?'상대 파트 · ':'보프 파트 · ')+'내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
 }
-function targetY(){return settings.scroll==='down'?448:82;}
-function noteY(at,t){return targetY()+(settings.scroll==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
+function targetY(){return (typeof dustinScrollDirection==='function'?dustinScrollDirection():settings.scroll)==='down'?448:82;}
+function noteY(at,t){return targetY()+((typeof dustinScrollDirection==='function'?dustinScrollDirection():settings.scroll)==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof dustinScrollFactor==='function'?dustinScrollFactor(t):1)*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
 function laneHeld(lane){for(const value of held.values())if(value===lane)return true;return false;}
 function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));for(const key of ['d','f','j','k'])$('keycap-'+key)?.classList.toggle('active',held.has('key:'+playKeys[['d','f','j','k'].indexOf(key)]));}
 const keyCountStorage='fnf-key-counts-v1';
@@ -236,7 +237,7 @@ function scheduleMusic(){
 
   }
 }
-function stopSources(){if(typeof sillyVideos!=='undefined')for(const video of sillyVideos.values())video.pause();for(const source of [...sources]){try{source.stop();}catch{}}sources=[];}
+function stopSources(){if(typeof pauseDustinVideos==='function')pauseDustinVideos();if(typeof sillyVideos!=='undefined')for(const video of sillyVideos.values())video.pause();for(const source of [...sources]){try{source.stop();}catch{}}sources=[];}
 function updateHud(){ $('score').textContent=(score<0?'-':'')+String(Math.abs(score)).padStart(6,'0');$('accuracy').textContent=judged?(earned/judged*100).toFixed(1)+'%':'—';$('health').style.width=health+'%';$('health-icons').style.left=(100-health)+'%';$('health-meter').setAttribute('aria-valuenow',Math.round(health));$('health-number').textContent=Math.round(health)+'%';$('combo').textContent=combo;$('misses').textContent=hits.miss; }
 const audioBuffers=new Map();
 let pauseAfterLoad=false;
@@ -305,6 +306,7 @@ async function start(){
     const buffer=buffers[0];
     if(buffer)DURATION=Math.max(...buffers.map(b=>b.duration));
     notes=createChart();opponentNotes=createChart(settings.difficulty,autoSide());buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
+    if(typeof playDustinStory==='function')await playDustinStory('intro');
     startTime=audio.currentTime+5*BEAT/(settings.rate||1)+.05;for(const stem of buffers)playTrackBuffer(stem,startTime);
     countdownBuffers.forEach((sound,i)=>playTrackBuffer(sound,startTime-(4-i)*BEAT/(settings.rate||1)));
     state='playing';$('overlay').classList.add('hidden');$('pause').disabled=false;$('pause').innerHTML='일시정지 <kbd>ESC / Enter</kbd>';$('status').textContent='LIVE / '+song.title.toUpperCase();updateHud();
@@ -368,6 +370,7 @@ function finish(failed=false){
   $('description').innerHTML=`점수 ${score.toLocaleString()} · 정확도 ${accuracy.toFixed(1)}%<br>최대 콤보 ${maxCombo} · 놓친 노트 ${hits.miss}<br>PERFECT ${hits.perfect} / GOOD ${hits.good} / BAD ${hits.bad} / MISS ${hits.miss}`;
   $('start').innerHTML='다시 플레이 <span>↗</span>';$('hint').textContent='다시 도전해서 최고 기록을 만들어 보세요.';$('overlay').classList.remove('hidden');
   if(typeof extraFinish==='function')extraFinish(failed);
+  if(!failed&&typeof playDustinStory==='function')void playDustinStory('outro');
 }
 const noteSkinImage=typeof Image!=='undefined'?new Image():null;
 if(noteSkinImage)noteSkinImage.src='assets/note-skin.png';
@@ -498,6 +501,7 @@ function drawCachedScene(t){
 }
 function draw(t){prepareStageResolution();
   drawCachedScene(t);
+  if(typeof dustinUnderlay==='function')dustinUnderlay(t);
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);
   const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);
   ctx.save();if(typeof extraHudAlpha==='function')ctx.globalAlpha=extraHudAlpha(t);
@@ -507,11 +511,12 @@ function draw(t){prepareStageResolution();
   const ends=opponentFlashEnds(opponentNotes);let lo=0,hi=ends.length;
   while(lo<hi){const mid=(lo+hi)>>>1;if(ends[mid]<=t)lo=mid+1;else hi=mid;}
   for(let i=lo;i<opponentNotes.length;i++){const n=opponentNotes[i];if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration||0))opponentLit[n.lane]=true;}
-  const visibleUntil=t+LEAD/(settings.speed*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
+  const visibleUntil=t+LEAD/(settings.speed*(typeof dustinScrollFactor==='function'?dustinScrollFactor(t):1)*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
   for(const side of ['nova','echo']){
     if(impostorVideo||typeof allStarsCinemaActive==='function'&&allStarsCinemaActive(t))continue;
     if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
     ctx.save();
+    if(typeof dustinFull==='function'&&dustinFull()&&side===playerSide()&&dustinFX?.direction==='left'){const center=laneX(1,side)+45;ctx.translate(center,265);ctx.rotate(-Math.PI/2);ctx.translate(-center,-265);}
     const left=laneX(0,side)-47;
     label(side===playerSide()?(settings.bot?'BOT · 자동':'PLAYER · 직접 연주'):'AUTO',laneX(1,side)+45,18,11,side===playerSide()?'#8cf5d9':'#a7b7cd');
     const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,['survent-casanova','survent-gospel'].includes(songId)?'#080e1d55':'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
@@ -521,7 +526,7 @@ function draw(t){prepareStageResolution();
       const lit=state==='playing'&&t>=0&&(side===autoSide()?activeOpponent:(flashes[lane]>t||laneHeld(lane)||botLit[lane]));
       const offset=typeof modOffset==='function'?modOffset(lane,side,t):{x:0,y:0};const x=laneX(lane,side)+offset.x;
       if(lit)rect(x-38,targetY()-43,76,86,COLORS[lane]+'22');
-      if(!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY()+offset.y,lit)))stageArrow(x,targetY()+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
+      if(!(typeof drawDustinReceptor==='function'&&drawDustinReceptor(lane,x,targetY()+offset.y,lit,t))&&!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY()+offset.y,lit)))stageArrow(x,targetY()+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
       if(side===playerSide())label(playKeys[lane].toUpperCase(),x,settings.scroll==='down'?492:33,10,'#a7b7cd');
     }
     ctx.save();ctx.beginPath();ctx.rect(left,0,366,490);ctx.clip();
@@ -533,6 +538,7 @@ function draw(t){prepareStageResolution();
       const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
       if(Math.max(y,tail)<-35||Math.min(y,tail)>565)continue;
       const color=note.type===3?'#bd7aff':note.type===2?'#ffffff':COLORS[note.lane];
+      if(typeof drawDustinNote==='function'&&drawDustinNote(note,x,y,tail,t))continue;
       if(typeof drawMarioNote==='function'&&drawMarioNote(note,x,y,tail,t,side))continue;
       if(note.hurt&&typeof extraDrawHurt==='function'){extraDrawHurt(note,x,y,tail);continue;}
       if(note.duration){
@@ -559,7 +565,7 @@ function draw(t){prepareStageResolution();
   if(state==='playing')drawCountdown(t);
   if(t-feedbackAt<.65&&feedback){label(feedback,560,166,19,feedbackColor);if(/^(PERFECT|GOOD|BAD|MISS)/.test(feedback))label(timingOffsetText(feedbackOffsetMs),560,184,12,'#d5deec');if(combo>1){label(String(combo),560,222,29,'#ffffff');label('COMBO',560,239,9,'#8c9bb0');}}
   ctx.restore();
-  if(typeof drawModHud==='function')drawModHud(t);if(typeof drawQTHud==='function')drawQTHud(t);
+  if(typeof drawModHud==='function')drawModHud(t);if(typeof drawQTHud==='function')drawQTHud(t);if(typeof drawDustinEffectsHud==='function')drawDustinEffectsHud(t);
   rect(0,527,1120*Math.max(0,t)/DURATION,3,'#8cf5d9');
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
@@ -572,11 +578,12 @@ $('sound').addEventListener('click',()=>{muted=!muted;if(master)master.gain.valu
 document.addEventListener('keydown',e=>{
   if($('key-settings-dialog')?.open)return;
   const key=inputKey(e);
+  if(typeof dustinKey==='function'&&dustinKey(e,true))return;
   if(key==='Escape'||(key==='Enter'&&['playing','paused'].includes(state))){e.preventDefault();if(!e.repeat)pause();return;}
   if(e.target?.matches?.('select,input,button')&&state!=='playing')return;
   if(KEYS[key]!==undefined){e.preventDefault();if(!e.repeat)inputDown('key:'+key,KEYS[key]);}
 });
-document.addEventListener('keyup',e=>{const key=inputKey(e);inputUp('key:'+key);});
+document.addEventListener('keyup',e=>{if(typeof dustinKey==='function')dustinKey(e,false);const key=inputKey(e);inputUp('key:'+key);});
 for(const button of document.querySelectorAll('[data-lane]')){
   button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);inputDown('pointer:'+e.pointerId,Number(button.dataset.lane));});
   for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,e=>inputUp('pointer:'+e.pointerId));
@@ -609,7 +616,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
-const modNames={corruption:'Corruption+',dustin:'Dustin · 경량 연주판',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+const modNames={corruption:'Corruption+',dustin:'Dustin',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
 let selectedMod=null;
 function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
 function buildModCards(){

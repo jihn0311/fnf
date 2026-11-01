@@ -1,0 +1,698 @@
+{
+  "perseverance": {
+    "scripts": [
+      "songs\\perseverance\\scripts\\song_events.hx",
+      "songs\\perseverance\\scripts\\song_mechanics.hx",
+      "data\\stages\\ruins_exit.hx"
+    ],
+    "calls": [
+      "epicbump",
+      "epicimpact",
+      "pixelbump",
+      "swagbump"
+    ],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Char Anim Suffix",
+      "Change Character",
+      "Change Character Offset",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Character Ecco",
+      "Cinematic Bars",
+      "HScript Call",
+      "Idle Cam Movement",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette"
+    ],
+    "layers": 9
+  },
+  "kinemorto": {
+    "scripts": [
+      "songs\\kinemorto\\scripts\\song_events.hx",
+      "songs\\kinemorto\\scripts\\song_mechanics.hx",
+      "songs\\kinemorto\\scripts\\song_modchart.hx",
+      "data\\stages\\snowdin_river.hx"
+    ],
+    "calls": [
+      "bgFog",
+      "changeToSans",
+      "epicimpact",
+      "mortoZoom",
+      "moveBones",
+      "papsDies",
+      "switchToSans"
+    ],
+    "events": [
+      "Add Camera Zoom",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Character Ecco",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Idle Cam Movement",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos"
+    ],
+    "layers": 8
+  },
+  "cornered": {
+    "scripts": [
+      "songs\\cornered\\scripts\\anim.hx",
+      "songs\\cornered\\scripts\\morePPLui.hx",
+      "songs\\cornered\\scripts\\song_events.hx",
+      "songs\\cornered\\scripts\\song_ui.hx",
+      "data\\stages\\waterfall.hx"
+    ],
+    "calls": [
+      "backgroundFade",
+      "phantomIn",
+      "phantomOut"
+    ],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos"
+    ],
+    "layers": 17
+  },
+  "heatwave": {
+    "scripts": [
+      "songs\\heatwave\\scripts\\song_attack.hx",
+      "songs\\heatwave\\scripts\\song_events.hx",
+      "songs\\heatwave\\scripts\\song_mechanics.hx",
+      "songs\\heatwave\\scripts\\song_ui.hx",
+      "data\\stages\\hotland.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Character Ecco",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Idle Cam Movement",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos"
+    ],
+    "layers": 11
+  },
+  "avulsion": {
+    "scripts": [
+      "songs\\avulsion\\scripts\\song_events.hx",
+      "data\\stages\\lab.hx"
+    ],
+    "calls": [
+      "flash_red",
+      "lyrics"
+    ],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Idle Cam Movement",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette"
+    ],
+    "layers": 17
+  },
+  "broken-reality": {
+    "scripts": [
+      "songs\\broken-reality\\scripts\\song_attacking.hx",
+      "songs\\broken-reality\\scripts\\song_events.hx",
+      "songs\\broken-reality\\scripts\\song_mechanics.hx",
+      "data\\stages\\hall.hx"
+    ],
+    "calls": [
+      "changeDrainAmount",
+      "cineHit",
+      "disableDrain",
+      "doAttack",
+      "enableDrain",
+      "fadeSansStrums",
+      "goDownScroll",
+      "goLeftScroll",
+      "goUpScroll"
+    ],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Health Time Bar",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Cinematic Bars",
+      "HScript Call",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos",
+      "Video Cutscene"
+    ],
+    "layers": 13
+  },
+  "the-uprising": {
+    "scripts": [
+      "songs\\the-uprising\\scripts\\song_ui.hx",
+      "data\\stages\\surface.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Char Anim Suffix",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Update Pause Infos"
+    ],
+    "layers": 7
+  },
+  "you-are": {
+    "scripts": [
+      "songs\\you-are\\scripts\\epilepsy.hx",
+      "data\\stages\\youare.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "New Change HUD Alpha",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 15
+  },
+  "haunted": {
+    "scripts": [
+      "data\\stages\\haunted.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Character Ecco",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 18
+  },
+  "bonetravaganza": {
+    "scripts": [
+      "songs\\bonetravaganza\\scripts\\song_events.hx",
+      "songs\\bonetravaganza\\scripts\\stage_closeup.hx",
+      "data\\stages\\bone_stage.hx"
+    ],
+    "calls": [
+      "toggleTv"
+    ],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Update Pause Infos",
+      "Video Cutscene"
+    ],
+    "layers": 7
+  },
+  "homie-cide": {
+    "scripts": [
+      "songs\\homie-cide\\scripts\\song_events.hx",
+      "data\\stages\\grillbys.hx"
+    ],
+    "calls": [
+      "papsWhat",
+      "sansSpeaks"
+    ],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Movement",
+      "Change Char Anim Suffix",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Video Cutscene"
+    ],
+    "layers": 14
+  },
+  "thermal-shock": {
+    "scripts": [
+      "songs\\thermal-shock\\scripts\\thermal_events.hx",
+      "data\\stages\\core.hx"
+    ],
+    "calls": [],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 13
+  },
+  "overthrone": {
+    "scripts": [
+      "songs\\overthrone\\scripts\\redDemonO.hx",
+      "songs\\overthrone\\scripts\\song_events.hx",
+      "data\\stages\\throne_room_fell.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette"
+    ],
+    "layers": 12
+  },
+  "redscreen": {
+    "scripts": [
+      "data\\stages\\dustshift.hx"
+    ],
+    "calls": [],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change Character Offset",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Character Ecco",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "New Change HUD Alpha",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 5
+  },
+  "bargain": {
+    "scripts": [
+      "songs\\bargain\\scripts\\song_events.hx",
+      "data\\stages\\bargain.hx"
+    ],
+    "calls": [],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 6
+  },
+  "genocides": {
+    "scripts": [
+      "songs\\genocides\\scripts\\song_events.hx",
+      "data\\stages\\og_undertale.hx"
+    ],
+    "calls": [
+      "genoText",
+      "genoTextOpen"
+    ],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Continuous BPM Change",
+      "Contrast Effect",
+      "HScript Call",
+      "New Change HUD Alpha",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Update Pause Infos"
+    ],
+    "layers": 6
+  },
+  "inopia": {
+    "scripts": [
+      "songs\\inopia\\scripts\\song_ui.hx",
+      "data\\stages\\inopia_bg.hx"
+    ],
+    "calls": [],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change Character Offset",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos"
+    ],
+    "layers": 25
+  },
+  "lorem-ipsum": {
+    "scripts": [
+      "songs\\lorem-ipsum\\scripts\\video_cutscene.hx",
+      "data\\stages\\sixbones.hx"
+    ],
+    "calls": [],
+    "events": [
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Char Anim Suffix",
+      "Change Character",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Time Signature Change",
+      "Video Cutscene"
+    ],
+    "layers": 29
+  },
+  "psychopath": {
+    "scripts": [
+      "data\\stages\\psychopath.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Add Camera Zoom",
+      "BPM Change",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "CameraSpeed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Character Ecco",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "New Change HUD Alpha",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Video Cutscene"
+    ],
+    "layers": 8
+  },
+  "red-demon-o": {
+    "scripts": [
+      "songs\\red-demon-o\\scripts\\song_events.hx",
+      "data\\stages\\throne_room_fell.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Camera Bump",
+      "Camera Flash",
+      "Camera Movement",
+      "Camera Speed",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Lyrics",
+      "Play Animation"
+    ],
+    "layers": 12
+  },
+  "uncreate": {
+    "scripts": [
+      "songs\\uncreate\\scripts\\uncreate.hx"
+    ],
+    "calls": [],
+    "events": [
+      "Add Camera Zoom",
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer"
+    ],
+    "layers": 3
+  },
+  "vindication": {
+    "scripts": [
+      "songs\\vindication\\scripts\\drugs.hx",
+      "songs\\vindication\\scripts\\song_events.hx",
+      "songs\\vindication\\scripts\\song_ui.hx",
+      "data\\stages\\spacetime.hx"
+    ],
+    "calls": [
+      "set_stageModulo"
+    ],
+    "events": [
+      "Bloom Effect",
+      "Camera Bump Modulo",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Camera Speed",
+      "Change Character",
+      "Change HUD Alpha",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Change Strum Skin",
+      "Contrast Effect",
+      "HScript Call",
+      "Lyrics",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette",
+      "Update Pause Infos"
+    ],
+    "layers": 10
+  },
+  "yolo": {
+    "scripts": [
+      "songs\\yolo\\scripts\\drugs.hx",
+      "data\\stages\\yolo_stage.hx"
+    ],
+    "calls": [
+      "add_abberation",
+      "set_stageModulo"
+    ],
+    "events": [
+      "Bloom Effect",
+      "Camera Flash",
+      "Camera Modulo Change",
+      "Camera Movement",
+      "Change Character",
+      "Change Scroll Speed",
+      "Change Stage Zoom",
+      "Cinematic Bars",
+      "Contrast Effect",
+      "HScript Call",
+      "Play Animation",
+      "Saturation Effect",
+      "Screen Coverer",
+      "Screen Vignette"
+    ],
+    "layers": 5
+  }
+}
