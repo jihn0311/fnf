@@ -140,8 +140,8 @@ function readSettings(){
   if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:time());
   $('chart-info').textContent=(settings.bot?'BOT · ':'')+(playerSide()==='nova'?'상대 파트 · ':'보프 파트 · ')+'내 노트 '+chart.length+'개 · 롱노트 '+chart.filter(n=>n.duration).length+'개 / '+BPM+' BPM';
 }
-function targetY(){return (typeof dustinScrollDirection==='function'?dustinScrollDirection():settings.scroll)==='down'?448:82;}
-function noteY(at,t){return targetY()+((typeof dustinScrollDirection==='function'?dustinScrollDirection():settings.scroll)==='down'?-1:1)*(at-t)/LEAD*430*settings.speed*(typeof dustinScrollFactor==='function'?dustinScrollFactor(t):1)*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
+function targetY(side=playerSide(),t=time()){return typeof dustinScrollLayout==='function'?dustinScrollLayout(side,t).y:settings.scroll==='down'?448:82;}
+function noteY(at,t,side=playerSide()){const direction=typeof dustinScrollLayout==='function'?dustinScrollLayout(side,t).sign:settings.scroll==='down'?-1:1;return targetY(side,t)+direction*(at-t)/LEAD*430*settings.speed*(typeof dustinScrollFactor==='function'?dustinScrollFactor(t):1)*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1);}
 function laneHeld(lane){for(const value of held.values())if(value===lane)return true;return false;}
 function refreshButtons(){for(const button of document.querySelectorAll('[data-lane]'))button.classList.toggle('active',laneHeld(Number(button.dataset.lane)));for(const key of ['d','f','j','k'])$('keycap-'+key)?.classList.toggle('active',held.has('key:'+playKeys[['d','f','j','k'].indexOf(key)]));}
 const keyCountStorage='fnf-key-counts-v1';
@@ -525,8 +525,8 @@ function draw(t){prepareStageResolution();
       const activeOpponent=opponentLit[lane];
       const lit=state==='playing'&&t>=0&&(side===autoSide()?activeOpponent:(flashes[lane]>t||laneHeld(lane)||botLit[lane]));
       const offset=typeof modOffset==='function'?modOffset(lane,side,t):{x:0,y:0};const x=laneX(lane,side)+offset.x;
-      if(lit)rect(x-38,targetY()-43,76,86,COLORS[lane]+'22');
-      if(!(typeof drawDustinReceptor==='function'&&drawDustinReceptor(lane,x,targetY()+offset.y,lit,t))&&!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY()+offset.y,lit)))stageArrow(x,targetY()+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
+      if(lit)rect(x-38,targetY(side,t)-43,76,86,COLORS[lane]+'22');
+      if(!(typeof drawDustinReceptor==='function'&&drawDustinReceptor(lane,x,targetY(side,t)+offset.y,lit,t))&&!(typeof drawKapiReceptor==='function'&&drawKapiReceptor(side,lane,x,targetY(side,t)+offset.y,lit)))stageArrow(x,targetY(side,t)+offset.y,lane,36,lit?COLORS[lane]:'#aab7cd',false,t);
       if(side===playerSide())label(playKeys[lane].toUpperCase(),x,settings.scroll==='down'?492:33,10,'#a7b7cd');
     }
     ctx.save();ctx.beginPath();ctx.rect(left,0,366,490);ctx.clip();
@@ -535,7 +535,7 @@ function draw(t){prepareStageResolution();
       if(note.time>visibleUntil)break;
       if(note.done)continue;
       const holding=side===autoSide()?note.started:note.holding;
-      const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY():noteY(note.time,t))+offset.y,tail=noteY(note.time+(note.duration||0),t)+offset.y;
+      const offset=typeof modOffset==='function'?modOffset(note.lane,side,t):{x:0,y:0};const x=laneX(note.lane,side)+offset.x;let y=(holding?targetY(side,t):noteY(note.time,t,side))+offset.y,tail=noteY(note.time+(note.duration||0),t,side)+offset.y;
       if(Math.max(y,tail)<-35||Math.min(y,tail)>565)continue;
       const color=note.type===3?'#bd7aff':note.type===2?'#ffffff':COLORS[note.lane];
       if(typeof drawDustinNote==='function'&&drawDustinNote(note,x,y,tail,t))continue;
