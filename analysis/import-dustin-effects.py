@@ -131,6 +131,7 @@ for sid,song in songs.items():
  if stagefile.exists():
   roles={'player':'echo','boyfriend':'echo','bf':'echo','opponent':'nova','dad':'nova','gf':'gf','girlfriend':'gf'}
   record['drawOrder']=[{'side':roles[node.tag]} if node.tag in roles else {'name':node.get('name','')} for node in xml(stagefile) if node.tag in roles or node.tag=='sprite']
+ if slug=='broken-reality':record['sounds']={name:ns['copy'](asset('sounds/undertale/'+name+'.ogg'),'dustin/effects/sounds') for name in ['snd_b','snd_laz'] if asset('sounds/undertale/'+name+'.ogg').exists()}
  record['scriptSteps'],record['scriptInitial'],record['scriptCalls']=script_operations(sources,{l['name'] for l in layers},aliases)
  # Keep a source audit rather than silently labeling unknown script choreography as implemented.
  calls=sorted({e['params'][0] for ev in record['events'].values() for e in ev if e['name']=='HScript Call'})
@@ -146,13 +147,19 @@ charsource=charsource.replace("out=root/'assets/extra-mods/dustin'","out=root/'a
 charsource=charsource.replace("if not key.startswith(('idle','sing','dance')) or 'miss' in key.lower():continue","if 'miss' in key.lower():continue")
 charsource=charsource.replace("if not k.startswith(('idle','sing','dance')) or 'miss' in k.lower():continue","if 'miss' in k.lower():continue")
 charsource=charsource.replace("idx=list(range(int(raw.split('..')[0]),int(raw.split('..')[1])+1)) if '..' in raw else [int(n) for n in re.findall(r'\\d+',raw)]","idx=[value for token in raw.split(',') for value in (list(range(int(token.split('..')[0]),int(token.split('..')[1])+1)) if '..' in token else [int(token)])]")
+charsource=charsource.replace('step=max(1,math.ceil(len(matches)/16))',"step=1 if name=='bf_itsover' else max(1,math.ceil(len(matches)/16))")
 exec(charsource,charenv)
+charenv['cached'].pop('bf_itsover',None)
 for name in sorted({key.split(':',1)[1] for scene in base['scenes'].values() for key in scene['characters']}):
  cp=asset('data/characters/'+name+'.xml')
  if cp.exists() and any(not a.get('name','').startswith(('idle','sing','dance')) for a in xml(cp).findall('anim')):charenv['character'](name)
 charenv['character']('papyrus_lyrics')
 fullchars=charenv['art']['characters']
 # The source aliases idle and lyrics to the same long timeline; share decoded pages.
+bf=fullchars.get('dustin:bf_itsover')
+if bf:
+ bf['animations']['attack_back']=list(reversed(bf['animations']['attack_prep']))
+ bf['config']['attack_back']={**bf['config']['attack_prep'],'loop':False}
 paps=fullchars.get('dustin:papyrus_lyrics')
 if paps:
  paps['animations']['idle']=paps['animations']['lyrics']

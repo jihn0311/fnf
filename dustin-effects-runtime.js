@@ -7,7 +7,7 @@ function dustinData(){return typeof DUSTIN_EFFECTS==='undefined'?null:DUSTIN_EFF
 function dustinTempo(t){const list=dustinData()?.tempo[settings.difficulty]||[];let value={time:0,step:0,bpm:BPM};for(const item of list){if(item.time>t)break;value=item;}return value;}
 function dustinStep(t){const v=dustinTempo(t);return v.step+(t-v.time)*v.bpm/15;}
 function dustinStepTime(step){const list=dustinData()?.tempo[settings.difficulty]||[];let v={time:0,step:0,bpm:BPM};for(const item of list){if(item.step>step)break;v=item;}return v.time+(step-v.step)*15/v.bpm;}
-function resetDustinEffects(){dustinKeys.clear();dustinFX={cursor:0,scriptCursor:0,pending:[],at:-Infinity,last:null,tweens:{},values:{hud:1,bars:0,cover:0,zoom:1,bloom:1,contrast:1,saturation:1,scroll:song.originalSpeed||1,vignette:0},layers:{},lyric:'',lyricColor:'#fff',lyricSize:24,lyricY:400,coverColor:'#000',flashes:[],camera:0,drain:1.2,drainEnabled:true,drainTime:0,karma:0,hate:0,madness:0,bones:0,direction:null,attack:null,qte:null,qteDone:[],avulsionDrainStarted:false,dodgeUntil:-Infinity,dodgeReadyAt:-Infinity,blasterChecked:false,soul:{x:560,y:278,invulnerable:0,mode:'red',bombs:[],bullets:[],explosions:[],beam:null,beamIndex:-1,spawn:-1,shot:-1},echo:null,skin:{}};dustinApplyOperations(dustinData()?.scriptInitial||[],0);}
+function resetDustinEffects(){dustinKeys.clear();dustinFX={cursor:0,scriptCursor:0,pending:[],at:-Infinity,last:null,tweens:{},values:{hud:1,bars:0,cover:0,zoom:1,bloom:1,contrast:1,saturation:1,scroll:song.originalSpeed||1,vignette:0},layers:{},lyric:'',lyricColor:'#fff',lyricSize:24,lyricY:400,coverColor:'#000',flashes:[],camera:0,drain:1.2,drainEnabled:true,drainTime:0,karma:0,hate:0,madness:0,bones:0,direction:null,attack:null,attackCount:0,qte:null,qteDone:[],avulsionDrainStarted:false,dodgeUntil:-Infinity,dodgeReadyAt:-Infinity,blasterChecked:false,soul:{x:560,y:278,invulnerable:0,mode:'red',bombs:[],bullets:[],explosions:[],beam:null,beamIndex:-1,spawn:-1,shot:-1},echo:null,skin:{}};dustinApplyOperations(dustinData()?.scriptInitial||[],0);}
 function dustinEase(p,name='linear',mode='In'){p=clamp01(p);let f=x=>x;if(name==='quad')f=x=>x*x;if(name==='cube'||name==='cubic')f=x=>x*x*x;if(name==='quart')f=x=>x**4;if(name==='quint')f=x=>x**5;if(name==='sine')f=x=>1-Math.cos(x*Math.PI/2);if(name==='circ')f=x=>1-Math.sqrt(1-x*x);if(name==='expo')f=x=>x===0?0:2**(10*x-10);return mode==='Out'?1-f(1-p):mode==='InOut'?(p<.5?f(p*2)/2:1-f((1-p)*2)/2):f(p);}
 function dustinValue(key,t){const s=dustinFX;if(!s)return 1;const tw=s.tweens[key];if(!tw)return s.values[key]??0;const p=dustinEase(tw.duration?(t-tw.at)/tw.duration:1,tw.ease,tw.mode);return tw.from+(tw.to-tw.from)*p;}
 function dustinTween(key,to,e,enabled,steps,ease,mode){const s=dustinFX,from=dustinValue(key,e.time);s.values[key]=Number(to)||0;s.tweens[key]={from,to:Number(to)||0,at:e.time,duration:enabled?Math.max(0,Number(steps)||0)*e.stepSeconds:0,ease,mode};}
@@ -43,7 +43,7 @@ function dustinCall(name,arg,t){const s=dustinFX;dustinApplyOperations(dustinDat
  case 'enableDrain':s.drainEnabled=true;s.drainTime=0;break;
  case 'disableDrain':s.drainEnabled=false;s.drainTime=0;break;
  case 'changeDrainAmount':s.drain=Number(arg)||1.2;break;
- case 'doAttack':if(!s.attack||t>s.attack.at+2){s.attack={at:t,speed:1.1,judged:false,hit:false};extraState.special.echo={name:'attack_prep',at:t};}break;
+ case 'doAttack':if(!s.attack||t>=dustinAttackEnd(s.attack)){s.attack={at:t,speed:1.1,judged:false,hit:false,direction:++s.attackCount%2?1:-1};extraState.special.echo={name:'attack_prep',at:t};if(state==='playing'&&Math.abs(time()-t)<.15)extraSound('dustin:snd_b',.35);}break;
  case 'goDownScroll':s.direction='down';break;
  case 'goUpScroll':s.direction='up';break;
  case 'goLeftScroll':s.direction='left';break;
@@ -73,6 +73,7 @@ async function prepareDustinEffects(){
  if(!dustinFull())return;resetDustinEffects();const data=dustinData();if(!data)return;
  const keys=[...data.layers.map(l=>l.key),...Object.keys(EXTRA_ART.sprites).filter(k=>k.startsWith('dustin/effects/game/')&&(!k.includes('/notes/')||k.includes('/types/')||data.skins.some(s=>k.endsWith('/'+s)||k.endsWith('/'+s+'_END')||k.endsWith('/'+s+'_ENDs'))))];const charPaths=[...MOD_ART.scenes[song.sceneKey].characters,...(songId==='dustin-avulsion'?['dustin:papyrus_lyrics']:[])].flatMap(key=>{const a=dustinEffectCharacter(key);return a.pages||[a.src];});const paths=[...new Set([...charPaths,...keys.flatMap(k=>EXTRA_ART.sprites[k]?.pages||[EXTRA_ART.sprites[k]?.src]).filter(Boolean)])];let next=0;
  await Promise.all(Array.from({length:3},async()=>{while(next<paths.length){const src=paths[next++];if(modImages.has(src))continue;const im=new Image();im.src=src;await im.decode();modImages.set(src,im);}}));
+ if(audio?.decodeAudioData)for(const [name,src] of Object.entries(data.sounds||{})){const key='dustin:'+name;if(!extraSoundBuffers.has(key)){const response=await fetch(src);if(!response.ok)throw Error('Dustin sound load failed: '+name);extraSoundBuffers.set(key,await audio.decodeAudioData(await response.arrayBuffer()));}}
  // Fetch complete videos before countdown: no late network fetch during an attack.
  for(const [name,src] of Object.entries({...data.videos,...Object.fromEntries(Object.entries(data.storyVideos||{}).map(([k,v])=>['story:'+k,v]))})){const r=await fetch(src);if(!r.ok)throw Error('더스틴 영상 준비 실패: '+name);const url=URL.createObjectURL(await r.blob()),video=document.createElement('video');video.muted=true;video.playsInline=true;video.preload='auto';video.src=url;await new Promise((resolve,reject)=>{video.onloadeddata=resolve;video.onerror=()=>reject(Error('더스틴 영상 재생 불가: '+name));});dustinVideos.set(name,{video,url,story:name.startsWith('story:')});}
 }
@@ -82,6 +83,7 @@ function updateDustinEffects(t){
  // Merge all three clocks so seeks and frame stalls produce the same state as playback.
  while(true){const chartAt=events[s.cursor]?.time??Infinity,scriptAt=s.scriptCursor<scriptSteps.length?dustinStepTime(scriptSteps[s.scriptCursor].step):Infinity,pendingAt=s.pending[0]?.time??Infinity;const at=Math.min(chartAt,scriptAt,pendingAt);if(at>t||!Number.isFinite(at))break;if(chartAt===at)dustinNativeEvent(events[s.cursor++]);else if(scriptAt===at){const cue=scriptSteps[s.scriptCursor++];dustinApplyOperations(cue.operations,at);}else{const cue=s.pending.shift();dustinApplyOperations([cue.op],at);}}
  s.at=t;s.flashes=s.flashes.filter(f=>t<f.at+f.duration);
+ if(s.attack&&t>=dustinAttackEnd(s.attack)&&extraState.special.echo?.name.startsWith('attack'))delete extraState.special.echo;
  if(state!=='playing'){s.last=null;return;}const dt=s.last===null?0:Math.max(0,Math.min(.1,(t-s.last)/(settings.rate||1)));s.last=t;
  if(s.drainEnabled&&s.drainTime>0&&songId==='dustin-broken-reality'){health=Math.max(7.5,health-2.5*s.drain*(s.attack?.hit?.65:1)*dt);s.drainTime=Math.max(0,s.drainTime-dt);}
  if(s.karma>0){s.karma=Math.max(0,s.karma-dt);health=Math.max(5,health-5*dt);}
@@ -98,7 +100,7 @@ function dustinHazard(note,kind){if(!dustinFull()||!note.hurt)return false;note.
  else if(note.sourceNoteType==='NOTE_hate'){if(s.hate>=1)health=0;else s.hate=Math.min(1,s.hate+.2);}
  else{health=Math.max(0,health-5);s.madness++;if(s.madness>=8)health=0;}
  s.flashes.push({at:time(),duration:.2,color:'#f00'});feedback=note.sourceNoteType==='NOTE_karma'?'KARMA':note.sourceNoteType==='NOTE_hate'?'HATE':'MADNESS';feedbackAt=time();feedbackColor='#ff539d';feedbackOffsetMs=null;updateHud();return true;}
-function dustinAttackPress(t){const s=dustinFX,a=s?.attack;if(!a||a.judged||t<a.at+.4||t>a.at+.4+1/a.speed)return false;const distance=Math.abs(-.5+(t-a.at-.4)*a.speed);if(distance>.3942)return true;const gain=distance<=.0547?.63:distance<=.1898?.45:.24;a.judged=true;a.hit=true;extraState.special.echo={name:'attack',at:t};a.rating=distance<=.0547?'PERFECT':distance<=.1898?'GOOD':'BAD';health=Math.min(100,health+gain*50*Math.max(1,s.drain*.47));return true;}
+function dustinAttackPress(t){const s=dustinFX,a=s?.attack;if(!a||a.judged||t<a.at+.4||t>a.at+.4+1/a.speed)return false;const distance=Math.abs(-.5+(t-a.at-.4)*a.speed);if(distance>.3942)return true;const gain=distance<=.0547?.63:distance<=.1898?.45:.24;a.judged=true;a.hit=true;a.judgedAt=t;a.position=clamp01((t-a.at-.4)*a.speed);extraState.special.echo={name:'attack',at:t+.2};if(state==='playing')extraSound('dustin:snd_laz',1);a.rating=distance<=.0547?'PERFECT':distance<=.1898?'GOOD':'BAD';health=Math.min(100,health+gain*50*Math.max(1,s.drain*.47));return true;}
 function dustinKey(e,down){if(!dustinFull()||state!=='playing')return false;const key=e.code||e.key;if(down)dustinKeys.add(key);else dustinKeys.delete(key);const step=dustinStep(time());if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ'].includes(key)&&dustinSoulActive(step)){e.preventDefault();return true;}if(down&&!e.repeat&&key==='Space'){e.preventDefault();if(songId==='dustin-avulsion'&&step>=2110&&step<2238)health=Math.min(100,health+.053*50);if(dustinFX.qte&&time()>=dustinFX.qte.end-.24*(settings.rate||1)&&time()<=dustinFX.qte.end)dustinFX.qte=null;if(songId==='dustin-perseverance'&&step>=2192&&step<=2281&&time()>=dustinFX.dodgeReadyAt){dustinFX.dodgeUntil=time()+.8*(settings.rate||1);dustinFX.dodgeReadyAt=time()+1*(settings.rate||1);extraState.special.echo={name:'dodge',at:time()};}dustinAttackPress(time());return true;}return false;}
 function dustinSoulActive(step){return dustinFull()&&songId==='dustin-heatwave'&&((step>=4&&step<112)||(step>=1984&&step<2204));}
 function updateDustinSoul(t,dt,step){if(!dustinSoulActive(step))return;const s=dustinFX.soul,scale=1120/1280;const dx=(dustinKeys.has('ArrowRight')?1:0)-(dustinKeys.has('ArrowLeft')?1:0),dy=(dustinKeys.has('ArrowDown')?1:0)-(dustinKeys.has('ArrowUp')?1:0);s.x=Math.max(452,Math.min(668,s.x+dx*176.7*dt*scale));s.y=Math.max(192,Math.min(364,s.y+dy*176.7*dt*scale));s.mode=step>=63?'yellow':'red';s.invulnerable=Math.max(0,s.invulnerable-dt);
@@ -127,7 +129,7 @@ function drawDustinEffectsHud(t){if(!dustinFull()||!dustinFX)return;const s=dust
  if(s.fog){ctx.save();ctx.globalAlpha=.18;const fog=ctx.createLinearGradient(0,300,0,530);fog.addColorStop(0,'#bdd2dc00');fog.addColorStop(1,'#bdd2dc');ctx.fillStyle=fog;ctx.fillRect(0,300,1120,230);ctx.restore();}
  if(s.bones){const key='dustin/effects/game/mechanics/strum_covering_bones';extraSprite(key,t,650,180,430,300);}
  if(songId==='dustin-perseverance'&&step>=2256&&step<2284){label('SPACE · 회피',560,350,25,'#fff');extraSprite('dustin/effects/ruins_exit/BLASTER',Math.max(0,t-dustinStepTime(2256)),380,100,360,280,step>=2280?'blaster_blast':'blaster_idle');}
- const a=s.attack;if(a&&t-a.at<2){rect(350,310,420,70,'#060606');rect(350,330,420,25,'#a12323');rect(480,330,160,25,'#cfb729');rect(537,330,46,25,'#31b450');const x=350+420*clamp01((t-a.at-.4)*a.speed);rect(x-2,315,4,58,'#fff');label(a.judged?a.rating:'SPACE · 가운데에서 공격',560,300,18,'#fff');}
+ drawDustinAttack(t);
  if(dustinSoulActive(step)){const soul=s.soul;rect(444,180,232,196,'#fff');rect(450,186,220,184,'#050505');if(step>=1984){const wall=24+14*Math.sin((t-dustinStepTime(1984))*2.5);for(let y=190;y<365;y+=12){rect(450,y,wall,5,'#eee');rect(670-wall,y,wall,5,'#eee');}}for(const b of soul.bombs)extraSprite('dustin/effects/game/undertale/spr_plusbomb',0,b.x-13,b.y-13,26,26);for(const e of soul.explosions){ctx.save();ctx.globalAlpha=1-(t-e.at)/.35;rect(450,e.y-6,220,12,'#fff');rect(e.x-6,186,12,184,'#fff');ctx.restore();}if(soul.beam&&t-soul.beam.at<1.1){const beam=soul.beam,age=t-beam.at;ctx.save();if(!beam.right){ctx.translate(560,0);ctx.scale(-1,1);ctx.translate(-560,0);}extraSprite('dustin/effects/game/undertale/spr_gasterblaster',age,680,beam.y-35,80,70);ctx.restore();if(age>.65)rect(450,beam.y-12,220,24,'#fff');else{ctx.save();ctx.globalAlpha=.3;rect(450,beam.y-2,220,4,'#ff3939');ctx.restore();}}for(const b of soul.bullets)rect(b.x-2,b.y,4,10,'#ffed30');label('♥',soul.x,soul.y+7,25,soul.mode==='yellow'?'#ffe52b':'#f22');label('방향키 이동 · Z 발사',560,404,15,'#fff');}
  if(s.qte){const span=s.qte.end-dustinStepTime(s.qte.step),progress=clamp01((t-dustinStepTime(s.qte.step))/Math.max(.01,span-.12));ctx.strokeStyle=t>=s.qte.end-.24*(settings.rate||1)?'#f22':'#fff';ctx.lineWidth=4;for(const radius of [34,34*(3.24-2.24*progress)]){ctx.beginPath();ctx.arc(560,265,radius,0,Math.PI*2);ctx.stroke();}label('빨갛게 변하면 SPACE',560,385,21,'#fff');}
  if(songId==='dustin-avulsion'&&step>=2110&&step<2238)label('SPACE 연타 · 버티기',560,360,25,'#ff3030');
@@ -179,4 +181,32 @@ function dustinUnderlay(t){
  if(s.coverHUD&&s.coverFront)return;
  const alpha=clamp01(dustinValue('cover',t));if(!alpha)return;
  ctx.save();ctx.globalAlpha=alpha;rect(0,0,1120,530,s.coverColor);ctx.restore();
+}
+
+function dustinAttackEnd(a){return a.hit?a.judgedAt+50/30:a.at+.4+1/a.speed+16/30;}
+function dustinAttackPose(side,t){
+ if(!dustinFull()||songId!=='dustin-broken-reality'||side!=='echo')return null;
+ const a=dustinFX?.attack;if(!a||t<a.at||t>=dustinAttackEnd(a))return null;
+ if(a.hit&&t>=a.judgedAt+.2)return {key:'attack',elapsed:t-a.judgedAt-.2};
+ const expired=a.at+.4+1/a.speed;
+ if(!a.hit&&t>=expired)return {key:'attack_back',elapsed:t-expired};
+ return t-a.at<.5?{key:'attack_prep',elapsed:t-a.at}:{key:'attack_prep-loop',elapsed:t-a.at-.5};
+}
+function drawDustinAttack(t){
+ const a=dustinFX?.attack;if(!a||t<a.at||t>=dustinAttackEnd(a))return;
+ const expired=a.at+.4+1/a.speed,miss=!a.hit&&t>=expired;
+ const alpha=clamp01((t-a.at)/.15)*clamp01((dustinAttackEnd(a)-t)/.2);
+ ctx.save();ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=false;
+ const w=430,x=560-w/2,y=settings.scroll==='down'?82:410;
+ extraSprite('dustin/effects/game/undertale/spr_target',0,x,y,w,60);
+ if(t>=a.at+.4&&!miss){const p=a.hit?a.position:clamp01((t-a.at-.4)*a.speed),cx=x+w*(a.direction===-1?1-p:p);extraSprite('dustin/effects/game/undertale/spr_targetchoice',a.hit?t-a.judgedAt:0,cx-6,y-3,12,66);}
+ label(a.hit?a.rating:miss?'MISS...':'SPACE · 공격',560,y-12,15,a.hit?'#a8ffa8':miss?'#ff4444':'#fff');ctx.restore();
+}
+
+function dustinAttackOffset(side,t,scale){
+ const a=dustinFX?.attack;if(!dustinFull()||songId!=='dustin-broken-reality'||!a?.hit)return {x:0,y:0};
+ const age=t-a.judgedAt;
+ if(side==='echo'&&age>=.55&&age<1.3)return {x:2660*scale,y:-330*scale};
+ if(side==='nova'&&age>=.9&&age<1.3){const recoil=1-clamp01((age-.9)/.4);return {x:200*scale*recoil,y:70*scale*recoil};}
+ return {x:0,y:0};
 }

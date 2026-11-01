@@ -141,6 +141,7 @@ function extraActor(side,t,x,y,black=false){
  if((side==='gf'||(song.pack==='kapi'||((song.pack==='qt'||song.pack==='qt-safe')&&side==='nova'))&&a.animations.danceLeft)&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&song.pack!=='qt'&&song.pack!=='qt-safe'&&song.pack!=='dustin'&&!singing)){key=special.name;elapsed=t-special.at;}}
+ if(typeof dustinAttackPose==='function'){const pose=dustinAttackPose(side,t);if(pose&&a.animations[pose.key]){key=pose.key;elapsed=pose.elapsed;}}
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
  const off=a.config?.[key]?.offsets||[0,0];ctx.save();if((song.pack==='mario'||song.pack==='kapi'||song.pack==='corruption')&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.
@@ -149,7 +150,7 @@ function extraActor(side,t,x,y,black=false){
  const flip=(song.pack==='death'||song.pack==='impostor'||song.pack==='mario'||song.pack==='corruption')?(!!a.flip)!==(side==='echo'):!!a.flip;
  const destructionMoved=songId==='tainted-destruction'&&t>=112*BEAT;
  // Destruction BF sprites already face the opponent from the right-hand position.
- const facingFlip=((song.pack==='silly'||songId==='tainted-defeat')&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
+ const facingFlip=song.sceneKey==='dustin-broken-reality'&&s.chars[side]==='dustin:bf_itsover'?false:((song.pack==='silly'||songId==='tainted-defeat')&&side==='echo')||(songId==='tainted-destruction'&&s.chars[side].startsWith('tainted:bf_des'))?false:flip!==destructionMoved;
  if(facingFlip)ctx.scale(-1,1);if(black)ctx.filter='brightness(0)';
  if(song.pack==='impostor'){
   const layout=impostorViewLayout(),placement=layout?.actors[side];
@@ -256,7 +257,7 @@ function extraStage(t){
  ctx.restore();
  if(songId==='tainted-destruction')extraShader(((beat>=182&&beat<320)||(beat>=382&&beat<384))?.5:beat>=388?1:0,t,false);
  if(allStarsCinemaActive(t))return;
- const swap=extraSwap(t);label(s.chars.nova.split(':')[1].toUpperCase()+' / AUTO',265+580*swap,508,12,'#f58bc6');label('YOU / '+s.chars.echo.split(':')[1].toUpperCase(),845-580*swap,508,12,'#8cf5d9');
+ const swap=song.sceneKey==='dustin-broken-reality'?1:extraSwap(t);label(s.chars.nova.split(':')[1].toUpperCase()+' / AUTO',265+580*swap,508,12,'#f58bc6');label('YOU / '+s.chars.echo.split(':')[1].toUpperCase(),845-580*swap,508,12,'#8cf5d9');
 }
 function extraHudAlpha(t){if(typeof dustinFull==='function'&&dustinFull()&&dustinFX)return clamp01(dustinValue('hud',t));if(allStarsCinemaActive(t))return 0;if(song.lowSpec)return 1;if(song.pack==='impostor')return impostorHudAlpha(t);if(song.pack==='silly')return 1;if(!extraActive()||songId!=='tainted-destruction')return 1;return state==='ready'?1:clamp01((t-28*BEAT)/.5);}
 function extraHud(t){

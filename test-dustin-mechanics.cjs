@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const c={console,assert,feedback:"",feedbackAt:0,feedbackColor:"",feedbackOffsetMs:null,EXTRA_ART:{sprites:{}},MOD_ART:{characters:{}},song:{pack:'dustin',originalSpeed:1},songId:'dustin-heatwave',settings:{difficulty:'hard',rate:1,bot:false},BPM:130,BEAT:60/130,state:'paused',health:100,extraState:{bumps:[],alt:{},special:{}},clamp01:x=>Math.max(0,Math.min(1,x)),updateHud(){},time:()=>0,playerSide:()=> 'echo',autoSide:()=> 'nova'};
+const c={console,assert,extraSound(){},feedback:"",feedbackAt:0,feedbackColor:"",feedbackOffsetMs:null,EXTRA_ART:{sprites:{}},MOD_ART:{characters:{}},song:{pack:'dustin',originalSpeed:1},songId:'dustin-heatwave',settings:{difficulty:'hard',rate:1,bot:false},BPM:130,BEAT:60/130,state:'paused',health:100,extraState:{bumps:[],alt:{},special:{}},clamp01:x=>Math.max(0,Math.min(1,x)),updateHud(){},time:()=>0,playerSide:()=> 'echo',autoSide:()=> 'nova'};
 vm.createContext(c);for(const f of ['dustin-effects.js','dustin-effects-runtime.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
 vm.runInContext(`
 resetDustinEffects();updateDustinEffects(135);assert.equal(dustinValue('cover',135),0,'Heatwave must clear its intentional blackout');
