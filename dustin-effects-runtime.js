@@ -2,7 +2,7 @@
 // Native chart events are kept separate from the unchanged low-spec chart.
 let dustinFX=null;const dustinVideos=new Map(),dustinKeys=new Set();
 function dustinFull(){return song.pack==='dustin'&&!song.lowSpec;}
-function dustinEffectCharacter(key){return dustinFull()&&typeof DUSTIN_UNDYNE_QUALITY!=='undefined'&&DUSTIN_UNDYNE_QUALITY[key]||dustinFull()&&typeof DUSTIN_EFFECT_CHARACTERS!=='undefined'&&DUSTIN_EFFECT_CHARACTERS[key]||MOD_ART.characters[key];}
+function dustinEffectCharacter(key){return typeof DUSTIN_BR_PAPYRUS!=='undefined'&&DUSTIN_BR_PAPYRUS[key]||dustinFull()&&typeof DUSTIN_UNDYNE_QUALITY!=='undefined'&&DUSTIN_UNDYNE_QUALITY[key]||dustinFull()&&typeof DUSTIN_EFFECT_CHARACTERS!=='undefined'&&DUSTIN_EFFECT_CHARACTERS[key]||MOD_ART.characters[key];}
 function dustinData(){return typeof DUSTIN_EFFECTS==='undefined'?null:DUSTIN_EFFECTS[songId];}
 function dustinTempo(t){const list=dustinData()?.tempo[settings.difficulty]||[];let value={time:0,step:0,bpm:BPM};for(const item of list){if(item.time>t)break;value=item;}return value;}
 function dustinStep(t){const v=dustinTempo(t);return v.step+(t-v.time)*v.bpm/15;}
@@ -72,7 +72,7 @@ function dustinCall(name,arg,t){const s=dustinFX;dustinApplyOperations(dustinDat
 async function prepareDustinEffects(){
  for(const item of dustinVideos.values()){item.video.pause();item.video.removeAttribute('src');item.video.load();URL.revokeObjectURL(item.url);}dustinVideos.clear();
  if(!dustinFull())return;resetDustinEffects();const data=dustinData();if(!data)return;
- const keys=[...data.layers.map(l=>l.key),...Object.keys(EXTRA_ART.sprites).filter(k=>k.startsWith('dustin/effects/game/')&&(!k.includes('/notes/')||k.includes('/types/')||data.skins.some(s=>k.endsWith('/'+s)||k.endsWith('/'+s+'_END')||k.endsWith('/'+s+'_ENDs'))))];const charPaths=[...MOD_ART.scenes[song.sceneKey].characters,...(songId==='dustin-avulsion'?['dustin:papyrus_lyrics']:[])].flatMap(key=>{const a=dustinEffectCharacter(key);return a.pages||[a.src];});const paths=[...new Set([...charPaths,...keys.flatMap(k=>EXTRA_ART.sprites[k]?.pages||[EXTRA_ART.sprites[k]?.src]).filter(Boolean)])];let next=0;
+ const keys=[...data.layers.map(l=>l.key),...Object.keys(EXTRA_ART.sprites).filter(k=>k.startsWith('dustin/effects/game/')&&(!k.includes('/notes/')||k.includes('/types/')||data.skins.some(s=>k.endsWith('/'+s)||k.endsWith('/'+s+'_END')||k.endsWith('/'+s+'_ENDs'))))];const charPaths=[...MOD_ART.scenes[song.sceneKey].characters,...(songId==='dustin-avulsion'?['dustin:papyrus_lyrics']:songId==='dustin-broken-reality'?['dustin:phantom_paps_br_body']:[])].flatMap(key=>{const a=dustinEffectCharacter(key);return a.pages||[a.src];});const paths=[...new Set([...charPaths,...keys.flatMap(k=>EXTRA_ART.sprites[k]?.pages||[EXTRA_ART.sprites[k]?.src]).filter(Boolean)])];let next=0;
  await Promise.all(Array.from({length:3},async()=>{while(next<paths.length){const src=paths[next++];if(modImages.has(src))continue;const im=new Image();im.src=src;await im.decode();modImages.set(src,im);}}));
  if(audio?.decodeAudioData)for(const [name,src] of Object.entries(data.sounds||{})){const key='dustin:'+name;if(!extraSoundBuffers.has(key)){const response=await fetch(src);if(!response.ok)throw Error('Dustin sound load failed: '+name);extraSoundBuffers.set(key,await audio.decodeAudioData(await response.arrayBuffer()));}}
  // Fetch complete videos before countdown: no late network fetch during an attack.
@@ -135,7 +135,7 @@ function dustinOffset(lane,side,t){if(!dustinFull()||songId!=='dustin-kinemorto'
 function drawDustinVideo(t){let active=null;for(const e of dustinData()?.events[settings.difficulty]||[]){if(e.time>t)break;if(e.name==='Video Cutscene'){const item=dustinVideos.get(e.params[0]);if(item&&t<e.time+item.video.duration)active={...item,at:e.time};}}
  for(const item of dustinVideos.values())if(!item.story&&item.video!==active?.video&&!item.video.paused)item.video.pause();if(!active)return false;const v=active.video,target=Math.max(0,t-active.at);if(!v.seeking&&Math.abs(v.currentTime-target)>.2)v.currentTime=target;v.playbackRate=settings.rate||1;if(state==='playing'){if(v.paused)v.play().catch(()=>{});}else if(!v.paused)v.pause();rect(0,0,1120,530,'#000');if(v.readyState>=2){const z=Math.min(1120/v.videoWidth,530/v.videoHeight);ctx.drawImage(v,(1120-v.videoWidth*z)/2,(530-v.videoHeight*z)/2,v.videoWidth*z,v.videoHeight*z);}return true;}
 function drawDustinNativeStage(t){if(!dustinFull()||!dustinFX)return false;if(drawDustinVideo(t))return true;const data=dustinData();if(!data?.layers.length||dustinPixel())return false;const s=dustinFX;rect(0,0,1120,530,'#080810');ctx.save();const z=Math.max(.3,Math.min(songId==='dustin-broken-reality'?1.1:3,dustinValue('zoom',t)))*(songId==='dustin-heatwave'?.78:songId==='dustin-broken-reality'?.8:1);ctx.translate(560,265);ctx.scale(z,z);ctx.translate(-560,-265);ctx.filter='brightness('+dustinStageBrightness(t)+') contrast('+Math.max(0,dustinValue('contrast',t))+') saturate('+Math.max(0,dustinValue('saturation',t))+')';
- const layer=l=>{if(!dustinStageLayerVisible(l))return;const o=s.layers[l.name]||{};if(l.variant==='sans'&&!s.sansStage)return;if(songId==='dustin-kinemorto'&&s.sansStage&&l.variant!=='sans'&&l.name!=='BG')return;if(!(o.visible??l.visible)&&l.variant!=='sans')return;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,o.alpha??l.alpha));const bounds=dustinStageLayerBounds(l,z);extraSprite(l.key,o.anim?t-(o.animAt||0):t,bounds.x,bounds.y,bounds.w,bounds.h,o.anim||'idle');ctx.restore();};if(songId==='dustin-kinemorto'&&s.sansStage){for(const l of data.layers)layer(l);drawDustinActors(t);}else if(data.drawOrder?.length){for(const item of data.drawOrder){if(item.side){if(item.side==='gf'&&songId==='dustin-heatwave')drawDustinMettaton(t);else{if(item.side==='nova')drawDustinPhantom(t);drawDustinActors(t,item.side);}}else for(const l of data.layers)if(l.name===item.name)layer(l);}}else{for(const l of data.layers.filter(l=>!l.front))layer(l);drawDustinActors(t);for(const l of data.layers.filter(l=>l.front))layer(l);}if(s.backgroundDark)rect(0,0,1120,530,'#000a');ctx.restore();return true;}
+ const layer=l=>{if(!dustinStageLayerVisible(l))return;const o=s.layers[l.name]||{};if(l.variant==='sans'&&!s.sansStage)return;if(songId==='dustin-kinemorto'&&s.sansStage&&l.variant!=='sans'&&l.name!=='BG')return;if(!(o.visible??l.visible)&&l.variant!=='sans')return;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,o.alpha??l.alpha));const bounds=dustinStageLayerBounds(l,z);extraSprite(l.key,o.anim?t-(o.animAt||0):t,bounds.x,bounds.y,bounds.w,bounds.h,o.anim||'idle');ctx.restore();};if(songId==='dustin-kinemorto'&&s.sansStage){for(const l of data.layers)layer(l);drawDustinActors(t);}else if(data.drawOrder?.length){for(const item of data.drawOrder){if(item.side){if(item.side==='gf'&&songId==='dustin-heatwave')drawDustinMettaton(t);else{if(item.side==='nova')drawDustinPhantom(t);drawDustinActors(t,item.side);}}else for(const l of data.layers)if(l.name===item.name)layer(l);}}else{for(const l of data.layers.filter(l=>!l.front))layer(l);drawDustinActors(t);for(const l of data.layers.filter(l=>l.front))layer(l);}if(song.sceneKey==='dustin-broken-reality'&&extraState.brPhantomLead){ctx.save();ctx.filter='none';ctx.globalCompositeOperation='multiply';rect(560-560/z,265-265/z,1120/z,530/z,'#ff3030');ctx.restore();}if(s.backgroundDark)rect(0,0,1120,530,'#000a');ctx.restore();return true;}
 function drawDustinEffectsHud(t){if(!dustinFull()||!dustinFX)return;const s=dustinFX,step=dustinStep(t),bars=song.sceneKey==='dustin-broken-reality'?0:Math.max(0,Math.min(265,dustinValue('bars',t)*265));if(bars){rect(0,0,1120,bars,'#000');rect(0,530-bars,1120,bars,'#000');}const cover=clamp01(dustinValue('cover',t));if(cover&&s.coverHUD&&s.coverFront){ctx.save();ctx.globalAlpha=cover;rect(0,0,1120,530,s.coverColor);ctx.restore();}for(const f of s.flashes){ctx.save();ctx.globalAlpha=clamp01(f.fade?(t-f.at)/f.duration:1-(t-f.at)/f.duration);rect(0,0,1120,530,f.color);ctx.restore();}
  drawDustinLyricsActor(t);
  const vig=Math.min(.95,Math.max(s.hate,dustinValue('vignette',t)*.35));if(vig){const g=ctx.createRadialGradient(560,265,120,560,265,610);g.addColorStop(0,'#0000');g.addColorStop(1,'rgba(0,0,0,'+vig+')');ctx.fillStyle=g;ctx.fillRect(0,0,1120,530);}
@@ -228,6 +228,7 @@ function dustinAttackOffset(side,t,scale){
 function dustinStageBrightness(t){return Math.max(1,Math.min(3,dustinValue('bloom',t)));}
 function drawDustinPhantom(t){
  if(!dustinFull()||songId!=='dustin-broken-reality')return;
+ if(extraState.brPhantomLead){drawDustinPapyrusLead(t);return;}
  let at=null,visible=false;const step=dustinStep(t);
  for(const cue of [{step:976,on:true},{step:1104,on:false},{step:1320,on:true},{step:1360,on:false},{step:4834,on:true},{step:4928,on:false},{step:5186,on:true}]){if(cue.step>step)break;at=dustinStepTime(cue.step);visible=cue.on;}
  if(at===null&&!extraState.brPhantomLead)return;const alpha=extraState.brPhantomLead?.56:.56*(visible?clamp01((t-at)/2):1-clamp01((t-at)/.5));if(alpha<=0)return;
@@ -247,4 +248,20 @@ function dustinStageLayerBounds(layer,zoom){
  const left=560-560/zoom,right=560+560/zoom,bottom=265+265/zoom;
  const x=Math.min(layer.x,left);
  return {...layer,x,w:Math.max(layer.x+layer.w,right)-x,h:Math.max(layer.h,bottom-layer.y)};
+}
+
+function drawDustinPapyrusLead(t){
+ const scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView,key=extraState.brLeadCharacter;
+ const p=v.slots[0]['dustin:phantom_paps_br'];if(!p||!key)return;
+ const split=key==='dustin:phantom_paps_br_head',wave=t*3;
+ const bob={x:Math.sin(wave)*50,y:Math.cos(wave*.8)*40+Math.sin(wave*1.5)*10};
+ const paint=(character,x,y)=>{const a=dustinEffectCharacter(character);if(!a)return;const old=extraState.chars.gf,actor=actors.gf;
+ extraState.chars.gf=character;actors.gf=extraState.dustinActors[3]||{lane:-1,until:-1};ctx.save();ctx.translate((x-v.left)*v.scale,(y-v.top)*v.scale);const z=1.3*v.scale/a.scale;ctx.scale(z,z);
+ try{extraActor('gf',t,0,0);}finally{ctx.restore();extraState.chars.gf=old;actors.gf=actor;}};
+ if(!split){paint(key,p.x+bob.x,p.y+bob.y);return;}
+ paint('dustin:phantom_paps_br_body',p.x+bob.x-50,p.y+bob.y);
+ const orbit=Math.max(0,t-dustinStepTime(2669))*1.5*1.7;
+ const q=Math.sin(orbit*.8)*.5+.5+Math.sin(orbit*.5)*.15+Math.cos(orbit*1.7)*.1,eased=Math.sin(q*Math.PI*.5);
+ const bf=v.slots[song.dustinPlayerLine]['dustin:bf_itsover'];
+ paint(key,p.x+((bf?.x||p.x-1000)-p.x)*eased+Math.cos(orbit*1.2)*25+Math.sin(orbit*.5)*10,p.y-380-Math.sin(q*Math.PI)*240+Math.sin(orbit*3.5)*15);
 }

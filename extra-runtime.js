@@ -70,7 +70,7 @@ function extraEvent(e,t,quiet=false){
 function extraActorLabels(){
  if(!extraState)return;
  for(const [side,id,avatar] of [['nova','opponent-name','enemy-avatar'],['echo','player-name','player-avatar']]){
-  const name=extraState.chars[side],a=MOD_ART.characters[name];if(!a)continue;
+  const name=song.sceneKey==='dustin-broken-reality'&&side==='nova'&&extraState.brPhantomLead?extraState.brLeadCharacter:extraState.chars[side],a=MOD_ART.characters[name];if(!a)continue;
   if($(id))$(id).textContent=name.split(':')[1].replaceAll('_',' ').toUpperCase();
   if($(avatar)){$(avatar).style.backgroundImage=a.icon?'url("'+a.icon+'")':'';$(avatar).textContent=a.icon?'':side==='echo'?'P':'R';}
  }
