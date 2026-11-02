@@ -24,12 +24,12 @@ function dustinEnsemblePose(line,t){
 }
 function drawDustinEnsemble(t,onlySide){
  const lines=dustinEnsemble(),scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView;
- for(const i of [...lines.keys()].sort((a,b)=>(lines[a].type===2?-1:0)-(lines[b].type===2?-1:0))){
+ for(const i of [...lines.keys()].sort((a,b)=>(lines[a].type===2?-2:song.sceneKey==='dustin-the-uprising'&&a===6?-1:0)-(lines[b].type===2?-2:song.sceneKey==='dustin-the-uprising'&&b===6?-1:0))){
  const line=lines[i],side=line.type===1?'echo':line.type===2?'gf':'nova';if(onlySide&&onlySide!==side)continue;
- const key=extraState.dustinLines[i],p=v.slots[i]?.[key],a=dustinEffectCharacter(key);if(!a||!p||p.hidden)continue;
+ const key=extraState.dustinLines[i],p=v.slots[i]?.[key],a=dustinEffectCharacter(key);if(!a||!p||p.hidden)continue;const presentation=dustinUprisingPresentation(i,t);if(presentation.alpha<=0)continue;
  const oldKey=extraState.chars[side],oldActor=actors[side];extraState.chars[side]=key;
  actors[side]=side===playerSide()?extraState.dustinActors[i]||{lane:-1,until:-1}:dustinEnsemblePose(line,t);
- const placement=dustinEnsemblePlacement(key,p);ctx.save();ctx.translate((placement.x-v.left)*v.scale,(placement.y-v.top)*v.scale);const z=p.z*v.scale/a.scale;ctx.scale(z,z);
+ const placement=dustinEnsemblePlacement(key,p);ctx.save();ctx.globalAlpha*=presentation.alpha;ctx.translate((placement.x+presentation.x-v.left)*v.scale,(placement.y+presentation.y-v.top)*v.scale);const z=p.z*v.scale/a.scale;ctx.scale(z,z);
  try{extraActor(side,t,0,0);}finally{ctx.restore();extraState.chars[side]=oldKey;actors[side]=oldActor;}
  }
 }
@@ -37,3 +37,14 @@ function drawDustinEnsemble(t,onlySide){
 // Cornered reference video: Undyne stands centrally behind the foreground bones.
 // Use one offset for every form so transformations do not jump between anchors.
 function dustinEnsemblePlacement(key,p){return song.sceneKey==='dustin-cornered'&&key?.startsWith('dustin:undyne')?{...p,x:p.x-140,y:p.y-70}:p;}
+
+// Source: data/stages/surface.hx stepHit; evaluated from song time for seeks/restarts.
+function dustinUprisingPresentation(i,t){
+ if(song.sceneKey!=='dustin-the-uprising')return {alpha:1,x:0,y:0};
+ const cues=i===2?[[1336,1,0]]:i===6?[[696,.9,3],[960,0,5],[1122,.5,.5],[1152,0,1],[2106,.9,2],[2232,0,1]]:i===5?[[400,.9,1],[1322,0,.5],[1600,.75,3],[2356,0,.7]]:i===3||i===4?[[400,.9,1],[2356,0,.7]]:[];
+ let alpha=i>=2?0:1,from=alpha,at=0,duration=0,target=alpha;
+ const value=time=>{const q=duration?clamp01((time-at)/duration):1,e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;return from+(target-from)*e;};
+ for(const [step,next,seconds] of cues){const start=dustinStepTime(step);if(t<start)break;alpha=value(start);from=alpha;target=next;at=start;duration=seconds;}
+ alpha=value(t);const rise=i===5?clamp01((t-dustinStepTime(1600))/3):0;
+ return {alpha,x:i===6?-400:0,y:i===6?-100:-300*rise};
+}
