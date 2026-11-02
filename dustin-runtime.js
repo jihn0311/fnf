@@ -26,7 +26,7 @@ function drawDustinEnsemble(t,onlySide){
  const lines=dustinEnsemble(),scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView;
  for(const i of [...lines.keys()].sort((a,b)=>(lines[a].type===2?-2:song.sceneKey==='dustin-the-uprising'&&a===6?-1:0)-(lines[b].type===2?-2:song.sceneKey==='dustin-the-uprising'&&b===6?-1:0))){
  const line=lines[i],side=line.type===1?'echo':line.type===2?'gf':'nova';if(onlySide&&onlySide!==side)continue;
- const key=extraState.dustinLines[i],p=v.slots[i]?.[key],a=dustinEffectCharacter(key);if(!a||!p||p.hidden)continue;const presentation=dustinUprisingPresentation(i,t);if(presentation.alpha<=0)continue;
+ const key=extraState.dustinLines[i];if(song.sceneKey==='dustin-cornered'&&key?.includes('undyne')&&extraState.dustinLines[0]?.includes('phantom_paps'))continue;const p=v.slots[i]?.[key],a=dustinEffectCharacter(key);if(!a||!p||p.hidden)continue;const presentation=dustinUprisingPresentation(i,t);if(presentation.alpha<=0)continue;
  const oldKey=extraState.chars[side],oldActor=actors[side];extraState.chars[side]=key;
  actors[side]=side===playerSide()?extraState.dustinActors[i]||{lane:-1,until:-1}:dustinEnsemblePose(line,t);
  const placement=dustinEnsemblePlacement(key,p);ctx.save();ctx.globalAlpha*=presentation.alpha;ctx.translate((placement.x+presentation.x-v.left)*v.scale,(placement.y+presentation.y-v.top)*v.scale);const z=p.z*v.scale/a.scale;ctx.scale(z,z);
