@@ -65,10 +65,17 @@ function autoSide(){return playerSide()==='echo'?'nova':'echo';}
 function sectionAt(t){if(song.sections){const section=song.sections.find(s=>t>=s.start&&t<s.end);return section?section.mode:t<song.sections[0].start?'intro':'outro';}const beat=Math.round(t/BEAT*1e8)/1e8;return beat<8?'intro':beat>=song.beats-4?'outro':song.parts[Math.floor((beat-8)/8)];}
 function sings(side,t){const part=sectionAt(t);return part===side||part==='duet';}
 function laneX(lane,side='echo'){if(song.pack==='silly'&&extraState?.middle&&side==='echo')return 425+lane*90;const swap=song.sceneKey==='dustin-broken-reality'?1:typeof tripleActive==='function'&&tripleActive()?tripleSwap():typeof extraSwap==='function'?extraSwap():0;return (side==='nova'?135+580*swap:715-580*swap)+lane*90;}
+function singingEnd(side,t,hold,miss){
+ if(miss)return t+hold;const chart=side===playerSide()?notes:opponentNotes;let lo=0,hi=chart.length;
+ while(lo<hi){const mid=(lo+hi)>>>1;if(chart[mid].time<=t+.001)lo=mid+1;else hi=mid;}
+ const beat=song.pack==='dustin'&&typeof dustinTempo==='function'?60/dustinTempo(t).bpm:BEAT;
+ for(let i=lo;i<chart.length&&chart[i].time<=t+beat;i++){const n=chart[i];if(n.hurt||n.noAnimation)continue;return Math.max(t+hold,n.time+.015);}
+ return t+hold;
+}
 function animateSinger(side,lane,t,duration=0,miss=false){
  const previous=actors[side],hold=(song.pack==='survent'?.36:song.pack==='impostor'?.2:.23)*(settings.rate||1);
- const same=song.pack==='survent'&&!miss&&!previous.miss&&previous.lane===lane&&previous.until>t;
- actors[side]={lane,at:same?previous.at:t,until:t+Math.max(hold,duration),miss};
+ const same=!miss&&!previous.miss&&previous.lane===lane&&previous.until>t;
+ actors[side]={lane,at:same?previous.at:t,until:singingEnd(side,t,Math.max(hold,duration),miss),miss};
 }
 // Each chart owns its cursor; replacing a chart automatically resets traversal.
 const chartCursors=new WeakMap();
