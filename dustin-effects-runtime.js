@@ -60,8 +60,8 @@ function dustinCall(name,arg,t){const s=dustinFX;dustinApplyOperations(dustinDat
  case 'pixelbump':case 'epicbump':case 'swagbump':case 'cineHit':extraState.bumps.push({at:t,amount:name==='pixelbump'?.04:.09});break;
  case 'epicimpact':s.flashes.push({at:t,duration:.13,color:'#fff',fade:false});break;
  case 'backgroundFade':s.backgroundDark=true;break;
- case 'phantomIn':s.phantom=true;break;
- case 'phantomOut':s.phantom=false;break;
+ case 'phantomIn':s.phantom=true;if(song.sceneKey==='dustin-cornered')s.backgroundDark=false;break;
+ case 'phantomOut':s.phantom=false;if(song.sceneKey==='dustin-cornered')s.backgroundDark=false;break;
  case 'toggleTv':s.tv=String(arg).includes('LOVE');break;
  case 'changeToSans':case 'switchToSans':s.sansStage=true;break;
  case 'bgFog':s.fog=true;break;
