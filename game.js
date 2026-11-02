@@ -714,3 +714,15 @@ $('open-key-settings')?.addEventListener('click',()=>{
 $('close-key-settings')?.addEventListener('click',()=>$('key-settings-dialog').close());
 $('key-settings-dialog')?.addEventListener('close',()=>{bindingLane=null;held.clear();refreshButtons();showPlayKeys();});
 
+
+// Remember controls on this browser without storing in-progress game state.
+const savedControlIds=['difficulty','scroll','speed','rate','practice','nightmare','play-side','bot-mode','performance-mode'];
+function saveGamePreferences(){try{const controls={};for(const id of savedControlIds){const e=$(id);if(e)controls[id]=e.type==='checkbox'?e.checked:e.value;}localStorage.setItem('fnf-preferences-v1',JSON.stringify({controls,muted}));}catch{}}
+function restoreGamePreferences(){try{const saved=JSON.parse(localStorage.getItem('fnf-preferences-v1'));if(!saved?.controls)return;
+ for(const id of savedControlIds){const e=$(id),v=saved.controls[id];if(!e||v===undefined)continue;if(e.type==='checkbox'){if(typeof v==='boolean')e.checked=v;}else if(e.tagName==='SELECT'){if([...e.options].some(o=>o.value===v))e.value=v;}else if(Number.isFinite(Number(v))){e.value=String(Math.max(Number(e.min)||0,Math.min(Number(e.max)||Infinity,Number(v))));}}
+ muted=!!saved.muted;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');
+ rebuildSongPicker();readSettings();changeScrollSpeed($('speed').value);updateHealthDirection();
+ }catch{}}
+restoreGamePreferences();
+for(const id of [...savedControlIds,'speed-number'])for(const event of ['input','change'])$(id)?.addEventListener(event,saveGamePreferences);
+$('sound').addEventListener('click',saveGamePreferences);
