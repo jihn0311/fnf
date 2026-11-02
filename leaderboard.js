@@ -9,7 +9,7 @@
  function mode(){return {song_id:song.lowSpec?songId+'-low':songId,difficulty:settings.difficulty,play_side:playerSide(),rate:settings.rate,practice:!!el('practice').checked,nightmare:!!el('nightmare').checked};}
  async function api(url,options={}){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
-  try{const response=await fetch(url,{...options,headers:{...headers,...options.headers},signal:controller.signal});if(!response.ok)throw new Error('request failed');return response.status===204?null:await response.json();}
+  try{const response=await fetch(url,{...options,headers:{...headers,...options.headers},signal:controller.signal});if(!response.ok){const error=new Error('request failed');error.status=response.status;throw error;}const body=await response.text();return body.trim()?JSON.parse(body):null;}
   finally{clearTimeout(timer);}
  }
  async function refresh(){
@@ -35,7 +35,7 @@
   const record=pending;busy=true;el('ranking-submit').disabled=true;
   el('ranking-submit-status').textContent='저장하는 중…';
   try{await api(endpoint,{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({...record,nickname})});if(pending===record){pending=null;el('online-ranking').classList.remove('record-ready');el('ranking-submit-status').textContent='기록을 저장했어!';}void refresh();}
-  catch{el('ranking-submit-status').textContent='저장하지 못했어. 연결을 확인하고 다시 눌러줘.';}
+  catch(error){el('ranking-submit-status').textContent=error.status===401||error.status===403?'서버에서 기록 등록 권한을 거절했어.':error.status===400?'기록 값이 서버의 허용 범위와 맞지 않아 등록하지 못했어.':error.status?'서버 오류로 등록하지 못했어 ('+error.status+'). 잠시 후 다시 눌러줘.':'서버 응답을 확인하지 못했어. 새로고침으로 기록이 올라갔는지 먼저 확인해줘.';}
   finally{busy=false;el('ranking-submit').disabled=!pending;}
  });
  el('open-ranking').addEventListener('click',()=>{if(state==='playing')pause();el('online-ranking').scrollIntoView({behavior:'smooth',block:'start'});el('ranking-heading').focus({preventScroll:true});void refresh();});
