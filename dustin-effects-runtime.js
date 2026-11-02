@@ -2,7 +2,7 @@
 // Native chart events are kept separate from the unchanged low-spec chart.
 let dustinFX=null;const dustinVideos=new Map(),dustinKeys=new Set();
 function dustinFull(){return song.pack==='dustin'&&!song.lowSpec;}
-function dustinEffectCharacter(key){return dustinFull()&&typeof DUSTIN_EFFECT_CHARACTERS!=='undefined'&&DUSTIN_EFFECT_CHARACTERS[key]||MOD_ART.characters[key];}
+function dustinEffectCharacter(key){return dustinFull()&&typeof DUSTIN_UNDYNE_QUALITY!=='undefined'&&DUSTIN_UNDYNE_QUALITY[key]||dustinFull()&&typeof DUSTIN_EFFECT_CHARACTERS!=='undefined'&&DUSTIN_EFFECT_CHARACTERS[key]||MOD_ART.characters[key];}
 function dustinData(){return typeof DUSTIN_EFFECTS==='undefined'?null:DUSTIN_EFFECTS[songId];}
 function dustinTempo(t){const list=dustinData()?.tempo[settings.difficulty]||[];let value={time:0,step:0,bpm:BPM};for(const item of list){if(item.time>t)break;value=item;}return value;}
 function dustinStep(t){const v=dustinTempo(t);return v.step+(t-v.time)*v.bpm/15;}

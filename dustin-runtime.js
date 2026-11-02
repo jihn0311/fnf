@@ -29,7 +29,11 @@ function drawDustinEnsemble(t,onlySide){
  const key=extraState.dustinLines[i],p=v.slots[i]?.[key],a=dustinEffectCharacter(key);if(!a||!p||p.hidden)continue;
  const oldKey=extraState.chars[side],oldActor=actors[side];extraState.chars[side]=key;
  actors[side]=side===playerSide()?extraState.dustinActors[i]||{lane:-1,until:-1}:dustinEnsemblePose(line,t);
- ctx.save();ctx.translate((p.x-v.left)*v.scale,(p.y-v.top)*v.scale);const z=p.z*v.scale/a.scale;ctx.scale(z,z);
+ const placement=dustinEnsemblePlacement(key,p);ctx.save();ctx.translate((placement.x-v.left)*v.scale,(placement.y-v.top)*v.scale);const z=p.z*v.scale/a.scale;ctx.scale(z,z);
  try{extraActor(side,t,0,0);}finally{ctx.restore();extraState.chars[side]=oldKey;actors[side]=oldActor;}
  }
 }
+
+// Cornered reference video: Undyne stands centrally behind the foreground bones.
+// Use one offset for every form so transformations do not jump between anchors.
+function dustinEnsemblePlacement(key,p){return song.sceneKey==='dustin-cornered'&&key?.startsWith('dustin:undyne')?{...p,x:p.x-140,y:p.y-70}:p;}
