@@ -2418,5 +2418,6 @@
   "assets/extra-mods/dustin/effects/characters/papyrus_lyrics/8.webp",
   "assets/extra-mods/dustin/effects/characters/papyrus_lyrics/9.webp",
   "assets/extra-mods/dustin/effects/sounds/snd_b.ogg",
-  "assets/extra-mods/dustin/effects/sounds/snd_laz.ogg"
+  "assets/extra-mods/dustin/effects/sounds/snd_laz.ogg",
+  "dustin-ensemble.js"
 ]
