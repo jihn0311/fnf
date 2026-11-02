@@ -35,7 +35,7 @@ const tripleOffsets={
 function tripleActor(name,side,t,x,y,flip,p){
  const sheet=MOD_ART.characters[name],im=modImages.get(sheet.src);if(!im)return;
  const a=actors[side],singing=t<a.until&&(a.at??-Infinity)>=p.time;
- let key=singing?['left','down','up','right'][a.lane]:'idle',elapsed=singing?t-a.at:characterBeatElapsed(sheet,'idle',t);
+ let key=singing?['left','down','up','right'][a.lane]:'idle',elapsed=singing?(t<a.sustainUntil?characterBeatElapsed(sheet,key,t-(a.at||0)):t-a.at):characterBeatElapsed(sheet,'idle',t);
  const offsets=tripleOffsets[name==='Beast'&&flip?'beastLeft':name==='BOYFRIEND'&&flip?'bfLeft':name];
  let offset=offsets[key]||[0,0];
  if((name==='BFPhase3_Perspective'||name==='KnucklesEXE')&&(key==='left'||key==='right'))key=key==='left'?'right':'left';

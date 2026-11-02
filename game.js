@@ -75,7 +75,7 @@ function singingEnd(side,t,hold,miss){
 function animateSinger(side,lane,t,duration=0,miss=false){
  const previous=actors[side],hold=(song.pack==='survent'?.36:song.pack==='impostor'?.2:.23)*(settings.rate||1);
  const same=!miss&&!previous.miss&&previous.lane===lane&&previous.until>t;
- actors[side]={lane,at:same?previous.at:t,until:singingEnd(side,t,Math.max(hold,duration),miss),miss};
+ actors[side]={lane,at:same?previous.at:t,until:singingEnd(side,t,Math.max(hold,duration),miss),sustainUntil:duration>0?t+duration:-1,miss};
 }
 // Each chart owns its cursor; replacing a chart automatically resets traversal.
 const chartCursors=new WeakMap();

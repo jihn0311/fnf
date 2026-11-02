@@ -34,7 +34,7 @@ function modActor(name,side,t,x,y){
  let key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(singing&&actor.miss)key=missAnimationKey(sheet,actor.lane)||key;
  const frames=sheet.animations[key]||sheet.animations.idle;
- const elapsed=singing?Math.max(0,t-(actor.at??t)):characterBeatElapsed(sheet,key,t);
+ const elapsed=singing?(t<actor.sustainUntil?characterBeatElapsed(sheet,key,t-(actor.at||0)):Math.max(0,t-(actor.at??t))):characterBeatElapsed(sheet,key,t);
  const f=frames[Math.floor(elapsed*24)%frames.length];
  ctx.drawImage(image,f.x,f.y,f.w,f.h,x-f.fw/2+f.ox,y-f.fh+f.oy,f.w,f.h);
 }

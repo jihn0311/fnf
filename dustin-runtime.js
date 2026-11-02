@@ -20,7 +20,7 @@ function dustinEnsemble(){return typeof DUSTIN_ENSEMBLE!=='undefined'&&DUSTIN_EN
 function dustinEnsemblePose(line,t){
  const notes=line.notes;let lo=0,hi=notes.length;
  while(lo<hi){const mid=(lo+hi)>>>1;if(notes[mid][0]<=t)lo=mid+1;else hi=mid;}
- if(!lo)return {lane:-1,until:-1};const [at,lane,duration]=notes[lo-1];return {lane,at,until:at+Math.max(.2,duration)};
+ if(!lo)return {lane:-1,until:-1};const [at,lane,duration]=notes[lo-1];return {lane,at,until:at+Math.max(.2,duration),sustainUntil:duration>0?at+duration:-1};
 }
 function drawDustinEnsemble(t,onlySide){
  const lines=dustinEnsemble(),scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView;
