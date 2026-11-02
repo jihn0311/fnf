@@ -34,7 +34,7 @@ function modActor(name,side,t,x,y){
  let key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(singing&&actor.miss)key=missAnimationKey(sheet,actor.lane)||key;
  const frames=sheet.animations[key]||sheet.animations.idle;
- const elapsed=singing?Math.max(0,t-(actor.at??t)):Math.max(0,t);
+ const elapsed=singing?Math.max(0,t-(actor.at??t)):characterBeatElapsed(sheet,key,t);
  const f=frames[Math.floor(elapsed*24)%frames.length];
  ctx.drawImage(image,f.x,f.y,f.w,f.h,x-f.fw/2+f.ox,y-f.fh+f.oy,f.w,f.h);
 }
@@ -172,7 +172,7 @@ function missAnimationKey(sheet,lane){
  return missKeyCache.get(sheet)[lane];
 }
 function girlfriendPose(sheet,t){
- const beat=Math.max(0,t)/BEAT,index=Math.floor(beat),elapsed=(beat-index)*BEAT;
+ const beat=characterBeatPosition(t),index=Math.floor(beat),elapsed=(beat-index)*BEAT;
  if(sheet.animations.danceLeft&&sheet.animations.danceRight)return {key:index%2?'danceRight':'danceLeft',elapsed};
  const frames=sheet.animations.idle;
  // A combined GF atlas contains both 15-frame dance directions.
@@ -189,3 +189,6 @@ function drawSonicSpecialNote(note,x,y,t){
  ctx.drawImage(im,f.x,f.y,f.width,f.height,x-f.width*scale/2,y-f.height*scale/2,f.width*scale,f.height*scale);
  return true;
 }
+
+function characterBeatPosition(t){return Math.max(0,song.pack==='dustin'&&typeof dustinStep==='function'?dustinStep(t)/4:typeof tripleActive==='function'&&tripleActive()?tripleStep(t)/4:t/BEAT);}
+function characterBeatElapsed(sheet,key,t){const frames=sheet.animations[key]||sheet.animations.idle||[];const beat=characterBeatPosition(t);return (beat-Math.floor(beat))*frames.length/(sheet.config?.[key]?.fps||24);}

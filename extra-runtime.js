@@ -139,6 +139,7 @@ function extraActor(side,t,x,y,black=false){
  let elapsed=singing?t-(actor.at??t):Math.max(0,t)%BEAT;
  if(singing&&actor.miss)key=missAnimationKey(a,actor.lane)||key;
  if((side==='gf'||(song.pack==='kapi'||((song.pack==='qt'||song.pack==='qt-safe')&&side==='nova'))&&a.animations.danceLeft)&&!singing){const pose=girlfriendPose(a,t);key=pose.key;elapsed=pose.elapsed;}
+ if(!singing&&!(side==='gf'&&!a.animations.danceLeft&&a.animations.idle?.length>=28&&a.animations.idle?.length<=32))elapsed=characterBeatElapsed(a,key,t);
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&song.pack!=='qt'&&song.pack!=='qt-safe'&&song.pack!=='dustin'&&!singing)){key=special.name;elapsed=t-special.at;}}
  if(typeof dustinAttackPose==='function'){const pose=dustinAttackPose(side,t);if(pose&&a.animations[pose.key]){key=pose.key;elapsed=pose.elapsed;}}
