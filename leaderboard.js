@@ -23,21 +23,22 @@
   }catch{if(id===requestId)el('ranking-status').textContent='온라인 순위를 불러오지 못했어. 잠시 후 새로고침해줘.';}
  }
  window.addEventListener('fnf:finished',event=>{
-  pending=null;el('ranking-submit').disabled=true;
+  pending=null;el('online-ranking').classList.remove('record-ready');el('ranking-submit').disabled=true;
   if(event.detail.failed||event.detail.bot){el('ranking-submit-status').textContent='곡을 끝까지 직접 플레이하면 기록을 올릴 수 있어.';return;}
   pending={...event.detail.mode,score:event.detail.score,accuracy:event.detail.accuracy,max_combo:event.detail.max_combo,misses:event.detail.misses};
   el('ranking-submit-status').textContent='방금 완주한 기록: '+pending.score.toLocaleString()+'점. 닉네임을 입력하고 등록해줘.';
-  el('ranking-submit').disabled=busy;
+  el('ranking-submit').disabled=busy;el('online-ranking').classList.add('record-ready');
  });
  el('ranking-submit').addEventListener('click',async()=>{
   if(!pending||busy)return;
   const nickname=el('ranking-name').value.trim();if(!nickname||nickname.length>20){el('ranking-submit-status').textContent='닉네임은 1~20자로 입력해줘.';return;}
   const record=pending;busy=true;el('ranking-submit').disabled=true;
   el('ranking-submit-status').textContent='저장하는 중…';
-  try{await api(endpoint,{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({...record,nickname})});if(pending===record){pending=null;el('ranking-submit-status').textContent='기록을 저장했어!';}void refresh();}
+  try{await api(endpoint,{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({...record,nickname})});if(pending===record){pending=null;el('online-ranking').classList.remove('record-ready');el('ranking-submit-status').textContent='기록을 저장했어!';}void refresh();}
   catch{el('ranking-submit-status').textContent='저장하지 못했어. 연결을 확인하고 다시 눌러줘.';}
   finally{busy=false;el('ranking-submit').disabled=!pending;}
  });
+ el('open-ranking').addEventListener('click',()=>{if(state==='playing')pause();el('online-ranking').scrollIntoView({behavior:'smooth',block:'start'});el('ranking-heading').focus({preventScroll:true});void refresh();});
  el('ranking-refresh').addEventListener('click',refresh);
  for(const id of ['song','performance-mode','difficulty','play-side','rate','practice','nightmare'])el(id)?.addEventListener('change',refresh);
  void refresh();
