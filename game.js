@@ -579,6 +579,7 @@ document.addEventListener('keydown',e=>{
   if($('key-settings-dialog')?.open)return;
   const key=inputKey(e);
   if(typeof dustinKey==='function'&&dustinKey(e,true))return;
+  if(key==='Escape'&&document.querySelector('.game')?.classList.contains('game-only')&&!document.fullscreenElement){e.preventDefault();setGameOnly(false);return;}
   if(key==='Escape'||(key==='Enter'&&['playing','paused'].includes(state))){e.preventDefault();if(!e.repeat)pause();return;}
   if(e.target?.matches?.('select,input,button')&&state!=='playing')return;
   if(KEYS[key]!==undefined){e.preventDefault();if(!e.repeat)inputDown('key:'+key,KEYS[key]);}
@@ -601,6 +602,18 @@ $('speed').addEventListener('input',()=>changeScrollSpeed($('speed').value));
 $('speed-number').addEventListener('change',()=>changeScrollSpeed($('speed-number').value));
 readSettings();frame();
 
+function setGameOnly(active){
+ const game=document.querySelector('.game');game.classList.toggle('game-only',active);
+ $('game-only').setAttribute('aria-pressed',String(active));
+}
+$('game-only').addEventListener('click',async()=>{
+ setGameOnly(true);
+ // A fixed viewport also works on mobile browsers without the Fullscreen API.
+ if(!document.fullscreenElement)try{await document.querySelector('.game').requestFullscreen?.();}catch{}
+});
+$('exit-game-only').addEventListener('click',async()=>{
+ setGameOnly(false);if(document.fullscreenElement)try{await document.exitFullscreen();}catch{}
+});
 const fullscreenButton=$('fullscreen');
 fullscreenButton.addEventListener('click',async()=>{
  try{
@@ -610,6 +623,7 @@ fullscreenButton.addEventListener('click',async()=>{
 });
 document.addEventListener('fullscreenchange',()=>{
  const active=!!document.fullscreenElement;
+ if(!active)setGameOnly(false);
  fullscreenButton.textContent=active?'⛶ 전체화면 해제':'⛶ 전체화면';
  fullscreenButton.setAttribute('aria-pressed',String(active));
  fullscreenButton.setAttribute('aria-label',active?'전체화면 해제':'게임 전체화면');
