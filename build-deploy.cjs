@@ -8,7 +8,7 @@ const root = __dirname;
 const output = path.join(root, 'dist');
 const archive = path.join(root, 'neon-duet-deploy.zip');
 const files = [
-  'index.html', 'style.css', 'game.js', 'imported-chart.js',
+  'index.html', 'style.css', 'game.js', 'imported-chart.js', 'leaderboard.js',
   'assets/self-embodiment.mp3', 'assets/self-embodiment-inline.js',
 ];
 
@@ -60,3 +60,4 @@ const result = spawnSync('powershell.exe', [
 if (result.error) throw result.error;
 if (result.status !== 0) process.exit(result.status || 1);
 console.log(`Ready: ${output}\nZIP: ${archive}\n${files.length} game files packaged.`);
+

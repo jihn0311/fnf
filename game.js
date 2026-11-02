@@ -369,6 +369,7 @@ function finish(failed=false){
   $('overline').textContent=failed?'GAME OVER / HEALTH EMPTY':(settings.bot?'BOT · 자동 플레이 / ':'')+(playerSide()==='nova'?'상대 파트 / ':'보프 파트 / ')+song.title+' / '+settings.difficulty.toUpperCase()+' / RANK '+rank;$('title').textContent=failed?'다시, 리듬을 잡아봐.':'너의 리듬, '+rank+' 랭크.';
   $('description').innerHTML=`점수 ${score.toLocaleString()} · 정확도 ${accuracy.toFixed(1)}%<br>최대 콤보 ${maxCombo} · 놓친 노트 ${hits.miss}<br>PERFECT ${hits.perfect} / GOOD ${hits.good} / BAD ${hits.bad} / MISS ${hits.miss}`;
   $('start').innerHTML='다시 플레이 <span>↗</span>';$('hint').textContent='다시 도전해서 최고 기록을 만들어 보세요.';$('overlay').classList.remove('hidden');
+  window.dispatchEvent(new CustomEvent('fnf:finished',{detail:{failed,bot:settings.bot,score,accuracy:Number(Math.min(100,Math.max(0,accuracy)).toFixed(4)),max_combo:maxCombo,misses:hits.miss,mode:{song_id:song.lowSpec?songId+'-low':songId,difficulty:settings.difficulty,play_side:playerSide(),rate:settings.rate,practice:!!$('practice').checked,nightmare:!!$('nightmare').checked}}}));
   if(typeof extraFinish==='function')extraFinish(failed);
   if(!failed&&typeof playDustinStory==='function')void playDustinStory('outro');
 }
@@ -701,3 +702,4 @@ $('open-key-settings')?.addEventListener('click',()=>{
 });
 $('close-key-settings')?.addEventListener('click',()=>$('key-settings-dialog').close());
 $('key-settings-dialog')?.addEventListener('close',()=>{bindingLane=null;held.clear();refreshButtons();showPlayKeys();});
+
