@@ -17,13 +17,17 @@
   const id=++requestId,selected=mode(),all=el('ranking-view').value==='all',search=el('ranking-search').value.trim();el('ranking-order-heading').textContent='순위';el('ranking-title').textContent=song.title+' · '+selected.difficulty.toUpperCase()+' · '+(selected.play_side==='echo'?'보프':'상대')+' · '+selected.rate+'×'+(selected.practice?' · 연습':'')+(selected.nightmare?' · 나이트메어':'');
   if(all)el('ranking-title').textContent=song.title+' · 모든 플레이 조건'+(search?' · 닉네임: '+search:'');
   el('ranking-status').textContent='기록을 불러오는 중…';el('ranking-rows').replaceChildren();
-  const params=new URLSearchParams({select:'nickname,score,accuracy,max_combo,song_id,difficulty,play_side,rate,practice,nightmare',order:'score.desc,accuracy.desc,created_at.asc',limit:all?'100':'20'});
+  const params=new URLSearchParams({select:'nickname,score,accuracy,max_combo,misses,song_id,difficulty,play_side,rate,practice,nightmare',order:'score.desc,accuracy.desc,created_at.asc,id.asc',limit:'200'});
   params.set('song_id','eq.'+selected.song_id);
   if(!all)for(const [name,value] of Object.entries(selected))params.set(name,'eq.'+value);
   if(search)params.set('nickname','eq.'+search);
-  try{const rows=await api(endpoint+'?'+params);if(id!==requestId)return;
+  try{const rows=[],seen=new Set(),target=all?100:20;
+   for(let offset=0;rows.length<target;offset+=200){params.set('offset',String(offset));const page=await api(endpoint+'?'+params);if(id!==requestId)return;
+    for(const row of page){const token=JSON.stringify([row.nickname,row.song_id,row.difficulty,row.play_side,Number(row.rate),!!row.practice,!!row.nightmare,Number(row.score),Number(row.accuracy),Number(row.max_combo),Number(row.misses)]);if(seen.has(token))continue;seen.add(token);rows.push(row);if(rows.length===target)break;}
+    if(page.length<200)break;
+   }
    rows.forEach((row,index)=>{const tr=document.createElement('tr');for(const value of [index+1,row.nickname,Number(row.score).toLocaleString(),Number(row.accuracy).toFixed(1)+'%',row.max_combo,recordLabel(row)]){const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td);}el('ranking-rows').appendChild(tr);});
-   el('ranking-status').textContent=rows.length?(all?'높은 점수순 상위 100개 · 서로 다른 조건의 점수는 직접 비교하지 않아요.':'상위 20개 기록 · 사용자 제출 기록 (플레이 진위 미검증)'):(search?'해당 닉네임의 기록이 없어요. 등록할 때 쓴 이름을 확인해주세요.':all?'아직 기록이 없어. 첫 기록을 남겨봐!':'현재 조건의 기록이 없어요. 전체 기록에서 다른 조건의 기록을 찾아보세요.');
+   el('ranking-status').textContent=rows.length?(all?'중복 제외 · 높은 점수순 상위 100개 · 서로 다른 조건의 점수는 직접 비교하지 않아요.':'중복 제외 · 상위 20개 기록 · 사용자 제출 기록 (플레이 진위 미검증)'):(search?'해당 닉네임의 기록이 없어요. 등록할 때 쓴 이름을 확인해주세요.':all?'아직 기록이 없어. 첫 기록을 남겨봐!':'현재 조건의 기록이 없어요. 전체 기록에서 다른 조건의 기록을 찾아보세요.');
   }catch{if(id===requestId)el('ranking-status').textContent='온라인 순위를 불러오지 못했어. 잠시 후 새로고침해줘.';}
  }
  window.addEventListener('fnf:finished',event=>{
