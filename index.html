@@ -37,8 +37,8 @@
     </section>
     <section id="online-ranking" class="online-ranking" aria-labelledby="ranking-heading">
       <div class="ranking-heading"><div><span class="eyebrow">ONLINE LEADERBOARD</span><h2 id="ranking-heading" tabindex="-1">🏆 온라인 랭킹</h2></div><button id="ranking-refresh" class="small" type="button">↻ 새로고침</button></div>
-      <div class="ranking-entry"><label>보기<select id="ranking-view"><option value="all">전체 기록 · 높은 점수순</option><option value="mode">현재 조건 랭킹 · 점수순</option></select></label><label>닉네임으로 찾기<input id="ranking-search" maxlength="20" placeholder="등록한 닉네임"></label><button id="ranking-search-button" class="small" type="button">기록 찾기</button></div><p id="ranking-title" class="ranking-mode"></p>
-      <p class="ranking-help">전체 기록에서는 다른 기기에서 등록한 기록도 찾을 수 있어요. 순위는 현재 조건 랭킹에서 비교해요.</p>
+      <div class="ranking-entry"><label>보기<select id="ranking-view"><option value="all">선택한 곡 · 높은 점수순</option><option value="mode">현재 조건 랭킹 · 점수순</option></select></label><label>닉네임으로 찾기<input id="ranking-search" maxlength="20" placeholder="등록한 닉네임"></label><button id="ranking-search-button" class="small" type="button">기록 찾기</button></div><p id="ranking-title" class="ranking-mode"></p>
+      <p class="ranking-help">선택한 곡의 기록을 높은 점수부터 보여줘요. 플레이 조건을 맞춰 비교하려면 현재 조건 랭킹을 선택하세요.</p>
       <p id="ranking-status" role="status"></p>
       <div class="ranking-table-wrap"><table><thead><tr><th id="ranking-order-heading">번호</th><th>닉네임</th><th>점수</th><th>정확도</th><th>최대 콤보</th><th>곡 · 플레이 조건</th></tr></thead><tbody id="ranking-rows"></tbody></table></div>
       <div class="ranking-entry"><label for="ranking-name">내 닉네임<input id="ranking-name" maxlength="20" placeholder="1~20자" autocomplete="nickname"></label><button id="ranking-submit" type="button" disabled>완주 기록 등록</button></div>
@@ -60,7 +60,7 @@ document.getElementById('ring-input').onpointerdown=e=>{e.preventDefault();modRi
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&song.rings?.[settings.difficulty]?.length){e.preventDefault();if(!e.repeat)modRingPress();}if(e.code==='Escape'&&!document.getElementById('mod-cinema').hidden)closeModVideo();});
 </script>
 
-<script src="leaderboard.js?v=aeb56a82c474"></script>
+<script src="leaderboard.js?v=d0fb3a9582b6"></script>
 </body>
 </html>
 

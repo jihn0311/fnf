@@ -14,10 +14,11 @@
  }
  function recordLabel(row){return (SONGS[row.song_id]?.title||row.song_id||'')+' · '+(row.difficulty||'')+' · '+(row.play_side==='nova'?'상대':'보프')+' · '+(row.rate||1)+'×'+(row.practice?' · 연습':'')+(row.nightmare?' · 나이트메어':'');}
  async function refresh(){
-  const id=++requestId,selected=mode(),all=el('ranking-view').value==='all',search=el('ranking-search').value.trim();el('ranking-order-heading').textContent=all?'번호':'순위';el('ranking-title').textContent=song.title+' · '+selected.difficulty.toUpperCase()+' · '+(selected.play_side==='echo'?'보프':'상대')+' · '+selected.rate+'×'+(selected.practice?' · 연습':'')+(selected.nightmare?' · 나이트메어':'');
-  if(all)el('ranking-title').textContent='모든 곡 · 모든 플레이 조건'+(search?' · 닉네임: '+search:'');
+  const id=++requestId,selected=mode(),all=el('ranking-view').value==='all',search=el('ranking-search').value.trim();el('ranking-order-heading').textContent='순위';el('ranking-title').textContent=song.title+' · '+selected.difficulty.toUpperCase()+' · '+(selected.play_side==='echo'?'보프':'상대')+' · '+selected.rate+'×'+(selected.practice?' · 연습':'')+(selected.nightmare?' · 나이트메어':'');
+  if(all)el('ranking-title').textContent=song.title+' · 모든 플레이 조건'+(search?' · 닉네임: '+search:'');
   el('ranking-status').textContent='기록을 불러오는 중…';el('ranking-rows').replaceChildren();
   const params=new URLSearchParams({select:'nickname,score,accuracy,max_combo,song_id,difficulty,play_side,rate,practice,nightmare',order:'score.desc,accuracy.desc,created_at.asc',limit:all?'100':'20'});
+  params.set('song_id','eq.'+selected.song_id);
   if(!all)for(const [name,value] of Object.entries(selected))params.set(name,'eq.'+value);
   if(search)params.set('nickname','eq.'+search);
   try{const rows=await api(endpoint+'?'+params);if(id!==requestId)return;
