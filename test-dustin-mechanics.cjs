@@ -2,6 +2,9 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const c={console,assert,extraSound(){},feedback:"",feedbackAt:0,feedbackColor:"",feedbackOffsetMs:null,EXTRA_ART:{sprites:{}},MOD_ART:{characters:{}},song:{pack:'dustin',originalSpeed:1},songId:'dustin-heatwave',settings:{difficulty:'hard',rate:1,bot:false},BPM:130,BEAT:60/130,state:'paused',health:100,extraState:{bumps:[],alt:{},special:{}},clamp01:x=>Math.max(0,Math.min(1,x)),updateHud(){},time:()=>0,playerSide:()=> 'echo',autoSide:()=> 'nova'};
 vm.createContext(c);for(const f of ['dustin-effects.js','dustin-effects-runtime.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
 vm.runInContext(`
+songId='dustin-perseverance';resetDustinEffects();
+for(const at of [82.1953488372093,82.7953488372093,91.7953488372093,92.3953488372093,92.99534883720929]){resetDustinEffects();updateDustinEffects(at);assert.equal(dustinValue('scroll',at),2);updateDustinEffects(at+.31);assert(Math.abs(dustinValue('scroll',at+.31)-3)<1e-6,'slow pulse must recover');}
+resetDustinEffects();updateDustinEffects(100);assert.equal(dustinValue('scroll',100),3);resetDustinEffects();for(let t=0;t<=100;t+=.05)updateDustinEffects(t);updateDustinEffects(100);assert.equal(dustinValue('scroll',100),3,'continuous play must recover too');songId='dustin-heatwave';
 resetDustinEffects();updateDustinEffects(135);assert.equal(dustinValue('cover',135),0,'Heatwave must clear its intentional blackout');
 const expected=dustinValue('cover',127);updateDustinEffects(0);for(let t=0;t<=127;t+=.05)updateDustinEffects(t);updateDustinEffects(127);assert.equal(dustinValue('cover',127),expected,'seek and frame-by-frame effect order');
 resetDustinEffects();dustinApplyOperations([{event:{name:'Screen Coverer',params:[false,0,1,0,'linear','In','camHUD','front']},delay:.2}],0);updateDustinEffects(.1);assert.equal(dustinValue('cover',.1),0);updateDustinEffects(.3);assert.equal(dustinValue('cover',.3),1);

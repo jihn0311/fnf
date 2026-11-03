@@ -20,7 +20,7 @@ function dustinNativeEvent(e){
  case 'Bloom Effect':common('bloom');break;
  case 'Contrast Effect':common('contrast');break;
  case 'Saturation Effect':common('saturation');break;
- case 'Change Scroll Speed':common('scroll');break;
+ case 'Change Scroll Speed':{const tween=s.tweens.scroll;if(!p[0]&&tween?.duration>0&&Math.abs(tween.at-t)<1e-6){tween.from=Number(p[1]);s.values.scroll=Number(p[1]);}else common('scroll');break;}
  case 'Screen Vignette':dustinTween('vignette',p[1]*p[2],e,p[0],p[3],p[4],p[5]);break;
  case 'Screen Coverer':s.coverColor=dustinColor(p[1]);s.coverHUD=p[6]!=='camGame';s.coverFront=p[7]==='front';dustinTween('cover',p[2],e,p[0],p[3],p[4],p[5]);break;
  case 'Camera Flash':s.flashes.push({at:t,duration:Math.max(.01,p[2]*e.stepSeconds),color:dustinColor(p[1]),fade:p[0],hud:p[3]!=='camGame'});break;
