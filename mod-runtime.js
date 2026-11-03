@@ -34,8 +34,8 @@ function modActor(name,side,t,x,y){
  let key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(singing&&actor.miss)key=missAnimationKey(sheet,actor.lane)||key;
  const frames=sheet.animations[key]||sheet.animations.idle;
- const elapsed=singing?(t<actor.sustainUntil?characterBeatElapsed(sheet,key,t-(actor.at||0)):Math.max(0,t-(actor.at??t))):characterBeatElapsed(sheet,key,t);
- const f=frames[Math.floor(elapsed*24)%frames.length];
+ const elapsed=singing?(t<actor.sustainUntil?characterBeatElapsed(sheet,key,t-(actor.at||0)):Math.max(0,t-(actor.at??t))):characterIdleElapsed(sheet,key,t);
+ const f=frames[Math.floor((beat-index)*half)%frames.length];
  ctx.drawImage(image,f.x,f.y,f.w,f.h,x-f.fw/2+f.ox,y-f.fh+f.oy,f.w,f.h);
 }
 function drawModStage(t){if(song.lowSpec){drawLowSpecStage(t);return;}
@@ -172,11 +172,11 @@ function missAnimationKey(sheet,lane){
  return missKeyCache.get(sheet)[lane];
 }
 function girlfriendPose(sheet,t){
- const beat=characterBeatPosition(t),index=Math.floor(beat),elapsed=(beat-index)*BEAT;
- if(sheet.animations.danceLeft&&sheet.animations.danceRight)return {key:index%2?'danceRight':'danceLeft',elapsed};
+ const beat=characterBeatPosition(t)/2,index=Math.floor(beat),elapsed=(beat-index)*BEAT*2;
+ if(sheet.animations.danceLeft&&sheet.animations.danceRight){const key=index%2?'danceRight':'danceLeft';return {key,elapsed:characterIdleElapsed(sheet,key,t)};}
  const frames=sheet.animations.idle;
  // A combined GF atlas contains both 15-frame dance directions.
- if(frames?.length>=28&&frames.length<=32){const half=Math.floor(frames.length/2),frame=(index%2)*half+Math.min(half-1,Math.floor(elapsed*24));return {key:'idle',elapsed:frame/24};}
+ if(frames?.length>=28&&frames.length<=32){const half=Math.floor(frames.length/2),frame=(index%2)*half+Math.min(half-1,Math.floor((beat-index)*half));return {key:'idle',elapsed:frame/24};}
  return {key:'idle',elapsed};
 }
 
@@ -192,3 +192,7 @@ function drawSonicSpecialNote(note,x,y,t){
 
 function characterBeatPosition(t){return Math.max(0,song.pack==='dustin'&&typeof dustinStep==='function'?dustinStep(t)/4:typeof tripleActive==='function'&&tripleActive()?tripleStep(t)/4:t/BEAT);}
 function characterBeatElapsed(sheet,key,t){const frames=sheet.animations[key]||sheet.animations.idle||[];const beat=characterBeatPosition(t);return (beat-Math.floor(beat))*frames.length/(sheet.config?.[key]?.fps||24);}
+
+// Idle clips often contain the full down-and-up dance. Give that clip twice
+// the previous duration; singing and sustain timing keep their own clock.
+function characterIdleElapsed(sheet,key,t){const frames=sheet.animations[key]||sheet.animations.idle||[];const cycle=characterBeatPosition(t)/2;return (cycle-Math.floor(cycle))*frames.length/(sheet.config?.[key]?.fps||24);}

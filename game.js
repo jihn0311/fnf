@@ -443,7 +443,7 @@ function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h);}
 function label(text,x,y,size,color,font='monospace'){ctx.fillStyle=color;ctx.textAlign='center';ctx.font=`700 ${size}px ${font}`;ctx.fillText(text,x,y);}
 function character(x,y,color,isNova,t){
   const actor=actors[isNova?'nova':'echo'],singing=t<actor.until;
-  const lane=singing?actor.lane:-1,bounce=Math.sin(t/BEAT*Math.PI*2)*6;
+  const lane=singing?actor.lane:-1,bounce=Math.sin(t/BEAT*Math.PI)*6;
   const dx=lane===0?-20:lane===3?20:0,dy=lane===1?20:lane===2?-18:0;
   ctx.save();ctx.translate(x+dx,y+bounce+dy);ctx.rotate(lane===0?-.12:lane===3?.12:0);
   ctx.scale(lane===1?1.06:1,lane===1?.9:lane===2?1.07:1);if(!isNova)ctx.scale(-1,1);
