@@ -35,13 +35,14 @@ const tripleOffsets={
 function tripleActor(name,side,t,x,y,flip,p){
  const sheet=MOD_ART.characters[name],im=modImages.get(sheet.src);if(!im)return;
  const a=actors[side],singing=t<a.until&&(a.at??-Infinity)>=p.time;
- let key=singing?['left','down','up','right'][a.lane]:'idle',elapsed=singing?(t<a.sustainUntil?characterBeatElapsed(sheet,key,t-(a.at||0)):t-a.at):characterIdleElapsed(sheet,'idle',t);
+ let key=singing?['left','down','up','right'][a.lane]:'idle',elapsed=singing?t-a.at:characterIdleElapsed(sheet,'idle',t);
  const offsets=tripleOffsets[name==='Beast'&&flip?'beastLeft':name==='BOYFRIEND'&&flip?'bfLeft':name];
  let offset=offsets[key]||[0,0];
  if((name==='BFPhase3_Perspective'||name==='KnucklesEXE')&&(key==='left'||key==='right'))key=key==='left'?'right':'left';
  if(singing&&a.miss)key=missAnimationKey(sheet,['left','down','up','right'].indexOf(key))||key;
  let fps=24;
  if(name==='eggman_soul')for(const [begin,end] of [[2887,2895],[3015,3023],[4039,4048]])if(t>=tripleTime(begin)&&t<tripleTime(end)){key='laugh';offset=offsets.laugh;elapsed=t-tripleTime(begin);fps=35;}
+ if(singing&&t<a.sustainUntil&&key!=='laugh'){const pose=sustainAnimationPose(sheet,key,elapsed);key=pose.key;elapsed=pose.elapsed;}
  const frames=sheet.animations[key]||sheet.animations.idle,f=frames[key==='idle'?Math.floor(Math.max(0,elapsed)*fps)%frames.length:Math.min(frames.length-1,Math.floor(Math.max(0,elapsed)*fps))];
  const scale=sheet.sourceScale||1;
  ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.drawImage(im,f.x,f.y,f.w,f.h,-f.fw/2+f.ox-offset[0]*scale,-f.fh+f.oy-offset[1]*scale,f.w,f.h);ctx.restore();

@@ -33,8 +33,9 @@ function modActor(name,side,t,x,y){
  const singing=t<actor.until;
  let key=singing?['left','down','up','right'][actor.lane]:'idle';
  if(singing&&actor.miss)key=missAnimationKey(sheet,actor.lane)||key;
+ let elapsed=singing?Math.max(0,t-(actor.at??t)):characterIdleElapsed(sheet,key,t);
+ if(singing&&t<actor.sustainUntil){const pose=sustainAnimationPose(sheet,key,elapsed);key=pose.key;elapsed=pose.elapsed;}
  const frames=sheet.animations[key]||sheet.animations.idle;
- const elapsed=singing?(t<actor.sustainUntil?characterBeatElapsed(sheet,key,t-(actor.at||0)):Math.max(0,t-(actor.at??t))):characterIdleElapsed(sheet,key,t);
  const f=frames[Math.floor((beat-index)*half)%frames.length];
  ctx.drawImage(image,f.x,f.y,f.w,f.h,x-f.fw/2+f.ox,y-f.fh+f.oy,f.w,f.h);
 }
@@ -196,3 +197,14 @@ function characterBeatElapsed(sheet,key,t){const frames=sheet.animations[key]||s
 // Idle clips often contain the full down-and-up dance. Give that clip twice
 // the previous duration; singing and sustain timing keep their own clock.
 function characterIdleElapsed(sheet,key,t){const frames=sheet.animations[key]||sheet.animations.idle||[];const cycle=characterBeatPosition(t)/2;return (cycle-Math.floor(cycle))*frames.length/(sheet.config?.[key]?.fps||24);}
+
+function sustainAnimationPose(sheet,key,age){
+ const frames=sheet.animations[key]||sheet.animations.idle||[],fps=sheet.config?.[key]?.fps||24,length=frames.length/fps;
+ age=Math.max(0,age);if(!frames.length||age<length)return {key,elapsed:age};
+ const loopKey=[key+'-loop',key+'Loop',key+'_loop'].find(k=>sheet.animations[k]?.length);
+ if(loopKey){const count=sheet.animations[loopKey].length,rate=sheet.config?.[loopKey]?.fps||fps;return {key:loopKey,elapsed:(age-length)%(count/rate)};}
+ if(sheet.config?.[key]?.loop)return {key,elapsed:age%length};
+ // Keep the initial attack out of the hold cycle; respect imported frame rates.
+ const tail=Math.min(frames.length,Math.max(2,Math.round(fps*.16))),start=frames.length-tail;
+ return {key,elapsed:start/fps+(age-length)%(tail/fps)};
+}
