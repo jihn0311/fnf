@@ -9,17 +9,20 @@
  function mode(){return {song_id:song.lowSpec?songId+'-low':songId,difficulty:settings.difficulty,play_side:playerSide(),rate:settings.rate,practice:!!el('practice').checked,nightmare:!!el('nightmare').checked};}
  async function api(url,options={}){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
-  try{const response=await fetch(url,{...options,headers:{...headers,...options.headers},signal:controller.signal});if(!response.ok){const error=new Error('request failed');error.status=response.status;throw error;}const body=await response.text();return body.trim()?JSON.parse(body):null;}
+  try{const response=await fetch(url,{cache:'no-store',...options,headers:{...headers,...options.headers},signal:controller.signal});if(!response.ok){const error=new Error('request failed');error.status=response.status;throw error;}const body=await response.text();return body.trim()?JSON.parse(body):null;}
   finally{clearTimeout(timer);}
  }
+ function recordLabel(row){return (SONGS[row.song_id]?.title||row.song_id||'')+' · '+(row.difficulty||'')+' · '+(row.play_side==='nova'?'상대':'보프')+' · '+(row.rate||1)+'×'+(row.practice?' · 연습':'')+(row.nightmare?' · 나이트메어':'');}
  async function refresh(){
-  const id=++requestId,selected=mode();el('ranking-title').textContent=song.title+' · '+selected.difficulty.toUpperCase()+' · '+(selected.play_side==='echo'?'보프':'상대')+' · '+selected.rate+'×'+(selected.practice?' · 연습':'')+(selected.nightmare?' · 나이트메어':'');
-  el('ranking-status').textContent='순위를 불러오는 중…';el('ranking-rows').replaceChildren();
-  const params=new URLSearchParams({select:'nickname,score,accuracy,max_combo',order:'score.desc,accuracy.desc,created_at.asc',limit:'20'});
-  for(const [name,value] of Object.entries(selected))params.set(name,'eq.'+value);
+  const id=++requestId,selected=mode(),all=el('ranking-view').value==='all',search=el('ranking-search').value.trim();el('ranking-order-heading').textContent=all?'번호':'순위';el('ranking-title').textContent=song.title+' · '+selected.difficulty.toUpperCase()+' · '+(selected.play_side==='echo'?'보프':'상대')+' · '+selected.rate+'×'+(selected.practice?' · 연습':'')+(selected.nightmare?' · 나이트메어':'');
+  if(all)el('ranking-title').textContent='모든 곡 · 모든 플레이 조건'+(search?' · 닉네임: '+search:'');
+  el('ranking-status').textContent='기록을 불러오는 중…';el('ranking-rows').replaceChildren();
+  const params=new URLSearchParams({select:'nickname,score,accuracy,max_combo,song_id,difficulty,play_side,rate,practice,nightmare',order:all?'created_at.desc':'score.desc,accuracy.desc,created_at.asc',limit:all?'100':'20'});
+  if(!all)for(const [name,value] of Object.entries(selected))params.set(name,'eq.'+value);
+  if(search)params.set('nickname','eq.'+search);
   try{const rows=await api(endpoint+'?'+params);if(id!==requestId)return;
-   rows.forEach((row,index)=>{const tr=document.createElement('tr');for(const value of [index+1,row.nickname,Number(row.score).toLocaleString(),Number(row.accuracy).toFixed(1)+'%',row.max_combo]){const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td);}el('ranking-rows').appendChild(tr);});
-   el('ranking-status').textContent=rows.length?'상위 20개 기록 · 사용자 제출 기록 (플레이 진위 미검증)':'아직 기록이 없어. 첫 기록을 남겨봐!';
+   rows.forEach((row,index)=>{const tr=document.createElement('tr');for(const value of [index+1,row.nickname,Number(row.score).toLocaleString(),Number(row.accuracy).toFixed(1)+'%',row.max_combo,recordLabel(row)]){const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td);}el('ranking-rows').appendChild(tr);});
+   el('ranking-status').textContent=rows.length?(all?'최근 기록 최대 100개 · 서로 다른 조건의 점수는 직접 비교하지 않아요.':'상위 20개 기록 · 사용자 제출 기록 (플레이 진위 미검증)'):(search?'해당 닉네임의 기록이 없어요. 등록할 때 쓴 이름을 확인해주세요.':all?'아직 기록이 없어. 첫 기록을 남겨봐!':'현재 조건의 기록이 없어요. 전체 기록에서 다른 조건의 기록을 찾아보세요.');
   }catch{if(id===requestId)el('ranking-status').textContent='온라인 순위를 불러오지 못했어. 잠시 후 새로고침해줘.';}
  }
  window.addEventListener('fnf:finished',event=>{
@@ -39,6 +42,9 @@
   finally{busy=false;el('ranking-submit').disabled=!pending;}
  });
  el('open-ranking').addEventListener('click',()=>{if(state==='playing')pause();el('online-ranking').scrollIntoView({behavior:'smooth',block:'start'});el('ranking-heading').focus({preventScroll:true});void refresh();});
+ el('ranking-view').addEventListener('change',refresh);
+ el('ranking-search-button').addEventListener('click',refresh);
+ el('ranking-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();void refresh();}});
  el('ranking-refresh').addEventListener('click',refresh);
  for(const id of ['song','performance-mode','difficulty','play-side','rate','practice','nightmare'])el(id)?.addEventListener('change',refresh);
  void refresh();
