@@ -8,9 +8,9 @@ function drawDustinActors(t,onlySide=null){
  if(dustinEnsemble()){drawDustinEnsemble(t,onlySide);return;}
  if(dustinPixel()){ctx.save();ctx.translate(560,450);ctx.scale(.8,.8);extraActor('nova',t,0,0);ctx.restore();return;}
  const scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView;
- for(const side of ['gf','nova','echo']){if(onlySide&&onlySide!==side)continue;if(song.sceneKey==='dustin-broken-reality'&&side==='nova'&&extraState.brPhantomLead&&dustinFull())continue;const key=extraState.chars[side];if(!key)continue;const i=side==='echo'?song.dustinPlayerLine:side==='nova'?extraState.dustinActive:scene.dustinLines.indexOf(scene.spectator),p=v?.slots[i]?.[key],a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];if(!a||p?.hidden)continue;
+ for(const side of ['gf','nova','echo']){if(onlySide&&onlySide!==side)continue;if(song.sceneKey==='dustin-broken-reality'&&side==='nova'&&extraState.brPhantomLead&&dustinFull())continue;const key=extraState.chars[side];if(!key||!dustinYouAreVisible(side,t))continue;const i=side==='echo'?song.dustinPlayerLine:side==='nova'?extraState.dustinActive:scene.dustinLines.indexOf(scene.spectator),p=v?.slots[i]?.[key],a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];if(!a||p?.hidden)continue;
  if(!p){extraActor(side,t,side==='nova'?280:side==='echo'?850:560,side==='gf'?365:470);continue;}
- const ghost=dustinPerseveranceGhost(side,t);if(ghost.alpha<=0)continue;ctx.save();ctx.globalAlpha*=ghost.alpha;ctx.translate(ghost.x*v.scale,ghost.y*v.scale);const attackOffset=typeof dustinAttackOffset==='function'?dustinAttackOffset(side,t,v.scale):{x:0,y:0};ctx.translate((p.x-v.left)*v.scale+attackOffset.x+(song.sceneKey==='dustin-broken-reality'&&side==='echo'?70:0),(p.y-v.top)*v.scale+attackOffset.y);const z=p.z*v.scale/a.scale;ctx.scale(z,z);const savedActor=actors[side];if(songId==='dustin-heatwave'&&!song.lowSpec||song.sceneKey==='dustin-broken-reality')actors[side]=extraState.dustinActors[i]||{lane:-1,until:-1};try{extraActor(side,t,0,0);}finally{actors[side]=savedActor;ctx.restore();}
+ const ghost=dustinPerseveranceGhost(side,t);const drift=dustinYouAreDrift(side,t);ghost.x+=drift.x;ghost.y+=drift.y;if(ghost.alpha<=0)continue;ctx.save();ctx.globalAlpha*=ghost.alpha;ctx.translate(ghost.x*v.scale,ghost.y*v.scale);const attackOffset=typeof dustinAttackOffset==='function'?dustinAttackOffset(side,t,v.scale):{x:0,y:0};ctx.translate((p.x-v.left)*v.scale+attackOffset.x+(song.sceneKey==='dustin-broken-reality'&&side==='echo'?70:0),(p.y-v.top)*v.scale+attackOffset.y);const z=p.z*v.scale/a.scale;ctx.scale(z,z);const savedActor=actors[side];if(songId==='dustin-heatwave'&&!song.lowSpec||song.sceneKey==='dustin-broken-reality')actors[side]=extraState.dustinActors[i]||{lane:-1,until:-1};try{extraActor(side,t,0,0);}finally{actors[side]=savedActor;ctx.restore();}
  }
 }
 function drawDustinStage(t){if(typeof drawDustinNativeStage==='function'&&drawDustinNativeStage(t))return;for(const l of dustinLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);drawDustinActors(t);}
@@ -53,4 +53,24 @@ function dustinPerseveranceGhost(side,t){
  if(song.sceneKey!=='dustin-perseverance'||side!=='gf')return {alpha:1,x:0,y:0};
  const start=dustinStepTime(2280),end=dustinStepTime(2288),q=clamp01((t-start)/(end-start));
  return {alpha:(.7+Math.sin(t)*.04)*.7*(1-(1-q)*(1-q)),x:Math.sin(t)*24,y:Math.sin(t*2)*6};
+}
+
+// youare.hx: solo opening/montage, Papyrus duet, then the final Sans duet.
+function dustinYouAreVisible(side,t){
+ if(song.sceneKey!=='dustin-you-are')return true;
+ const step=dustinStep(t);return side!=='gf'&&step>=258&&(side!=='echo'||step>=768&&step<1311||step>=2764);
+}
+function dustinYouAreDrift(side,t){
+ if(song.sceneKey!=='dustin-you-are'||side!=='nova')return {x:0,y:0};
+ const step=dustinStep(t),phase=(t-dustinStepTime(1033))*2;
+ return step>=1033&&step<1311?{x:Math.sin(phase)*300,y:Math.sin(phase*2)*150}:{x:0,y:0};
+}
+function dustinYouAreCamera(t){
+ if(song.sceneKey!=='dustin-you-are')return null;
+ const scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView,boxes=[];
+ for(const side of ['nova','echo']){if(!dustinYouAreVisible(side,t))continue;const i=side==='echo'?song.dustinPlayerLine:extraState.dustinActive,p=v.slots[i]?.[extraState.chars[side]];if(p)boxes.push({left:(p.x-p.w/2-v.left)*v.scale,right:(p.x+p.w/2-v.left)*v.scale,top:(p.y-p.h-v.top)*v.scale,bottom:(p.y-v.top)*v.scale});}
+ if(!boxes.length)return {x:560,y:265,z:1};
+ if(dustinStep(t)>=2096&&dustinStep(t)<2764){const bg=dustinData().layers.find(l=>l.name==='pixel_bg');return {x:bg.x+bg.w/2,y:bg.y+bg.h/2,z:.65};}
+ const left=Math.min(...boxes.map(b=>b.left)),right=Math.max(...boxes.map(b=>b.right)),top=Math.min(...boxes.map(b=>b.top)),bottom=Math.max(...boxes.map(b=>b.bottom));
+ return {x:(left+right)/2,y:(top+bottom)/2,z:Math.min(boxes.length===1?.65:1,850/Math.max(1,right-left),300/Math.max(1,bottom-top))};
 }

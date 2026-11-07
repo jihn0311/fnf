@@ -134,8 +134,8 @@ function dustinScrollLayout(side='echo',t=0){
 function dustinOffset(lane,side,t){if(!dustinFull()||songId!=='dustin-kinemorto'||side!==playerSide())return {x:0,y:0};const step=dustinStep(t),active=step>=544&&step<800||step>=1000&&step<1592;if(!active)return {x:0,y:0};const amount=step>=1000?1.3:1;return {x:10*Math.cos(t*3+lane*BEAT*2)*amount,y:8*Math.sin(t*3+lane*BEAT*2)*amount};}
 function drawDustinVideo(t){let active=null;for(const e of dustinData()?.events[settings.difficulty]||[]){if(e.time>t)break;if(e.name==='Video Cutscene'){const item=dustinVideos.get(e.params[0]);if(item&&t<e.time+item.video.duration)active={...item,at:e.time};}}
  for(const item of dustinVideos.values())if(!item.story&&item.video!==active?.video&&!item.video.paused)item.video.pause();if(!active)return false;const v=active.video,target=Math.max(0,t-active.at);if(!v.seeking&&Math.abs(v.currentTime-target)>.2)v.currentTime=target;v.playbackRate=settings.rate||1;if(state==='playing'){if(v.paused)v.play().catch(()=>{});}else if(!v.paused)v.pause();rect(0,0,1120,530,'#000');if(v.readyState>=2){const z=Math.min(1120/v.videoWidth,530/v.videoHeight);ctx.drawImage(v,(1120-v.videoWidth*z)/2,(530-v.videoHeight*z)/2,v.videoWidth*z,v.videoHeight*z);}return true;}
-function drawDustinNativeStage(t){if(!dustinFull()||!dustinFX)return false;if(drawDustinVideo(t))return true;const data=dustinData();if(!data?.layers.length||dustinPixel())return false;const s=dustinFX;rect(0,0,1120,530,'#080810');ctx.save();const z=Math.max(.3,Math.min(songId==='dustin-broken-reality'?1.1:3,dustinValue('zoom',t)))*(songId==='dustin-heatwave'?.78:songId==='dustin-broken-reality'?.8:1);ctx.translate(560,265);ctx.scale(z,z);ctx.translate(-560,-265);ctx.filter='brightness('+dustinStageBrightness(t)+') contrast('+Math.max(0,dustinValue('contrast',t))+') saturate('+Math.max(0,dustinValue('saturation',t))+')';
- const layer=l=>{if(!dustinStageLayerVisible(l))return;const o=s.layers[l.name]||{};if(l.variant==='sans'&&!s.sansStage)return;if(songId==='dustin-kinemorto'&&s.sansStage&&l.variant!=='sans'&&l.name!=='BG')return;if(!(o.visible??l.visible)&&l.variant!=='sans')return;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,o.alpha??l.alpha));const bounds=dustinStageLayerBounds(l,z);extraSprite(l.key,o.anim?t-(o.animAt||0):t,bounds.x,bounds.y,bounds.w,bounds.h,o.anim||'idle');ctx.restore();};if(songId==='dustin-kinemorto'&&s.sansStage){for(const l of data.layers)layer(l);drawDustinActors(t);}else if(data.drawOrder?.length){for(const item of data.drawOrder){if(item.side){if(item.side==='gf'&&songId==='dustin-heatwave')drawDustinMettaton(t);else{if(item.side==='nova')drawDustinPhantom(t);drawDustinActors(t,item.side);}}else for(const l of data.layers)if(l.name===item.name)layer(l);}}else{for(const l of data.layers.filter(l=>!l.front))layer(l);drawDustinActors(t);for(const l of data.layers.filter(l=>l.front))layer(l);}if(song.sceneKey==='dustin-broken-reality'&&extraState.brPhantomLead){ctx.save();ctx.filter='none';ctx.globalCompositeOperation='multiply';rect(560-560/z,265-265/z,1120/z,530/z,'#ff3030');ctx.restore();}if(s.backgroundDark)rect(0,0,1120,530,'#000a');ctx.restore();return true;}
+function drawDustinNativeStage(t){if(!dustinFull()||!dustinFX)return false;if(drawDustinVideo(t))return true;const data=dustinData();if(!data?.layers.length||dustinPixel())return false;const s=dustinFX;rect(0,0,1120,530,'#080810');ctx.save();const view=dustinYouAreCamera(t);const z=view?view.z:Math.max(.3,Math.min(songId==='dustin-broken-reality'?1.1:3,dustinValue('zoom',t)))*(songId==='dustin-heatwave'?.78:songId==='dustin-broken-reality'?.8:1);ctx.translate(560,view?330:265);ctx.scale(z,z);ctx.translate(-(view?.x??560),-(view?.y??265));ctx.filter='brightness('+dustinStageBrightness(t)+') contrast('+Math.max(0,dustinValue('contrast',t))+') saturate('+Math.max(0,dustinValue('saturation',t))+')';
+ const layer=l=>{if(!dustinStageLayerVisible(l,t))return;const o=s.layers[l.name]||{};if(l.variant==='sans'&&!s.sansStage)return;if(songId==='dustin-kinemorto'&&s.sansStage&&l.variant!=='sans'&&l.name!=='BG')return;if(!(o.visible??l.visible)&&l.variant!=='sans')return;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,o.alpha??l.alpha));const bounds=dustinStageLayerBounds(l,z,t);extraSprite(l.key,o.anim?t-(o.animAt||0):t,bounds.x,bounds.y,bounds.w,bounds.h,o.anim||'idle');ctx.restore();};if(songId==='dustin-kinemorto'&&s.sansStage){for(const l of data.layers)layer(l);drawDustinActors(t);}else if(data.drawOrder?.length){for(const item of data.drawOrder){if(item.side){if(item.side==='gf'&&songId==='dustin-heatwave')drawDustinMettaton(t);else{if(item.side==='nova')drawDustinPhantom(t);drawDustinActors(t,item.side);}}else for(const l of data.layers)if(l.name===item.name)layer(l);}}else{for(const l of data.layers.filter(l=>!l.front))layer(l);drawDustinActors(t);for(const l of data.layers.filter(l=>l.front))layer(l);}if(song.sceneKey==='dustin-broken-reality'&&extraState.brPhantomLead){ctx.save();ctx.filter='none';ctx.globalCompositeOperation='multiply';rect(560-560/z,265-265/z,1120/z,530/z,'#ff3030');ctx.restore();}if(s.backgroundDark)rect(0,0,1120,530,'#000a');ctx.restore();return true;}
 function drawDustinEffectsHud(t){if(!dustinFull()||!dustinFX)return;const s=dustinFX,step=dustinStep(t),bars=['dustin-broken-reality','dustin-the-uprising'].includes(song.sceneKey)?0:Math.max(0,Math.min(265,dustinValue('bars',t)*265));if(bars){rect(0,0,1120,bars,'#000');rect(0,530-bars,1120,bars,'#000');}const cover=clamp01(dustinValue('cover',t));if(cover&&s.coverHUD&&s.coverFront&&song.sceneKey!=='dustin-the-uprising'){ctx.save();ctx.globalAlpha=cover;rect(0,0,1120,530,s.coverColor);ctx.restore();}for(const f of s.flashes){ctx.save();ctx.globalAlpha=clamp01(f.fade?(t-f.at)/f.duration:1-(t-f.at)/f.duration);rect(0,0,1120,530,f.color);ctx.restore();}
  drawDustinLyricsActor(t);
  const vig=song.sceneKey==='dustin-the-uprising'?0:Math.min(.95,Math.max(s.hate,dustinValue('vignette',t)*.35));if(vig){const g=ctx.createRadialGradient(560,265,120,560,265,610);g.addColorStop(0,'#0000');g.addColorStop(1,'rgba(0,0,0,'+vig+')');ctx.fillStyle=g;ctx.fillRect(0,0,1120,530);}
@@ -226,7 +226,7 @@ function dustinAttackOffset(side,t,scale){
  return {x:0,y:0};
 }
 
-function dustinStageBrightness(t){return Math.max(1,Math.min(3,dustinValue('bloom',t)));}
+function dustinStageBrightness(t){if(song.sceneKey==='dustin-you-are')return 1;return Math.max(1,Math.min(3,dustinValue('bloom',t)));}
 function drawDustinPhantom(t){
  if(!dustinFull()||songId!=='dustin-broken-reality')return;
  if(extraState.brPhantomLead){drawDustinPapyrusLead(t);return;}
@@ -238,12 +238,21 @@ function drawDustinPhantom(t){
  ctx.save();ctx.globalAlpha=alpha;ctx.translate((p.x-v.left+250)*v.scale,(p.y-v.top-60)*v.scale);const z=1.3*v.scale/a.scale;ctx.scale(z,z);try{extraActor('gf',t,0,0);}finally{ctx.restore();extraState.chars.gf=old;actors.gf=oldActor;}
 }
 
-function dustinStageLayerVisible(layer){
+function dustinStageLayerVisible(layer,t=0){
+ if(song.sceneKey==='dustin-you-are'&&layer.name==='YOUAREtitlecard'){const a=EXTRA_ART.sprites[layer.key],frames=a?.animations?.introtitle||[];const age=t-dustinStepTime(258);return age>=0&&age<frames.length/24;}
+
  if(song.sceneKey==='dustin-perseverance'&&['BG4','BLASTER','PRESS_SPACE'].includes(layer.name))return false;
  if(song.sceneKey==='dustin-broken-reality'&&['fg_left','fg_right'].includes(layer.name))return false;
  return true;
 }
-function dustinStageLayerBounds(layer,zoom){
+function dustinStageLayerBounds(layer,zoom,t=0){
+ if(song.sceneKey==='dustin-you-are'){
+ const view=dustinYouAreCamera(t);
+ // Keep the foreground pillar at the edge, rather than over the final singer.
+ if(layer.name==='sans_fg')return {...layer,x:view.x+530/zoom};
+ if(layer.name==='sans_bg'){const left=view.x-560/zoom,right=view.x+560/zoom,bottom=view.y+200/zoom;const x=Math.min(left,layer.x);return {...layer,x,w:Math.max(right,layer.x+layer.w)-x,h:Math.max(layer.h,bottom-layer.y)};}
+ }
+
  if(song.sceneKey!=='dustin-broken-reality'||layer.name!=='ground')return layer;
  // Cover the inverse camera viewport; leave character scale/positions untouched.
  const left=560-560/zoom,right=560+560/zoom,bottom=265+265/zoom;
