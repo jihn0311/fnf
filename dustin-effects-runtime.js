@@ -247,13 +247,7 @@ function dustinStageLayerVisible(layer,t=0){
  return true;
 }
 function dustinStageLayerBounds(layer,zoom,t=0){
- if(song.sceneKey==='dustin-you-are'){
- const view=dustinYouAreCamera(t);
- // Keep the foreground pillar at the edge, rather than over the final singer.
- if(layer.name==='sans_fg')return {...layer,x:view.x+530/zoom};
- if(layer.name==='sans_bg'){const left=view.x-560/zoom,right=view.x+560/zoom,bottom=view.y+200/zoom;const x=Math.min(left,layer.x);return {...layer,x,w:Math.max(right,layer.x+layer.w)-x,h:Math.max(layer.h,bottom-layer.y)};}
- }
-
+ const youAre=dustinYouAreLayerBounds(layer,t);if(youAre)return youAre;
  if(song.sceneKey!=='dustin-broken-reality'||layer.name!=='ground')return layer;
  // Cover the inverse camera viewport; leave character scale/positions untouched.
  const left=560-560/zoom,right=560+560/zoom,bottom=265+265/zoom;

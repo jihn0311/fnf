@@ -8,7 +8,7 @@ function drawDustinActors(t,onlySide=null){
  if(dustinEnsemble()){drawDustinEnsemble(t,onlySide);return;}
  if(dustinPixel()){ctx.save();ctx.translate(560,450);ctx.scale(.8,.8);extraActor('nova',t,0,0);ctx.restore();return;}
  const scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView;
- for(const side of ['gf','nova','echo']){if(onlySide&&onlySide!==side)continue;if(song.sceneKey==='dustin-broken-reality'&&side==='nova'&&extraState.brPhantomLead&&dustinFull())continue;const key=extraState.chars[side];if(!key||!dustinYouAreVisible(side,t))continue;const i=side==='echo'?song.dustinPlayerLine:side==='nova'?extraState.dustinActive:scene.dustinLines.indexOf(scene.spectator),p=v?.slots[i]?.[key],a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];if(!a||p?.hidden)continue;
+ for(const side of ['gf','nova','echo']){if(onlySide&&onlySide!==side)continue;if(song.sceneKey==='dustin-broken-reality'&&side==='nova'&&extraState.brPhantomLead&&dustinFull())continue;const key=extraState.chars[side];if(!key||!dustinYouAreVisible(side,t))continue;const i=side==='echo'?song.dustinPlayerLine:side==='nova'?extraState.dustinActive:scene.dustinLines.indexOf(scene.spectator),p=dustinYouArePlacement(side,t,v?.slots[i]?.[key]),a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];if(!a||p?.hidden)continue;
  if(!p){extraActor(side,t,side==='nova'?280:side==='echo'?850:560,side==='gf'?365:470);continue;}
  const ghost=dustinPerseveranceGhost(side,t);const drift=dustinYouAreDrift(side,t);ghost.x+=drift.x;ghost.y+=drift.y;if(ghost.alpha<=0)continue;ctx.save();ctx.globalAlpha*=ghost.alpha;ctx.translate(ghost.x*v.scale,ghost.y*v.scale);const attackOffset=typeof dustinAttackOffset==='function'?dustinAttackOffset(side,t,v.scale):{x:0,y:0};ctx.translate((p.x-v.left)*v.scale+attackOffset.x+(song.sceneKey==='dustin-broken-reality'&&side==='echo'?70:0),(p.y-v.top)*v.scale+attackOffset.y);const z=p.z*v.scale/a.scale;ctx.scale(z,z);const savedActor=actors[side];if(songId==='dustin-heatwave'&&!song.lowSpec||song.sceneKey==='dustin-broken-reality')actors[side]=extraState.dustinActors[i]||{lane:-1,until:-1};try{extraActor(side,t,0,0);}finally{actors[side]=savedActor;ctx.restore();}
  }
@@ -67,10 +67,39 @@ function dustinYouAreDrift(side,t){
 }
 function dustinYouAreCamera(t){
  if(song.sceneKey!=='dustin-you-are')return null;
- const scene=MOD_ART.scenes[song.sceneKey],v=scene.dustinView,boxes=[];
- for(const side of ['nova','echo']){if(!dustinYouAreVisible(side,t))continue;const i=side==='echo'?song.dustinPlayerLine:extraState.dustinActive,p=v.slots[i]?.[extraState.chars[side]];if(p)boxes.push({left:(p.x-p.w/2-v.left)*v.scale,right:(p.x+p.w/2-v.left)*v.scale,top:(p.y-p.h-v.top)*v.scale,bottom:(p.y-v.top)*v.scale});}
- if(!boxes.length)return {x:560,y:265,z:1};
- if(dustinStep(t)>=2096&&dustinStep(t)<2764){const bg=dustinData().layers.find(l=>l.name==='pixel_bg');return {x:bg.x+bg.w/2,y:bg.y+bg.h/2,z:.65};}
- const left=Math.min(...boxes.map(b=>b.left)),right=Math.max(...boxes.map(b=>b.right)),top=Math.min(...boxes.map(b=>b.top)),bottom=Math.max(...boxes.map(b=>b.bottom));
- return {x:(left+right)/2,y:(top+bottom)/2,z:Math.min(boxes.length===1?.65:1,850/Math.max(1,right-left),300/Math.max(1,bottom-top))};
+ // Anchor the opening to the platform. Later shots supply their own scene rectangles.
+ const v=MOD_ART.scenes[song.sceneKey].dustinView,p=v.slots[0]['dustin:player'];
+ return {x:(p.x-v.left)*v.scale,y:(p.y-p.h/2-v.top)*v.scale,z:.65};
+}
+
+// Reference #2, 17:00 onward: use feet and shot composition, not actor bounding-box fitting.
+function dustinYouAreLayout(t){
+ const step=dustinStep(t);
+ if(step<768||step>=1311&&step<1600)return {nova:[560,440,105]};
+ if(step<1033)return {nova:[290,445,240],echo:[900,445,160]};
+ if(step<1311)return {nova:[560,330,280],echo:[620,450,220]};
+ if(step<1828)return {nova:[235,405,125]};
+ if(step<1952)return {nova:[860,435,200]};
+ if(step<2016)return {nova:[910,440,225]};
+ if(step<2096)return {nova:[580,405,190]};
+ if(step<2764)return {nova:[560,390,55]};
+ return {nova:[260,445,205],echo:[880,445,220]};
+}
+function dustinYouArePlacement(side,t,p){
+ if(song.sceneKey!=='dustin-you-are'||!p||song.lowSpec)return p;
+ const target=dustinYouAreLayout(t)[side];if(!target)return p;
+ const view=dustinYouAreCamera(t),v=MOD_ART.scenes[song.sceneKey].dustinView;
+ const [x,y,height]=target;
+ return {...p,x:v.left+((x-560)/view.z+view.x)/v.scale,y:v.top+((y-330)/view.z+view.y)/v.scale,z:p.z*height/(p.h*v.scale*view.z)};
+}
+function dustinYouAreLayerBounds(layer,t){
+ if(song.sceneKey!=='dustin-you-are')return null;
+ const view=dustinYouAreCamera(t);let box;
+ if(['kinemorto','door','flowers','waterfall','HOTLANDFINALE','lab'].includes(layer.name))box=[89,0,942,530];
+ if(layer.name==='pixel_bg')box=[250,55,620,403];
+ if(layer.name==='sans_bg')box=[0,-100,1120,630];
+ if(layer.name==='sans_fg')box=[1100,-100,1120,630];
+ if(layer.name==='heart')box=[540,445,40,40];
+ if(!box)return null;
+ const [x,y,w,h]=box;return {...layer,x:view.x+(x-560)/view.z,y:view.y+(y-330)/view.z,w:w/view.z,h:h/view.z};
 }
