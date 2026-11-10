@@ -1,0 +1,225 @@
+{
+  "source": "https://github.com/Allen98637/GalaxyMod",
+  "limitations": [
+    "Native shader, moving-keyboard/modchart and story videos are not ported.",
+    "Random note pairs use a reproducible seed. End-release notes use the web sustain rules."
+  ],
+  "songs": {
+    "galaxy": {
+      "easy": {
+        "notes": {
+          "echo": 158,
+          "nova": 155
+        },
+        "special": 0
+      },
+      "normal": {
+        "notes": {
+          "echo": 158,
+          "nova": 155
+        },
+        "special": 0
+      },
+      "hard": {
+        "notes": {
+          "echo": 251,
+          "nova": 245
+        },
+        "special": 0
+      }
+    },
+    "game": {
+      "easy": {
+        "notes": {
+          "echo": 201,
+          "nova": 201
+        },
+        "special": 0
+      },
+      "normal": {
+        "notes": {
+          "echo": 201,
+          "nova": 201
+        },
+        "special": 0
+      },
+      "hard": {
+        "notes": {
+          "echo": 359,
+          "nova": 357
+        },
+        "special": 0
+      }
+    },
+    "kastimagina": {
+      "easy": {
+        "notes": {
+          "echo": 362,
+          "nova": 362
+        },
+        "special": 0
+      },
+      "normal": {
+        "notes": {
+          "echo": 362,
+          "nova": 362
+        },
+        "special": 0
+      },
+      "hard": {
+        "notes": {
+          "echo": 602,
+          "nova": 602
+        },
+        "special": 64
+      }
+    },
+    "cona": {
+      "easy": {
+        "notes": {
+          "echo": 170,
+          "nova": 172
+        },
+        "special": 0
+      },
+      "normal": {
+        "notes": {
+          "echo": 170,
+          "nova": 172
+        },
+        "special": 0
+      },
+      "hard": {
+        "notes": {
+          "echo": 267,
+          "nova": 274
+        },
+        "special": 0
+      }
+    },
+    "underworld": {
+      "easy": {
+        "notes": {
+          "echo": 313,
+          "nova": 269
+        },
+        "special": 32
+      },
+      "normal": {
+        "notes": {
+          "echo": 313,
+          "nova": 269
+        },
+        "special": 32
+      },
+      "hard": {
+        "notes": {
+          "echo": 410,
+          "nova": 360
+        },
+        "special": 40
+      }
+    },
+    "cyber": {
+      "easy": {
+        "notes": {
+          "echo": 369,
+          "nova": 370
+        },
+        "special": 0
+      },
+      "normal": {
+        "notes": {
+          "echo": 369,
+          "nova": 370
+        },
+        "special": 0
+      },
+      "hard": {
+        "notes": {
+          "echo": 739,
+          "nova": 740
+        },
+        "special": 0
+      }
+    },
+    "newton": {
+      "easy": {
+        "notes": {
+          "echo": 165,
+          "nova": 302
+        },
+        "special": 136
+      },
+      "normal": {
+        "notes": {
+          "echo": 165,
+          "nova": 302
+        },
+        "special": 136
+      },
+      "hard": {
+        "notes": {
+          "echo": 242,
+          "nova": 408
+        },
+        "special": 136
+      }
+    },
+    "destiny": {
+      "easy": {
+        "notes": {
+          "echo": 176,
+          "nova": 285
+        },
+        "special": 129
+      },
+      "normal": {
+        "notes": {
+          "echo": 176,
+          "nova": 285
+        },
+        "special": 129
+      },
+      "hard": {
+        "notes": {
+          "echo": 282,
+          "nova": 394
+        },
+        "special": 129
+      }
+    },
+    "peace": {
+      "easy": {
+        "notes": {
+          "echo": 424,
+          "nova": 808
+        },
+        "special": 564
+      },
+      "normal": {
+        "notes": {
+          "echo": 424,
+          "nova": 808
+        },
+        "special": 564
+      },
+      "hard": {
+        "notes": {
+          "echo": 579,
+          "nova": 963
+        },
+        "special": 592
+      }
+    },
+    "familanna": {
+      "easy": {
+        "notes": {
+          "echo": 931,
+          "nova": 1069
+        },
+        "special": 0
+      }
+    }
+  }
+}

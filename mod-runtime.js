@@ -121,6 +121,7 @@ function drawLowSpecStage(t){
   else if(song.pack==='survent')drawSurventActors(t);
   else if(song.pack==='kapi')drawKapiActors(t);
   else if(song.pack==='camellia')drawCamelliaActors(t);
+  else if(song.pack==='galaxy')drawGalaxyActors(t);
   else if(song.pack==='garcello')drawGarcelloActors(t);
   else if(song.pack==='dustin')drawDustinActors(t);
   else if(song.pack==='agoti')drawAgotiActors(t);
@@ -144,6 +145,7 @@ function lowSpecLayers(){
  if(song.pack==='survent')return surventLayers();
  if(song.pack==='kapi')return kapiLayers();
  if(song.pack==='camellia')return camelliaLayers();
+ if(song.pack==='galaxy')return galaxyLayers();
  if(song.pack==='garcello')return garcelloLayers();
  if(song.pack==='agoti')return agotiLayers();
  if(song.pack==='mario')return marioLayers();
