@@ -702,9 +702,11 @@ function drawCamelliaActors(t){extraActor('gf',t,565,405);extraActor('nova',t,27
 function galaxyLayers(){return [{key:'galaxy/stage/'+song.stage,x:0,y:0,w:1120,h:530}];}
 function galaxyDarkPhase(t){const beat=t/BEAT;return song.sceneKey==='galaxy-underworld'&&(beat>=96&&beat<160||beat>=256&&beat<384);}
 function drawGalaxyActors(t){
- if(!galaxyDarkPhase(t))extraActor('gf',t,560,400);
- extraActor('nova',t,song.stage==='somewhere'?245:275,475);
- extraActor('echo',t,865,475);
+ const city=song.stage==='cona'||song.stage==='cyber';
+ const actor=(side,x,y,scale=1)=>{ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();};
+ if(!galaxyDarkPhase(t))actor('gf',city?605:560,city?435:400,city?1.5:1);
+ actor('nova',song.stage==='somewhere'?245:city?245:275,city?490:475,city?1.1:1);
+ actor('echo',city?940:865,city?490:475);
 }
 function drawGalaxyStage(t){
  for(const layer of galaxyLayers())extraSprite(layer.key,0,layer.x,layer.y,layer.w,layer.h);
