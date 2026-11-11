@@ -2509,5 +2509,9 @@
   "assets/extra-mods/galaxy/audio/peace/Inst.ogg",
   "assets/extra-mods/galaxy/audio/peace/Voices.ogg",
   "assets/extra-mods/galaxy/audio/underworld/Inst.ogg",
-  "assets/extra-mods/galaxy/audio/underworld/Voices.ogg"
+  "assets/extra-mods/galaxy/audio/underworld/Voices.ogg",
+  "galaxy-native.js",
+  "galaxy-runtime.js",
+  "galaxy-note-skin.js",
+  "assets/extra-mods/galaxy/notes/purple.webp"
 ]

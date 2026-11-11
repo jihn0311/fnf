@@ -531,7 +531,9 @@ function draw(t){prepareStageResolution();
   while(lo<hi){const mid=(lo+hi)>>>1;if(ends[mid]<=t)lo=mid+1;else hi=mid;}
   for(let i=lo;i<opponentNotes.length;i++){const n=opponentNotes[i];if(n.time>t)break;if(n.started&&t<n.time+Math.max(.15,n.duration||0))opponentLit[n.lane]=true;}
   const visibleUntil=t+LEAD/(settings.speed*(typeof dustinScrollFactor==='function'?dustinScrollFactor(t):1)*(typeof impostorScrollSpeed==='function'?impostorScrollSpeed(t):1))*1.3;
+  const galaxyNotes=typeof drawGalaxyNotes==='function'&&drawGalaxyNotes(t);
   for(const side of ['nova','echo']){
+    if(galaxyNotes)continue;
     if(impostorVideo||typeof allStarsCinemaActive==='function'&&allStarsCinemaActive(t))continue;
     if(typeof sillyCutsceneActive==='function'&&((side==='nova'&&sillyCutsceneActive(t))||(side==='echo'&&sillyOpeningActive(t))))continue;
     ctx.save();
@@ -586,6 +588,7 @@ function draw(t){prepareStageResolution();
   ctx.restore();
   if(typeof drawModHud==='function')drawModHud(t);if(typeof drawQTHud==='function')drawQTHud(t);if(typeof drawDustinEffectsHud==='function')drawDustinEffectsHud(t);
   rect(0,527,1120*Math.max(0,t)/DURATION,3,'#8cf5d9');
+  if(typeof drawGalaxyWindow==='function')drawGalaxyWindow(t);
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
 function frame(timestamp){updateHealthDirection();trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(typeof updateQT==='function')updateQT(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
