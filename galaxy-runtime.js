@@ -1,6 +1,6 @@
 'use strict';
 let galaxyMotion=null;
-function galaxyMotionActive(){return song.pack==='galaxy'&&!song.lowSpec&&settings.difficulty!=='easy'&&['galaxy-cona','galaxy-underworld','galaxy-cyber'].includes(songId);}
+function galaxyMotionActive(){return song.pack==='galaxy'&&!song.lowSpec&&['galaxy-cona','galaxy-underworld','galaxy-cyber'].includes(songId);}
 function galaxyNativeObject(lane,player,down){return {ID:lane,noteData:lane,mustPress:player,x:(player?690:50)+lane*112,y:down?550:50,angle:0,alpha:1,width:112,height:112,frameWidth:160,frameHeight:160,scale:{x:.7,y:.7},offset:{x:0,y:0},animation:{curAnim:{name:'note'}},isSustainNote:false,updateHitbox(){this.width=160*this.scale.x;this.height=160*this.scale.y;},setGraphicSize(w){this.scale.x=this.scale.y=w/160;this.updateHitbox();}};}
 function resetGalaxyMotion(){
  const down=settings.scroll==='down',sy=down?550:50,env={};
