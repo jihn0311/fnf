@@ -8,7 +8,7 @@ function extraReset(){
  const scene=MOD_ART.scenes[song.sceneKey];
  extraState={id:songId,cursor:0,at:-Infinity,chars:scene?{nova:scene.opponent,echo:scene.player,gf:scene.spectator}:{},special:{},alt:{},black:0,hideHealth:false,zoom:1,zoomTween:null,bumps:[],flashes:[],shake:null,follow:null,bumpMult:1,bumpInterval:4,glitchUntil:-1,lastMisses:0,death:null};
  if(song.pack==='mario'){extraState.marioHidden={gf:['exesequel','nesbeat'].includes(song.stage)};extraState.marioActors={};}
- if(song.pack==='dustin')dustinReset();
+ if(song.pack==='dustin')dustinReset();if(song.pack==='undertale')undertaleReset();
  extraHealthVisibility(false);
 }
 function extraHealthVisibility(hide){const node=document.querySelector?.('.health');if(node&&node.style.opacity!==(hide?'0':'1'))node.style.opacity=hide?'0':'1';}
@@ -89,6 +89,7 @@ function extraUpdate(t,quiet=false){
 function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='ready'?clamp01((t-112*BEAT)/.3):0;}
 function extraNote(note,side){
  if(!extraActive()||!extraState)return;
+ if(note.heal&&side===playerSide())health=Math.min(100,health+8);
  if(note.noAnimation)return;
  actors[side].alt=note.alt;if(song.pack==='dustin')dustinNote(note,side);
  if(song.pack==='mario'&&!note.noAnimation){
@@ -170,7 +171,7 @@ function extraActor(side,t,x,y,black=false){
   const ratio=a.scale/base.scale;ctx.scale(1/ratio,1/ratio);
   const originX=(-anchor.w/2-anchor.ox+anchorOff[0]*base.scale)*ratio,originY=(-anchor.h-anchor.oy+anchorOff[1]*base.scale)*ratio;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
- }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'||song.pack==='galaxy'){
+ }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'||song.pack==='galaxy'||song.pack==='undertale'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='agoti'){
@@ -205,6 +206,7 @@ function extraStage(t){
  }else if(song.pack==='camellia'){
   for(const l of camelliaLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
   drawCamelliaActors(t);
+ }else if(song.pack==='undertale'){drawUndertaleStage(t);
  }else if(song.pack==='galaxy'){drawGalaxyStage(t);
  }else if(song.pack==='garcello'){
   for(const l of garcelloLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
@@ -297,7 +299,7 @@ function extraHud(t){
 function extraSync(){
  extraHealthVisibility(false);
  if(!extraActive())return;
- const help=$('mod-help');if(song.pack==='galaxy'){if(help)help.textContent='In the Galaxy · 10곡 · 원본 음원·채보 · 랜덤 채보 고정 시드 · Cona·Underworld·Cyber 이동 채보 · 일반은 전 난이도 이동 · 저사양은 고정 채보';return;}if(song.pack==='corruption'){if(help)help.textContent='Corruption+ · 6곡 · 원본 음원/채보 · 캐릭터 전환 · 무대 웹 재구성 · 일부 영상·왜곡·입력 방해 연출 생략';return;}if(song.pack==='dustin'){if(help)help.textContent='Dustin · 일반: 연출·기믹 복원 중 / 저사양: 기존 경량 연주 · SPACE 회피·공격 · Heatwave 방향키·Z';return;}if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
+ const help=$('mod-help');if(song.pack==='undertale'){if(help)help.textContent='UNDERTALE · 원본 구버전 채보·음악 · 지정 키로 하트 이동 · SPACE로 점프 · 저사양은 공격 연출 생략';return;}if(song.pack==='galaxy'){if(help)help.textContent='In the Galaxy · 10곡 · 원본 음원·채보 · 랜덤 채보 고정 시드 · Cona·Underworld·Cyber 이동 채보 · 일반은 전 난이도 이동 · 저사양은 고정 채보';return;}if(song.pack==='corruption'){if(help)help.textContent='Corruption+ · 6곡 · 원본 음원/채보 · 캐릭터 전환 · 무대 웹 재구성 · 일부 영상·왜곡·입력 방해 연출 생략';return;}if(song.pack==='dustin'){if(help)help.textContent='Dustin · 일반: 연출·기믹 복원 중 / 저사양: 기존 경량 연주 · SPACE 회피·공격 · Heatwave 방향키·Z';return;}if(song.pack==='qt'||song.pack==='qt-safe'){if(help)help.textContent=song.qtDodge?'QT · SPACE 또는 회피 버튼 · 회피 실패/함정 입력: 체력 10% 감소 · 일부 원본 연출은 간소화':'QT · 회피 없음 · 톱날 공격과 함정 노트 제거';return;}if(song.pack==='survent'){if(help)help.textContent='Mid-Fight Masses · 선택한 5곡 · Easy / Normal / Hard · 원본 음원과 채보';return;}if(song.pack==='impostor'){if(help)help.textContent='Impostor V4 · 원본 음원·채보·캐릭터 · 사용 가능한 배경 · 일부 원본 전용 연출은 미포함';return;}if(song.pack==='silly'){if(help)help.textContent='Silly Billy · 원본 Hard 채보 / 보컬 · 변신, 거울 파손, 가사, 영상 · 카메라는 웹 재현';return;}if(help)help.textContent=song.pack==='virus'?'Virus R · 원본 음원/채보/아트 · 무대 애니메이션 웹 재현 (원본 효과 코드 미포함)':song.pack==='death'?'Deathmatch · 원본 캐릭터 교체·카메라 이벤트 · 일반/Evil 별도 음원 · 검은 HURT 노트는 피하세요':'Tainted Fate · 원본 이벤트·무대 전환·레인 교체 · 셰이더 웹 재현 · 연습 모드는 즉사 제한 해제';
 }
 // RGB channel separation and scanline displacement approximate the native shaders.
 let extraFxCanvas=null,extraTintCanvas=null;
