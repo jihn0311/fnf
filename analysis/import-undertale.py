@@ -4,10 +4,15 @@ from PIL import Image
 root=Path(__file__).resolve().parent.parent
 source=Path('C:/Users/kht80/AppData/Local/Temp/undertale-original')
 helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)};exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0],ns)
-art=ns['ART'];songs={};limit=int(sys.argv[1]) if len(sys.argv)>1 else 4
+art=ns['ART'];songs={};
+old=root/'undertale-mod.js'
+if old.exists():
+ text=old.read_text();art.update(json.loads(text.split('const UNDERTALE_ART=',1)[1].split(';\nconst UNDERTALE_SKINS=',1)[0]))
+limit=int(sys.argv[1]) if len(sys.argv)>1 else 4
 slugs=['tutorial','hopes-and-dreams','your-worst-nightmare','megalovania'][:limit]
 chars=['bf','gf']+(['dad'] if limit>1 else [])+(['flowey','bfBackwards'] if limit>2 else [])+(['sans','bfdark'] if limit>3 else [])
 for name in chars:
+ if 'undertale:'+name in art['characters']:continue
  d=ns['read'](source/'assets/preload/characters'/f'{name}.json');d['flip_x']=False
  a=ns['atlas'](source/'assets/shared/images'/d['image'],'undertale/characters/'+name,d,height=650)
  a['renderScale']=(240 if name.startswith('bf') else 280 if name=='gf' else 310)/a['animations']['idle'][0]['h'];art['characters']['undertale:'+name]=a

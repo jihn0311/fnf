@@ -2551,5 +2551,9 @@
   "assets/extra-mods/undertale/notes/HURTNOTE_assets.webp",
   "assets/extra-mods/undertale/notes/SANSNOTE_assets.webp",
   "assets/extra-mods/undertale/audio/tutorial/Inst.ogg",
-  "undertale-events.js"
+  "undertale-events.js",
+  "assets/extra-mods/undertale/characters/dad-0.webp",
+  "assets/extra-mods/undertale/characters/dad-1.webp",
+  "assets/extra-mods/undertale/audio/hopes-and-dreams/Inst.ogg",
+  "assets/extra-mods/undertale/audio/hopes-and-dreams/Voices.ogg"
 ]

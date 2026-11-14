@@ -542,7 +542,7 @@ function draw(t){prepareStageResolution();
     const left=laneX(0,side)-47;
     label(side===playerSide()?(settings.bot?'BOT · 자동':'PLAYER · 직접 연주'):'AUTO',laneX(1,side)+45,18,11,side===playerSide()?'#8cf5d9':'#a7b7cd');
     const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,['survent-casanova','survent-gospel'].includes(songId)?'#080e1d55':'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
-    ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);
+    if(song.pack!=='undertale'){ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);}
     for(let lane=0;lane<4;lane++){
       const activeOpponent=opponentLit[lane];
       const lit=state==='playing'&&t>=0&&(side===autoSide()?activeOpponent:(flashes[lane]>t||laneHeld(lane)||botLit[lane]));
