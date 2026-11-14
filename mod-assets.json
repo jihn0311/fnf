@@ -2573,5 +2573,7 @@
   "assets/extra-mods/undertale/audio/megalovania/Voices.ogg",
   "assets/extra-mods/undertale/fx/blaster-0.webp",
   "updates.js",
-  "updates.css"
+  "updates.css",
+  "assets/extra-mods/undertale/sounds/damage.ogg",
+  "assets/extra-mods/undertale/fx/thunder.webp"
 ]

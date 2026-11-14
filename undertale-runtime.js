@@ -21,7 +21,7 @@ function updateUndertale(t){if(!undertaleActive())return;if(!undertaleState||und
  // Rebuild only recent warnings on seek/resume; do not apply damage for skipped time.
  if(u.beat<beat-12)u.beat=beat-5;
  for(let b=Math.max(0,u.beat+1);b<=beat;b++){const s=undertalePhase(b);if(!song.lowSpec)undertaleSchedule(b,s);const rows=UNDERTALE_EVENTS[song.stage]?.[settings.difficulty==='hard'?'hard':'normal']||[];for(const row of rows)if(row.beat===b)for(const log of row.logs){if(log.dialogue){const lines=song.undertaleDialogues[log.dialogue]||[];u.dialogue={at:b*BEAT,lines};}if(log.text)u.title={at:b*BEAT,text:log.text};if(log.attack==='slash')u.attacks.push({kind:'slash',lanes:[0,1,2,3],warning:b*BEAT-BEAT,at:b*BEAT,done:false});}}
- u.beat=beat;for(const attack of u.attacks){if(attack.done||t<attack.at)continue;if(state!=='playing')continue;attack.done=true;if(settings.bot||attack.at<resumeGraceUntil||song.lowSpec)continue;const jumping=attack.at>=u.jump&&attack.at-u.jump<.6*(settings.rate||1);const hit=attack.kind==='slash'?!jumping:(attack.kind==='beam'||attack.kind==='finale')&&attack.lanes.includes(u.lane);if(hit){health=attack.kind==='finale'?Math.min(health,25):Math.max(0,health-(song.stage==='hopes-and-dreams'?10:5));combo=0;hits.miss++;score-=100;feedback='SOUL HIT';feedbackAt=t;feedbackOffsetMs=null;feedbackColor='#ff7272';updateHud();}}
+ u.beat=beat;for(const attack of u.attacks){if(attack.done||t<attack.at)continue;if(state!=='playing')continue;attack.done=true;if(settings.bot||attack.at<resumeGraceUntil||song.lowSpec)continue;const jumping=attack.at>=u.jump&&attack.at-u.jump<.6*(settings.rate||1);const hit=attack.kind==='slash'?!jumping:(attack.kind==='beam'||attack.kind==='finale')&&attack.lanes.includes(u.lane);if(hit){extraSound('undertale-damage',.8);health=attack.kind==='finale'?Math.min(health,25):Math.max(0,health-(song.stage==='hopes-and-dreams'?10:5));combo=0;hits.miss++;score-=100;feedback='SOUL HIT';feedbackAt=t;feedbackOffsetMs=null;feedbackColor='#ff7272';updateHud();}}
  u.attacks=u.attacks.filter(a=>t<a.at+Math.max(.5,13/24));u.at=t;
 }
 function undertaleLayers(){return song.stage==='megalovania'?[{key:'undertale/fx/hall',x:0,y:0,w:1120,h:530}]:[];}
@@ -34,6 +34,7 @@ function drawUndertaleActors(t){const phase=undertalePhase(t/BEAT),slug=song.sta
 function drawUndertaleStage(t){const phase=undertalePhase(t/BEAT);rect(0,0,1120,530,'#000');for(const l of undertaleLayers())extraSprite(l.key,t,l.x,l.y,l.w,l.h);
  if(!song.lowSpec&&song.stage==='hopes-and-dreams'&&t/BEAT>=64){const g=ctx.createRadialGradient(550,290,10,550,290,650);g.addColorStop(0,'#000');g.addColorStop(1,`hsl(${t*32%360} 90% 24%)`);ctx.fillStyle=g;ctx.fillRect(0,0,1120,530);}
  if(!song.lowSpec&&song.stage==='your-worst-nightmare'){for(let i=0;i<4;i++)if(phase.souls?.[i])extraSprite('undertale/fx/Souls'+(i===3?'':i+1),t,80,30,720,470);if(phase.static){ctx.save();ctx.globalAlpha=.25;extraSprite('undertale/fx/FloweyStatic',t,0,0,1120,530);ctx.restore();}}
+ drawUndertaleHopesEffects(t,false);
  drawUndertaleActors(t);
  if(song.lowSpec||!phase.starBlaze)return;
  const bone=song.stage==='megalovania',pellet=song.stage==='your-worst-nightmare';const key='undertale/fx/'+(bone?'bonewall':pellet?'pellet':'star');const count=bone?8:12;
@@ -42,7 +43,7 @@ function drawUndertaleStage(t){const phase=undertalePhase(t/BEAT);rect(0,0,1120,
 function drawUndertaleNote(note,x,y,tail){if(!undertaleActive())return false;const skin=UNDERTALE_SKINS[note.sourceNoteType];if(!skin)return false;const im=modImages.get(skin.src),f=skin.frames[note.lane];if(!im)return false;if(note.duration){ctx.save();ctx.strokeStyle=note.heal?'#66ff9b':'#efefff';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,tail);ctx.stroke();ctx.restore();}ctx.drawImage(im,f.x,f.y,f.w,f.h,x-36,y-36,72,72);return true;}
 function undertaleDialogue(t){const u=undertaleState;if(!u?.dialogue)return;let age=t-u.dialogue.at,line;for(const l of u.dialogue.lines){const duration=Math.max(2.5,l.text.length*(l.speed||.03)+1.5);if(age<duration){line=l;break;}age-=duration;}if(!line)return;const text=line.text.slice(0,Math.max(0,Math.floor(age/(line.speed||.03))));ctx.save();ctx.globalAlpha=.93;ctx.fillStyle='#fff';ctx.beginPath();ctx.roundRect(100,365,920,105,22);ctx.fill();ctx.restore();ctx.fillStyle='#12121b';ctx.font='bold 20px sans-serif';ctx.textAlign='left';let row='',y=402;for(const word of text.split(' ')){if(ctx.measureText(row+word).width>860){ctx.fillText(row,125,y);y+=26;row='';}row+=word+' ';}ctx.fillText(row,125,y);}
 // Use the complete atlas frame (including trim offsets) so the strike stays anchored.
-function drawUndertaleUnderlay(t){if(!undertaleActive())return;ctx.save();undertaleDialogue(t);ctx.restore();}
+function drawUndertaleUnderlay(t){if(!undertaleActive())return;ctx.save();drawUndertaleHopesEffects(t,true);undertaleDialogue(t);ctx.restore();}
 function undertaleAttackGeometry(side,lane,t){const spacing=Math.abs(laneX(1,side)-laneX(0,side)),scale=spacing/110,y=targetY(side,t),left=laneX(0,side)-48,width=spacing*3+96;return {x:laneX(lane,side),y,left,width,scale,boxScale:width/642,beamWidth:61*scale,beamTop:-172*530/720,beamHeight:988*scale};}
 function drawUndertaleAttack(a,t,side){
  const warning=t<a.at,elapsed=Math.max(0,t-(warning?a.warning:a.at));
@@ -74,4 +75,22 @@ async function playUndertaleIntro(){
  const dialog=document.createElement('dialog');dialog.id='undertale-intro';dialog.style.cssText='width:min(820px,85vw);border:3px solid white;border-radius:22px;background:#fff;color:#111;padding:24px;font-size:20px';
  const text=document.createElement('p'),next=document.createElement('button'),skip=document.createElement('button');next.textContent='다음 ▶';skip.textContent='대사 건너뛰기';skip.style.marginLeft='16px';dialog.append(text,next,skip);document.querySelector('.game').append(dialog);
  await new Promise(resolve=>{let index=0;const show=()=>{text.textContent=lines[index].text;next.textContent=index===lines.length-1?'연주 시작 ▶':'다음 ▶';};const done=()=>{dialog.close();dialog.remove();resolve();};const advance=()=>{index++;if(index>=lines.length)done();else show();};next.onclick=advance;skip.onclick=done;dialog.addEventListener('cancel',e=>{e.preventDefault();done();});dialog.addEventListener('keydown',e=>{if(e.code==='Enter'||e.code==='Space'){e.preventDefault();e.stopPropagation();advance();}});show();dialog.showModal();next.focus();});
+}
+
+async function prepareUndertaleSound(){if(song.pack!=='undertale'||song.lowSpec||!audio||extraSoundBuffers.has('undertale-damage'))return;const r=await fetch('assets/extra-mods/undertale/sounds/damage.ogg');if(!r.ok)throw Error('피격음 로드 실패');extraSoundBuffers.set('undertale-damage',await audio.decodeAudioData(await r.arrayBuffer()));}
+// Native stepHit: large foreground stars and background thunder every two steps.
+// Compute bounded live particles from song time; no per-frame allocations or timers.
+function drawUndertaleHopesEffects(t,foreground){
+ if(song.stage!=='hopes-and-dreams'||song.lowSpec)return;
+ const interval=BEAT/2,last=Math.floor(t/interval),rand=(n,s)=>((Math.imul(n+1,s)>>>0)%10000)/10000;
+ for(let n=Math.max(0,last-Math.ceil(3.1/interval));n<=last;n++){
+  const phase=undertalePhase(n/2),age=t-n*interval;
+  if(foreground&&phase.starBlaze){const duration=2.1+rand(n,34729);if(age>=duration)continue;const q=age/duration,rx=rand(n,76123)*1000-500,ry=rand(n,19237)*1000-500,size=230*(.5+rand(n,31123))*1120/1280;
+   const x=(3000+rx+(-6000+ry-rx)*q)*1120/1280,y=(-500+ry+(1500+rx-ry)*q)*530/720;
+   ctx.save();ctx.translate(x+size/2,y+size/2);ctx.rotate((1-(1-q)**5)*Math.PI*4);extraSprite('undertale/fx/star',t,-size/2,-size/2,size,size);ctx.restore();
+  }
+  if(!foreground&&['lightningAll','lightningFast','lightningSequence','lightningUnfair','lightningTriple','lightningSlow'].some(k=>phase[k])){const duration=.1+rand(n,15731)*.4;if(age>=duration)continue;const q=age/duration,w=57*(4.1+rand(n,27791)*4)*1120/1280;
+   ctx.save();ctx.globalAlpha=.5*(1-q);extraSprite('undertale/fx/thunder',t,rand(n,59183)*1120-w/2,-100,Math.max(1,w*(1-q)),850);ctx.restore();
+  }
+ }
 }

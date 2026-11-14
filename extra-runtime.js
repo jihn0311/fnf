@@ -28,6 +28,7 @@ async function extraPrepare(){
  const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
  await prepareCorruptionVideo();
  await prepareDustinEffects();
+ await prepareUndertaleSound();
  if(typeof qtActive==='function'&&qtActive())await prepareQT();
  if(song.pack==='kapi'&&!song.lowSpec)prepareKapiStage();
  if(song.pack==='silly'&&!song.lowSpec)await sillyPrepare();
