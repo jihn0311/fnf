@@ -15,7 +15,7 @@ function extraHealthVisibility(hide){const node=document.querySelector?.('.healt
 async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(typeof qtActive==='function'&&qtActive())for(const name of ['Normal','Cute','Error','tv'])assets.push(EXTRA_ART.sprites['qt/stage/'+name].src);if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
- for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes')){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
+ for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes'||key.startsWith('undertale/skin/'))){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.pack==='dustin'||song.pack==='corruption')for(const key of scene.spriteKeys)assets.push(EXTRA_ART.sprites[key].src);
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
  if(song.lowSpec&&scene.presentationKeys?.pipe)assets.push(EXTRA_ART.sprites[scene.presentationKeys.pipe].src);
@@ -89,7 +89,7 @@ function extraUpdate(t,quiet=false){
 function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='ready'?clamp01((t-112*BEAT)/.3):0;}
 function extraNote(note,side){
  if(!extraActive()||!extraState)return;
- if(note.heal&&side===playerSide())health=Math.min(100,health+8);
+ if(note.heal&&side===playerSide())health=Math.min(100,health+25);
  if(note.noAnimation)return;
  actors[side].alt=note.alt;if(song.pack==='dustin')dustinNote(note,side);
  if(song.pack==='mario'&&!note.noAnimation){
@@ -345,7 +345,7 @@ function extraHurt(note,kind){
  if(!note.hurt)return false;
  note.done=true;note.holding=false;
  if(kind!=='miss'){
-  health=Math.max(0,health-(typeof qtActive==='function'&&qtActive()?10:15));combo=0;score-=100;judged++;hits.miss++;
+  health=Math.max(0,health-(song.pack==='undertale'&&note.sourceNoteType==='Sans Note'?1:typeof qtActive==='function'&&qtActive()?10:15));combo=0;score-=100;judged++;hits.miss++;
   feedback='HURT · MISS';feedbackOffsetMs=null;feedbackAt=time();feedbackColor='#ff4d6a';
   
   extraState.flashes.push({at:time(),duration:.35,color:'#e90000',alpha:.4});updateHud();

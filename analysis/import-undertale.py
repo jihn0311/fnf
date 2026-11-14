@@ -19,7 +19,7 @@ for name in chars:
  if name=='gf':
   for anim in ['danceLeft','danceRight']:
    if anim in a['animations']:a['config'][anim]['fps']=24
-for name in ['hall','grafix','star','bone','bonewall','soul','warning','box','Slash','lightning','vine','pellet','Souls','Souls1','Souls2','Souls3','FloweyStatic','speech_bubble']:
+for name in ['blaster','hall','grafix','star','bone','bonewall','soul','warning','box','Slash','lightning','vine','pellet','Souls','Souls1','Souls2','Souls3','FloweyStatic','speech_bubble']:
  ns['atlas'](source/'assets/shared/images'/name,'undertale/fx/'+name,height=650,bg=True)
 skins={}
 for typ,name in [('Hurt Note','HURTNOTE_assets'),('Heal Note','HEALNOTE_assets'),('Sans Note','SANSNOTE_assets')]:
@@ -37,13 +37,14 @@ for slug in slugs:
   for side in charts[diff].values():
    for n in side:
     typ=n['sourceNoteType'];n['hurt']=typ in ['Hurt Note','Sans Note'];n['heal']=typ=='Heal Note'
- sid='undertale-'+slug;default='hard' if slug=='megalovania' else 'normal';opponent='gf' if slug=='tutorial' else 'dad' if slug=='hopes-and-dreams' else 'flowey' if slug=='your-worst-nightmare' else 'sans';player=base['player1'];scenechars=['undertale:'+n for n in dict.fromkeys([opponent,player,'gf'])]
+ sid='undertale-'+slug;default='hard' if slug=='megalovania' else 'normal';opponent='gf' if slug=='tutorial' else 'dad' if slug=='hopes-and-dreams' else 'flowey' if slug=='your-worst-nightmare' else 'sans';player=base['player1'];scenechars=['undertale:'+n for n in dict.fromkeys([opponent,player]+(['gf'] if slug=='tutorial' else []))]
  duration=ns['duration'](source/'assets/songs'/slug/'Inst.ogg')
  for chart in charts.values():
   for side in chart.values():
    side[:]=[n for n in side if n['time']<duration]
    for n in side:n['duration']=min(n['duration'],max(0,duration-n['time']))
- art['scenes'][sid]={'opponent':'undertale:'+opponent,'player':'undertale:'+player,'spectator':'undertale:gf','characters':scenechars,'spriteKeys':[k for k in art['sprites'] if k.startswith(('undertale/fx/','undertale/skin/'))]};art['backgrounds'][sid]=[]
+ fx=['soul','warning','box','Slash','speech_bubble']+({'tutorial':['blaster'],'hopes-and-dreams':['star','grafix','lightning'],'your-worst-nightmare':['pellet','vine','FloweyStatic','Souls','Souls1','Souls2','Souls3'],'megalovania':['hall','blaster','bonewall']}[slug])
+ art['scenes'][sid]={'opponent':'undertale:'+opponent,'player':'undertale:'+player,'spectator':'undertale:gf','characters':scenechars,'spriteKeys':['undertale/fx/'+n for n in fx]+['undertale/skin/'+n for n in skins]};art['backgrounds'][sid]=[]
  songs[sid]={'title':{'tutorial':'SOUL Tutorial','hopes-and-dreams':'Hopes and Dreams','your-worst-nightmare':'Your Worst Nightmare','megalovania':'Megalovania / Reality Check'}[slug],'pack':'undertale','sceneKey':sid,'stage':slug,'bpm':base['bpm'],'duration':duration,'beats':duration*base['bpm']/60,'defaultDifficulty':default,'genre':'UNDERTALE · ORIGINAL V1','description':'원본 구버전 채보·음원 · 방향키/지정 키로 SOUL 이동 · SPACE 점프','charts':charts,'sectionsByDifficulty':sections,'sections':sections[default],'events':events,'originalSpeed':base['speed'],'audioSrc':ns['copy'](source/'assets/songs'/slug/'Inst.ogg','undertale/audio/'+slug),'voiceSrc':ns['copy'](source/'assets/songs'/slug/'Voices.ogg','undertale/audio/'+slug) if (source/'assets/songs'/slug/'Voices.ogg').exists() else None,'sky':['#000000','#000000'],'undertaleDialogues':{p.stem:ns['read'](p).get('dialogue',[]) for p in folder.glob('*.json') if 'song' not in ns['read'](p)}}
  print('SONG',slug,duration,{d:len(c['echo']) for d,c in charts.items()},flush=True)
 # Keep icon as original source artwork.

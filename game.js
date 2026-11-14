@@ -326,6 +326,7 @@ async function start(){
     if(buffer)DURATION=Math.max(...buffers.map(b=>b.duration));
     notes=createChart();opponentNotes=createChart(settings.difficulty,autoSide());buildVoices();actors.nova={lane:-1,until:-1,miss:false};actors.echo={lane:-1,until:-1,miss:false};score=combo=maxCombo=earned=judged=0;health=50;hits={perfect:0,good:0,bad:0,miss:0};songIndex=0;pausedTime=0;feedback='';feedbackOffsetMs=null;splashes=[];held.clear();refreshButtons();resumeGraceUntil=-1;flashes=[-1,-1,-1,-1];
     if(typeof playDustinStory==='function')await playDustinStory('intro');
+    if(typeof playUndertaleIntro==='function')await playUndertaleIntro();
     startTime=audio.currentTime+5*BEAT/(settings.rate||1)+.05;for(const stem of buffers)playTrackBuffer(stem,startTime);
     countdownBuffers.forEach((sound,i)=>playTrackBuffer(sound,startTime-(4-i)*BEAT/(settings.rate||1)));
     state='playing';$('overlay').classList.add('hidden');$('pause').disabled=false;$('pause').innerHTML='일시정지 <kbd>ESC / Enter</kbd>';$('status').textContent='LIVE / '+song.title.toUpperCase();updateHud();
@@ -350,11 +351,12 @@ function findPlayableNote(t,predicate){
   for(let i=chartStart(notes);i<notes.length;i++){const note=notes[i];if(note.time>until)break;if(predicate(note))return note;}
 }
 function press(lane){
-  if(state!=='playing'||settings.bot)return;const t=time();flashes[lane]=t+.13;if(typeof undertaleMove==='function')undertaleMove(lane,t);
+  if(state!=='playing'||settings.bot)return;const t=time();flashes[lane]=t+.13;
   const continuing=findPlayableNote(t,n=>n.holding&&!n.done&&n.lane===lane&&t<n.time+n.duration);
   if(continuing){sustainTick(continuing,continuing.headKind);continuing.nextTick=t+.15*(settings.rate||1);if(!continuing.noAnimation)animateSinger(playerSide(),lane,t,continuing.time+continuing.duration-t);return;}
   const hittable=n=>!n.done&&!n.holding&&n.lane===lane&&(song.pack==='death'&&n.hurt?Math.abs((n.time-t)/(settings.rate||1))<=.045+1e-9:timingResult((n.time-t)/(settings.rate||1)).kind!=='miss');
   const note=(song.pack==='death'?findPlayableNote(t,n=>!n.hurt&&hittable(n)):null)||findPlayableNote(t,hittable);
+  if(!note&&typeof undertaleMove==='function')undertaleMove(lane,t);
   if(note){
     if(note.hurt&&typeof extraHurt==='function'){extraHurt(note,'hit');return;}
     note.hitOffsetMs=(t-note.time)/(settings.rate||1)*1000;

@@ -4,3 +4,5 @@ Credits: BoxOfRocks (code/music), lightywighty, Egg Overlord, EEF (art), Toby Fo
 Video reference: user-supplied Friday Night Funkin Undertale Vs Sans, Asriel & Flowey FULL WEEK + Cutscenes (FNF Mod) (Open World).mp4 (854x480, 30fps, 25:38).
 Use original assets where available, rather than enlarging compressed screenshots.
 Chart timestamps, directions, sustains and note types are imported from original JSON. Web sustain tail rules are retained. Attack state transitions are derived from original PlayState.beatHit. Random attack lanes use deterministic seeds; they are not the identical random realization in the recording. Canvas scenery/particles and dialogue dwell times adapt the native rendering. Overworld navigation and death-count-dependent branching are not part of the song picker.
+
+Flowey exposes only Normal: the bundled Easy/Hard files contain sparse placeholder/chart sections and are not offered as faithful alternatives. Source audio is copied byte-for-byte; all seven OGG stems were hash-verified.
