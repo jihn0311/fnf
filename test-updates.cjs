@@ -1,0 +1,13 @@
+const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{const b=await chromium.launch({headless:true,channel:'msedge'});try{const p=await b.newPage({viewport:{width:1400,height:950}}),errors=[];let requests=0;
+p.on('pageerror',e=>errors.push(e.message));p.on('request',()=>requests++);await p.addInitScript(()=>requestAnimationFrame=()=>0);
+await p.route('http://verify.local/**',r=>{const f=path.resolve(decodeURIComponent(new URL(r.request().url()).pathname).slice(1)||'index.html');return fs.existsSync(f)?r.fulfill({path:f}):r.fulfill({status:404,body:'missing'});});await p.goto('http://verify.local/');
+assert(await p.locator('#updates-dialog').isVisible());assert.equal(await p.locator('#updates-content article').count(),1);
+await p.locator('#updates-confirm').click();await p.reload();assert.equal(await p.locator('#updates-dialog').isVisible(),false);
+await p.locator('#open-updates').click();assert.equal(await p.locator('#updates-content article').count(),2);await p.keyboard.press('Escape');assert.equal(await p.locator('#updates-dialog').isVisible(),false);
+await p.evaluate(()=>localStorage.setItem('fnf.updates.lastSeen','old-release'));await p.reload();assert(await p.locator('#updates-dialog').isVisible());await p.locator('#close-updates').click();await p.reload();assert.equal(await p.locator('#updates-dialog').isVisible(),false);
+await p.setViewportSize({width:390,height:844});await p.locator('#open-updates').click();const fit=await p.locator('#updates-dialog').evaluate(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.height<=innerHeight;});assert(fit);await p.screenshot({path:process.env.TEMP+'/fnf-updates-mobile.png'});await p.locator('#updates-confirm').click();
+await p.evaluate(()=>{localStorage.removeItem('fnf.updates.lastSeen');sessionStorage.removeItem('fnf.updates.lastSeen');});await p.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new Error('Storage blocked');}}));await p.reload();assert(await p.locator('#updates-dialog').isVisible());await p.locator('#updates-confirm').click();await p.reload();assert.equal(await p.locator('#updates-dialog').isVisible(),false);
+assert.deepEqual(errors,[]);console.log('PASS first visit, repeat visit, manual history, new version, Escape, mobile layout, storage fallback');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

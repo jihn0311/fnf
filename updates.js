@@ -1,0 +1,21 @@
+'use strict';
+// Add a new entry with a unique id whenever a user-facing update is published.
+const GAME_UPDATES = [
+ {id:'2026-11-14-undertale',date:'2026-11-14',title:'UNDERTALE 스테이지 추가',items:['튜토리얼, Asriel, Flowey, Sans 스테이지를 추가했습니다.','원본 채보·음악·캐릭터와 함정·회복 노트를 적용했습니다.','하트 이동, SPACE·터치 점프, 전투 대사와 공격 연출을 추가했습니다.','일반·저사양 모드를 제공하며, Flowey는 Normal 난이도로 플레이할 수 있습니다.','새 업데이트는 처음 접속할 때 한 번 안내하며, 왼쪽 위에서 내역을 다시 볼 수 있습니다.']},
+ {id:'2026-11-11-galaxy',date:'2026-11-11',title:'갤럭시 채보 이동',items:['Cona·Underworld·Cyber에 노트와 판정 화살표 이동을 적용했습니다.','Underworld의 보라색 노트와 Cyber의 게임 화면 축소·이동 연출을 추가했습니다.','일반 모드는 모든 난이도에서 이동하며, 저사양 모드는 고정 채보를 유지합니다.']}
+];
+(()=>{
+ const key='fnf.updates.lastSeen',latest=GAME_UPDATES[0],trigger=document.getElementById('open-updates'),dialog=document.getElementById('updates-dialog'),body=document.getElementById('updates-content'),title=document.getElementById('updates-title');
+ if(!latest||!trigger||!dialog)return;
+ const read=()=>{try{const value=localStorage.getItem(key);if(value)return value;}catch{}try{return sessionStorage.getItem(key);}catch{return null;}};
+ const remember=()=>{try{localStorage.setItem(key,latest.id);}catch{try{sessionStorage.setItem(key,latest.id);}catch{}}};
+ function render(history){title.textContent=history?'업데이트 내역':'새로운 업데이트';body.replaceChildren();for(const entry of history?GAME_UPDATES:[latest]){const article=document.createElement('article'),date=document.createElement('time'),heading=document.createElement('h3'),list=document.createElement('ul');date.dateTime=entry.date;date.textContent=entry.date.replaceAll('-','.');heading.textContent=entry.title;for(const item of entry.items){const li=document.createElement('li');li.textContent=item;list.append(li);}article.append(date,heading,list);body.append(article);}dialog.scrollTop=0;}
+ function open(history){if(dialog.open)return;render(history);dialog.showModal();remember();}
+ trigger.addEventListener('click',async()=>{if(typeof state!=='undefined'&&state==='playing'&&typeof pause==='function')await pause();open(true);});
+ document.getElementById('close-updates').addEventListener('click',()=>dialog.close());
+ document.getElementById('updates-confirm').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();});
+ // Keep game shortcuts from firing while the modal owns keyboard focus.
+ for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{if(dialog.open)e.stopPropagation();},true);
+ if(read()!==latest.id)open(false);
+})();
