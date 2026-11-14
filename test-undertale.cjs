@@ -24,5 +24,20 @@ assert(await p.locator('#undertale-intro').isVisible());await p.locator('#undert
 await p.evaluate(()=>{state='playing';audio={currentTime:10};startTime=0;undertaleReset();drawUndertaleHud(10);});
 assert(await p.locator('#undertale-jump').isVisible());await p.locator('#undertale-jump').dispatchEvent('pointerdown');assert.equal(await p.evaluate(()=>undertaleState.jump),10);
 console.log('PASS intro dialogue and mobile jump');
+for(const mode of ['fullscreen','game-only']){
+ await p.evaluate(()=>{state='paused';});
+ await p.locator('#'+mode).click();
+ assert(await p.evaluate(()=>!!document.fullscreenElement),'Fullscreen entered');
+ await p.evaluate(()=>{window.introDone=false;playUndertaleIntro().then(()=>window.introDone=true);});
+ assert(await p.locator('#undertale-intro').isVisible(),mode+' dialogue visible');
+ const first=await p.locator('#undertale-intro p').textContent();
+ await p.locator('#undertale-intro button').first().click();
+ assert.notEqual(await p.locator('#undertale-intro p').textContent(),first);
+ await p.locator('#undertale-intro button').last().click();
+ assert(await p.evaluate(()=>window.introDone));
+ await p.evaluate(async()=>{setGameOnly(false);await document.exitFullscreen();});
+}
+console.log('PASS fullscreen and game-only dialogue visibility, next and skip');
+
 assert.deepEqual(errors,[]);console.log('PASS soul movement, timeline, all scenes and browser errors');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

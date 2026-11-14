@@ -81,7 +81,7 @@
 
 #exit-game-only{display:none}
 .game.game-only{position:fixed;inset:0;z-index:10000;width:100vw;height:100dvh;margin:0;border:0;border-radius:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column}
-.game.game-only>:not(.stage-viewport):not(#exit-game-only){display:none!important}
+.game.game-only>:not(.stage-viewport):not(#exit-game-only):not(dialog[open]){display:none!important}
 .game.game-only .stage-viewport{width:min(100vw,calc(100dvh * 1120 / 530));flex:none;min-height:0}
 .game.game-only #exit-game-only{display:block;position:absolute;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));z-index:20;border:1px solid #ffffff55;border-radius:6px;padding:9px 12px;background:#10151dcc;color:#fff;font-size:12px;opacity:.65}
 .game.game-only #exit-game-only:hover,.game.game-only #exit-game-only:focus-visible{opacity:1}
