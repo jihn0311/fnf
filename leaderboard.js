@@ -1,4 +1,10 @@
 'use strict';
+// NFKC also folds full-width letters and compatibility Hangul; remove separators.
+function rankingNameAllowed(name){
+ const normalized=String(name).normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+ const blocked=["씨발", "시발", "씨빨", "시빨", "씹새", "씹년", "개새끼", "개세끼", "병신", "븅신", "좆", "좃", "지랄", "니엄마", "느금마", "느그엄마", "애미뒤", "애비뒤", "엄마없", "고아새끼", "ㅅㅂ", "ㅆㅂ", "ㅂㅅ"].map(word=>word.normalize('NFKC'));
+ return !blocked.some(word=>normalized.includes(word))&&!/^(fuck(?:you|er|ing)?|shit|bitch|nigg(?:er|a))$/i.test(normalized);
+}
 // Publishable key only. Never put a secret/service_role key in browser code.
 (() => {
  const endpoint='https://vlkhiaeuzosdcvclempf.supabase.co/rest/v1/scores';
@@ -23,7 +29,7 @@
   if(search)params.set('nickname','eq.'+search);
   try{const rows=[],seen=new Set(),target=all?100:20;
    for(let offset=0;rows.length<target;offset+=200){params.set('offset',String(offset));const page=await api(endpoint+'?'+params);if(id!==requestId)return;
-    for(const row of page){const token=JSON.stringify([row.nickname,row.song_id,row.difficulty,row.play_side,Number(row.rate),!!row.practice,!!row.nightmare,Number(row.score),Number(row.accuracy),Number(row.max_combo),Number(row.misses)]);if(seen.has(token))continue;seen.add(token);rows.push(row);if(rows.length===target)break;}
+    for(const row of page){if(!rankingNameAllowed(row.nickname))continue;const token=JSON.stringify([row.nickname,row.song_id,row.difficulty,row.play_side,Number(row.rate),!!row.practice,!!row.nightmare,Number(row.score),Number(row.accuracy),Number(row.max_combo),Number(row.misses)]);if(seen.has(token))continue;seen.add(token);rows.push(row);if(rows.length===target)break;}
     if(page.length<200)break;
    }
    rows.forEach((row,index)=>{const tr=document.createElement('tr');for(const value of [index+1,row.nickname,Number(row.score).toLocaleString(),Number(row.accuracy).toFixed(1)+'%',row.max_combo,recordLabel(row)]){const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td);}el('ranking-rows').appendChild(tr);});
@@ -40,6 +46,7 @@
  el('ranking-submit').addEventListener('click',async()=>{
   if(!pending||busy)return;
   const nickname=el('ranking-name').value.trim();if(!nickname||nickname.length>20){el('ranking-submit-status').textContent='닉네임은 1~20자로 입력해줘.';return;}
+  if(!rankingNameAllowed(nickname)){el('ranking-submit-status').textContent='부적절한 표현이 포함된 닉네임은 등록할 수 없어요. 다른 이름을 입력해주세요.';return;}
   const record=pending;busy=true;el('ranking-submit').disabled=true;
   el('ranking-submit-status').textContent='저장하는 중…';
   try{await api(endpoint,{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({...record,nickname})});if(pending===record){pending=null;el('online-ranking').classList.remove('record-ready');el('ranking-submit-status').textContent='기록을 저장했어!';}void refresh();}
