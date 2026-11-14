@@ -31,6 +31,7 @@ for typ,name in [('Hurt Note','HURTNOTE_assets'),('Heal Note','HEALNOTE_assets')
 for slug in slugs:
  folder=source/'assets/preload/data'/slug;charts={};events={};sections={}
  for diff,suffix in [('easy','-easy'),('normal',''),('hard','-hard')]:
+  if slug=='your-worst-nightmare' and diff!='normal':continue
   s=ns['read'](folder/(slug+suffix+'.json'))['song'];base=s
   charts[diff],events[diff],sections[diff]=ns['chart'](s)
   for side in charts[diff].values():
