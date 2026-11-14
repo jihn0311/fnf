@@ -31,5 +31,8 @@ await p.evaluate(async()=>{selectSong('undertale-megalovania');await prepareMod(
 await p.evaluate(()=>{state='paused';const t=205*BEAT;extraUpdate(t,true);updateUndertale(t);draw(t);});
 await p.locator('canvas').first().screenshot({path:process.env.TEMP+'/sans-bones-fixed.png'});
 console.log('PASS bone timing, horizontal travel, aspect ratio, tail lifetime and low-spec exclusion');
+
+await p.evaluate(()=>{selectSong('undertale-hopes-and-dreams');const sound=extraSound;extraSound=()=>{};for(const kind of ['beam','finale','slash']){undertaleReset();undertaleState.at=10;undertaleState.beat=Math.floor(10/BEAT);undertaleState.attacks=[{kind,lanes:[1],warning:9,at:10,done:false}];state='playing';settings.bot=false;resumeGraceUntil=-1;health=80;combo=42;updateUndertale(10);if(combo!==(kind==='slash'?0:42)||health>=80)throw Error('Wrong hazard combo/health '+kind);}extraSound=sound;state='paused';});
+console.log('PASS lightning preserves combo with damage, SPACE failure still breaks combo');
 assert.deepEqual(errors,[]);console.log('PASS native sound decode, hit-only playback, large stars, thunder and low-spec exclusion');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
