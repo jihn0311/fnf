@@ -13,6 +13,7 @@ await p.evaluate(()=>{selectSong('undertale-tutorial');settings.difficulty='norm
 await p.evaluate(()=>{selectSong('undertale-tutorial');settings.bot=false;settings.rate=1;audio={currentTime:10};startTime=0;state='playing';resumeGraceUntil=-1;
 const trial=(kind,jump,lane,bot=false)=>{undertaleReset();undertaleState.at=9.9;undertaleState.beat=16;undertaleState.lane=lane;undertaleState.jump=jump?9.8:-100;undertaleState.attacks=[{kind,lanes:[1],warning:9,at:10,done:false}];health=50;settings.bot=bot;updateUndertale(10);return health;};
 if(trial('slash',false,1)!==45||trial('slash',true,1)!==50||trial('beam',false,1)!==45||trial('beam',false,2)!==50||trial('beam',false,1,true)!==50)throw Error('Dodge damage mismatch');
+for(const kind of ['beam','slash','finale']){undertaleReset();undertaleState.at=9.9;undertaleState.beat=16;undertaleState.lane=1;undertaleState.attacks=[{kind,lanes:[1],warning:9,at:10,done:false}];health=50;settings.bot=false;updateUndertale(10.4);const expected=kind==='finale'?25:45;if(health!==expected)throw Error('Late-frame damage lost '+kind);updateUndertale(10.45);if(health!==expected)throw Error('Repeated damage');}
 selectSong('undertale-your-worst-nightmare');settings.difficulty='normal';if(undertalePhase(144).opponentAlpha!==0||undertalePhase(200).opponentAlpha!==1)throw Error('Flowey soul transition');
 selectSong('undertale-hopes-and-dreams');if(!undertalePhase(64).starBlaze)throw Error('Asriel stars');
 selectSong('undertale-megalovania');if(!undertalePhase(200).starBlaze)throw Error('Sans bones');state='paused';});
