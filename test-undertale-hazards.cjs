@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{const b=await chromium.launch({headless:true,channel:'msedge'});try{const p=await b.newPage({viewport:{width:1400,height:950}}),errors=[];let requests=0;
+p.on('pageerror',e=>errors.push(e.message));p.on('request',()=>requests++);await p.addInitScript(()=>requestAnimationFrame=()=>0);
+await p.route('http://verify.local/**',r=>{const f=path.resolve(decodeURIComponent(new URL(r.request().url()).pathname).slice(1)||'index.html');return fs.existsSync(f)?r.fulfill({path:f}):r.fulfill({status:404,body:'missing'});});await p.goto('http://verify.local/');
+await p.locator('#updates-confirm').click();await p.evaluate(async()=>{selectSong('undertale-hopes-and-dreams');settings.difficulty='normal';await prepareMod();state='paused';settings.scroll='up';settings.speed=2.5;});
+for(const side of ['echo','nova'])for(const scroll of ['up','down']){
+await p.evaluate(({side,scroll})=>{settings.playSide=side;settings.scroll=scroll;for(let lane=0;lane<4;lane++){const g=undertaleAttackGeometry(playerSide(),lane,20);if(g.x!==laneX(lane,side)||g.y!==targetY(side,20)||g.beamWidth>=60)throw Error('Wrong hazard anchor');}}, {side,scroll});}
+for(const mode of ['warning','strike']){
+ const result=await p.evaluate(mode=>{settings.playSide='echo';settings.scroll='up';const t=mode==='warning'?20:20.1;extraUpdate(t,true);undertaleReset();undertaleState.dialogue={at:18,lines:[{text:'Dialogue stays behind the playable notes.',speed:.01}]};undertaleState.attacks=[{kind:'slash',lanes:[0,1,2,3],warning:19,at:mode==='warning'?20.2:19.95},{kind:'beam',lanes:[1],warning:19,at:19.95}];notes=Array.from({length:4},(_,lane)=>({lane,time:t+(420-targetY('echo',t))*LEAD/(430*settings.speed),duration:0,done:false}));opponentNotes=[];const calls=[],sprite=extraSprite,dialogue=undertaleDialogue,note=drawUndertaleNote;extraSprite=(...args)=>{calls.push(args[0]);return sprite(...args);};undertaleDialogue=(...args)=>{calls.push('dialogue');return dialogue(...args);};drawUndertaleNote=(...args)=>{calls.push('note');return note(...args);};try{draw(t);}finally{extraSprite=sprite;undertaleDialogue=dialogue;drawUndertaleNote=note;}if(calls.indexOf('dialogue')>=calls.indexOf('note'))throw Error('Dialogue covers notes');return {calls,png:canvas.toDataURL()};},mode);
+ assert(result.calls.includes('undertale/fx/'+(mode==='warning'?'box':'Slash')));assert(result.calls.includes('undertale/fx/lightning'));fs.writeFileSync(process.env.TEMP+'/hopes-'+mode+'-fixed.png',Buffer.from(result.png.split(',')[1],'base64'));
+}
+assert.deepEqual(errors,[]);console.log('PASS dialogue behind notes, native warning/strike textures, beam alignment in both scroll directions and player sides');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

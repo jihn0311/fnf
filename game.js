@@ -523,6 +523,7 @@ function drawCachedScene(t){
 }
 function draw(t){prepareStageResolution();
   drawCachedScene(t);
+  if(typeof drawUndertaleUnderlay==='function')drawUndertaleUnderlay(t);
   if(typeof dustinUnderlay==='function')dustinUnderlay(t);
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);
   const impostorVideo=song.pack==='impostor'&&impostorVideoFrame(t);

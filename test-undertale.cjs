@@ -3,6 +3,7 @@ const {chromium}=require('C:/Users/kht80/.cache/codex-runtimes/codex-primary-run
 (async()=>{const b=await chromium.launch({headless:true,channel:'msedge'});try{const p=await b.newPage({viewport:{width:1400,height:950}}),errors=[];let requests=0;
 p.on('pageerror',e=>errors.push(e.message));p.on('request',()=>requests++);await p.addInitScript(()=>requestAnimationFrame=()=>0);
 await p.route('http://verify.local/**',r=>{const f=path.resolve(decodeURIComponent(new URL(r.request().url()).pathname).slice(1)||'index.html');return fs.existsSync(f)?r.fulfill({path:f}):r.fulfill({status:404,body:'missing'});});await p.goto('http://verify.local/');
+if(await p.locator('#updates-dialog').isVisible())await p.locator('#updates-confirm').click();
 await p.locator('[data-mod="undertale"]').click();const ids=await p.locator('#song option').evaluateAll(es=>es.map(e=>e.value));
 for(const id of ids)for(const low of [false,true]){
 const r=await p.evaluate(async({id,low})=>{selectSong(id+(low?'-low':''));settings.difficulty=song.defaultDifficulty;await prepareMod();state='paused';notes=createChart();opponentNotes=createChart(settings.difficulty,'nova');for(const t of [0,1,15,35,60,100,160,230,300]){extraUpdate(t,true);updateUndertale(t);draw(t);}return {notes:notes.length,images:modImages.size,duration:DURATION,canvas:canvas.toDataURL()};},{id,low});assert(r.notes>0&&r.images>0);if(!low)fs.writeFileSync(process.env.TEMP+'/'+id+'.png',Buffer.from(r.canvas.split(',')[1],'base64'));console.log('PASS',id,low,r.notes,r.duration);
