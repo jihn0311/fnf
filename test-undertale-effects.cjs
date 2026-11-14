@@ -13,5 +13,18 @@ song.lowSpec=true;drawUndertaleHopesEffects(70*BEAT,true);if(calls.length)throw 
 const sound=extraSound;let count=0;extraSound=(name)=>{if(name==='undertale-damage')count++;};
 for(const dodge of [false,true]){undertaleReset();undertaleState.at=10;undertaleState.beat=Math.floor(10/BEAT);undertaleState.jump=dodge?9.9:-100;undertaleState.attacks=[{kind:'slash',lanes:[0,1,2,3],warning:9,at:10,done:false}];state='playing';settings.bot=false;resumeGraceUntil=-1;health=100;updateUndertale(10);updateUndertale(10.01);}
 if(count!==1)throw Error('Damage sound repeated or played on dodge');extraSound=sound;state='paused';await audio.close();});
+
+await p.evaluate(()=>{
+ selectSong('undertale-hopes-and-dreams');
+ if(undertaleFinaleProtected(960*BEAT-.001)||!undertaleFinaleProtected(960*BEAT)||!undertaleFinaleProtected(1152*BEAT))throw Error('Finale boundary');
+ const originals={time,finish,scheduleMusic,scheduleVoices,updateMod,updateOpponent,updateNotes,updateQT,updateUndertale,draw};
+ let now=960*BEAT,result=null;time=()=>now;finish=failed=>{result=failed===true?'failed':'complete';};scheduleMusic=scheduleVoices=updateMod=updateOpponent=updateNotes=updateQT=updateUndertale=draw=()=>{};
+ state='playing';health=0;$('practice').checked=false;frame(1000);if(result!==null)throw Error('Protected finale failed');
+ now=960*BEAT-.001;frame(1016);if(result!=='failed')throw Error('Early protection');
+ result=null;now=DURATION;frame(1032);if(result!=='complete')throw Error('Finale did not complete');
+ ({time,finish,scheduleMusic,scheduleVoices,updateMod,updateOpponent,updateNotes,updateQT,updateUndertale,draw}=originals);state='paused';
+ selectSong('undertale-megalovania');if(undertaleFinaleProtected(1200*BEAT))throw Error('Protected other song');
+});
+console.log('PASS zero-health finale protection, boundary, song completion and other-song exclusion');
 assert.deepEqual(errors,[]);console.log('PASS native sound decode, hit-only playback, large stars, thunder and low-spec exclusion');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

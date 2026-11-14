@@ -94,3 +94,6 @@ function drawUndertaleHopesEffects(t,foreground){
   }
  }
 }
+
+// Four-lane finale begins at source beat 960; protection lasts through song end.
+function undertaleFinaleProtected(t){return undertaleActive()&&song.stage==='hopes-and-dreams'&&t>=960*BEAT;}

@@ -597,7 +597,7 @@ function draw(t){prepareStageResolution();
   if(typeof drawGalaxyWindow==='function')drawGalaxyWindow(t);
   if(typeof extraDeathFrame==='function')extraDeathFrame();
 }
-function frame(timestamp){updateHealthDirection();trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(typeof updateQT==='function')updateQT(t);if(typeof updateUndertale==='function')updateUndertale(t);if(health<=0&&!$('practice').checked)finish(true);else if(t>=DURATION)finish();}
+function frame(timestamp){updateHealthDirection();trackRenderBudget(timestamp);const t=time();if(state==='playing'){scheduleMusic();scheduleVoices();if(typeof updateMod==='function')updateMod(t);updateOpponent(t);updateNotes(t);if(typeof updateQT==='function')updateQT(t);if(typeof updateUndertale==='function')updateUndertale(t);if(health<=0&&!$('practice').checked&&!(typeof undertaleFinaleProtected==='function'&&undertaleFinaleProtected(t)))finish(true);else if(t>=DURATION)finish();}
   draw(state==='ready'?0:t);if(typeof updateSongProgress==='function')updateSongProgress(state==='ready'||state==='loading'?0:t);requestAnimationFrame(frame);
 }
 $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pause').addEventListener('click',pause);
