@@ -24,4 +24,3 @@ assert(await p.locator('#undertale-jump').isVisible());await p.locator('#underta
 console.log('PASS intro dialogue and mobile jump');
 assert.deepEqual(errors,[]);console.log('PASS soul movement, timeline, all scenes and browser errors');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
-
