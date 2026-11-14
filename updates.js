@@ -1,6 +1,7 @@
 'use strict';
 // Add a new entry with a unique id whenever a user-facing update is published.
 const GAME_UPDATES = [
+ {id:'2026-11-14-sans-bones',date:'2026-11-14',title:'샌즈 뼈 연출 수정',items:['영상과 원본을 기준으로 긴 뼈의 크기, 빈틈 높이와 오른쪽에서 왼쪽으로 이동하는 경로를 수정했습니다.','반 박자마다 생성하며 구간 종료 후에도 이미 나온 뼈는 화면 밖까지 이동합니다.']},
  {id:'2026-11-14-hopes-finale',date:'2026-11-14',title:'Hopes and Dreams 마지막 구간 조정',items:['마지막 구간의 게임 진행 처리를 조정했습니다.']},
  {id:'2026-11-14-hopes-stars-sound',date:'2026-11-14',title:'큰 별·배경 번개와 피격음 추가',items:['Hopes and Dreams 원본 구간에 반 박자 간격의 큰 별과 배경 번개를 추가했습니다.','SPACE 회피 실패와 번개 피격 시 원본 피격음을 재생합니다.','효과음은 플레이 전에 준비하고 저사양 모드에서는 추가 연출을 생략합니다.']},
  {id:'2026-11-14-mobile-jump',date:'2026-11-14',title:'모바일 점프 버튼 설정',items:['점프 버튼은 기본으로 숨기고, 게임 화면 오른쪽 위 모바일 모드를 켰을 때만 표시합니다.','모바일 모드 선택은 저장되며, 꺼져 있어도 SPACE 키 점프는 사용할 수 있습니다.']},

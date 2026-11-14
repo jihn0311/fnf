@@ -36,14 +36,14 @@ function drawUndertaleStage(t){const phase=undertalePhase(t/BEAT);rect(0,0,1120,
  if(!song.lowSpec&&song.stage==='your-worst-nightmare'){for(let i=0;i<4;i++)if(phase.souls?.[i])extraSprite('undertale/fx/Souls'+(i===3?'':i+1),t,80,30,720,470);if(phase.static){ctx.save();ctx.globalAlpha=.25;extraSprite('undertale/fx/FloweyStatic',t,0,0,1120,530);ctx.restore();}}
  drawUndertaleHopesEffects(t,false);
  drawUndertaleActors(t);
- if(song.lowSpec||!phase.starBlaze)return;
+ if(song.lowSpec||song.stage==='megalovania'||!phase.starBlaze)return;
  const bone=song.stage==='megalovania',pellet=song.stage==='your-worst-nightmare';const key='undertale/fx/'+(bone?'bonewall':pellet?'pellet':'star');const count=bone?8:12;
  for(let i=0;i<count;i++){const age=(t+i*.43)%3,x=1250-age/3*1500+(i%3)*75,y=-80+age/3*650+(i%4)*35;ctx.save();ctx.translate(x,y);if(!bone)ctx.rotate(t+i);extraSprite(key,t,-(bone?10:30),-40,bone?450*126/1390:90,bone?450:90);ctx.restore();}
 }
 function drawUndertaleNote(note,x,y,tail){if(!undertaleActive())return false;const skin=UNDERTALE_SKINS[note.sourceNoteType];if(!skin)return false;const im=modImages.get(skin.src),f=skin.frames[note.lane];if(!im)return false;if(note.duration){ctx.save();ctx.strokeStyle=note.heal?'#66ff9b':'#efefff';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,tail);ctx.stroke();ctx.restore();}ctx.drawImage(im,f.x,f.y,f.w,f.h,x-36,y-36,72,72);return true;}
 function undertaleDialogue(t){const u=undertaleState;if(!u?.dialogue)return;let age=t-u.dialogue.at,line;for(const l of u.dialogue.lines){const duration=Math.max(2.5,l.text.length*(l.speed||.03)+1.5);if(age<duration){line=l;break;}age-=duration;}if(!line)return;const text=line.text.slice(0,Math.max(0,Math.floor(age/(line.speed||.03))));ctx.save();ctx.globalAlpha=.93;ctx.fillStyle='#fff';ctx.beginPath();ctx.roundRect(100,365,920,105,22);ctx.fill();ctx.restore();ctx.fillStyle='#12121b';ctx.font='bold 20px sans-serif';ctx.textAlign='left';let row='',y=402;for(const word of text.split(' ')){if(ctx.measureText(row+word).width>860){ctx.fillText(row,125,y);y+=26;row='';}row+=word+' ';}ctx.fillText(row,125,y);}
 // Use the complete atlas frame (including trim offsets) so the strike stays anchored.
-function drawUndertaleUnderlay(t){if(!undertaleActive())return;ctx.save();drawUndertaleHopesEffects(t,true);undertaleDialogue(t);ctx.restore();}
+function drawUndertaleUnderlay(t){if(!undertaleActive())return;ctx.save();drawUndertaleBones(t);drawUndertaleHopesEffects(t,true);undertaleDialogue(t);ctx.restore();}
 function undertaleAttackGeometry(side,lane,t){const spacing=Math.abs(laneX(1,side)-laneX(0,side)),scale=spacing/110,y=targetY(side,t),left=laneX(0,side)-48,width=spacing*3+96;return {x:laneX(lane,side),y,left,width,scale,boxScale:width/642,beamWidth:61*scale,beamTop:-172*530/720,beamHeight:988*scale};}
 function drawUndertaleAttack(a,t,side){
  const warning=t<a.at,elapsed=Math.max(0,t-(warning?a.warning:a.at));
@@ -97,3 +97,16 @@ function drawUndertaleHopesEffects(t,foreground){
 
 // Four-lane finale begins at source beat 960; protection lasts through song end.
 function undertaleFinaleProtected(t){return undertaleActive()&&song.stage==='hopes-and-dreams'&&t>=960*BEAT;}
+
+// Native doBone: one wall every two steps, fixed Y per wall, four-second horizontal travel.
+function undertaleBoneWalls(t){
+ if(song.stage!=='megalovania'||song.lowSpec)return [];
+ const interval=BEAT/2,last=Math.floor(t/interval),walls=[],scale=530/720;
+ for(let n=Math.max(0,last-Math.ceil(4/interval));n<=last;n++){
+  const age=t-n*interval;if(age<0||age>=4||!undertalePhase(n/2).starBlaze)continue;
+  const step=n*2,cycle=step%16,offset=cycle<8?100*cycle:800-100*(step%8);
+  walls.push({x:(2000-5000*age/4)*1120/1280,y:(offset-600)*scale,w:126*scale,h:1390*scale});
+ }
+ return walls;
+}
+function drawUndertaleBones(t){for(const wall of undertaleBoneWalls(t))if(wall.x+wall.w>0&&wall.x<1120)extraSprite('undertale/fx/bonewall',t,wall.x,wall.y,wall.w,wall.h);}

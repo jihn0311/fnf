@@ -26,5 +26,10 @@ await p.evaluate(()=>{
  selectSong('undertale-megalovania');if(undertaleFinaleProtected(1200*BEAT))throw Error('Protected other song');
 });
 console.log('PASS zero-health finale protection, boundary, song completion and other-song exclusion');
+
+await p.evaluate(async()=>{selectSong('undertale-megalovania');await prepareMod();const t=205*BEAT,a=undertaleBoneWalls(t),b=undertaleBoneWalls(t+.01);if(!a.length||!b.length)throw Error('Missing bones');const wall=a[a.length-1],next=b[b.length-1];if(next.x>=wall.x||next.y!==wall.y)throw Error('Bones must travel left at fixed height');if(Math.abs(wall.w/wall.h-126/1390)>.00001||wall.h<1000)throw Error('Wrong bone size');if(undertaleBoneWalls(199*BEAT).length)throw Error('Early bones');if(!undertaleBoneWalls(264*BEAT+.01).length)throw Error('Existing bones disappeared at phase end');if(undertaleBoneWalls(264*BEAT+4).length)throw Error('Expired bones');song.lowSpec=true;if(undertaleBoneWalls(t).length)throw Error('Low spec bones');song.lowSpec=false;});
+await p.evaluate(()=>{state='paused';const t=205*BEAT;extraUpdate(t,true);updateUndertale(t);draw(t);});
+await p.locator('canvas').first().screenshot({path:process.env.TEMP+'/sans-bones-fixed.png'});
+console.log('PASS bone timing, horizontal travel, aspect ratio, tail lifetime and low-spec exclusion');
 assert.deepEqual(errors,[]);console.log('PASS native sound decode, hit-only playback, large stars, thunder and low-spec exclusion');
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
