@@ -22,8 +22,9 @@ console.log('PASS dodge damage, jumps, bot safety, phase changes and deployment 
 await p.evaluate(()=>{selectSong('undertale-megalovania');window.introDone=false;playUndertaleIntro().then(()=>window.introDone=true);});
 assert(await p.locator('#undertale-intro').isVisible());await p.locator('#undertale-intro button').last().click();assert(await p.evaluate(()=>window.introDone));
 await p.evaluate(()=>{state='playing';audio={currentTime:10};startTime=0;undertaleReset();drawUndertaleHud(10);});
-assert(await p.locator('#undertale-jump').isVisible());await p.locator('#undertale-jump').dispatchEvent('pointerdown');assert.equal(await p.evaluate(()=>undertaleState.jump),10);
-console.log('PASS intro dialogue and mobile jump');
+assert(!(await p.locator('#undertale-jump').isVisible()));await p.locator('#mobile-mode').click();assert.equal(await p.evaluate(()=>localStorage.getItem('fnf-mobile-mode')),'true');assert(await p.locator('#undertale-jump').isVisible());await p.locator('#undertale-jump').dispatchEvent('pointerdown');assert.equal(await p.evaluate(()=>undertaleState.jump),10);
+await p.locator('#mobile-mode').click();assert(!(await p.locator('#undertale-jump').isVisible()));
+console.log('PASS intro dialogue and mobile jump toggle');
 for(const mode of ['fullscreen','game-only']){
  await p.evaluate(()=>{state='paused';});
  await p.locator('#'+mode).click();

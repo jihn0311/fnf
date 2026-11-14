@@ -1,6 +1,7 @@
 'use strict';
 // Add a new entry with a unique id whenever a user-facing update is published.
 const GAME_UPDATES = [
+ {id:'2026-11-14-mobile-jump',date:'2026-11-14',title:'모바일 점프 버튼 설정',items:['점프 버튼은 기본으로 숨기고, 게임 화면 오른쪽 위 모바일 모드를 켰을 때만 표시합니다.','모바일 모드 선택은 저장되며, 꺼져 있어도 SPACE 키 점프는 사용할 수 있습니다.']},
  {id:'2026-11-14-fullscreen-dialogue',date:'2026-11-14',title:'전체화면 대사 표시 수정',items:['게임 화면만 모드에서도 곡 시작 전 대사와 다음·건너뛰기 버튼이 표시되도록 수정했습니다.']},
  {id:'2026-11-14-soul-damage',date:'2026-11-14',title:'하트 크기와 공격 피해 수정',items:['하트의 투명 여백을 제거해 더 크고 선명하게 표시합니다.','Sans의 뼈 비율을 조정하고 SPACE 공격에도 원본 뼈 이미지를 적용했습니다.','화면 갱신이 늦을 때 번개·SPACE 공격 피해가 누락되는 조건을 수정했습니다.','번개는 왼쪽부터 보라·하늘·초록·빨강으로 표시됩니다.']},
  {id:'2026-11-14-hopes-hazards',date:'2026-11-14',title:'Hopes and Dreams 연출 수정',items:['플레이 중 말풍선이 채보 뒤에 표시되도록 수정했습니다.','번개를 레인 중앙에 정렬하고 레인별 색상과 원본 비율을 적용했습니다.','SPACE 회피 함정을 원본 경고 테두리와 베기 애니메이션으로 변경했습니다.']},
