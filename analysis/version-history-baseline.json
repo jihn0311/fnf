@@ -524,5 +524,7 @@
       "title": "Preserve Flowey heart image quality and correct BF animation offsets",
       "category": "minor"
     }
-  ]
+  ],
+  "mods": 17,
+  "modCounting": "Mode picker families excluding original and qt-safe duplicate; variants do not count."
 }

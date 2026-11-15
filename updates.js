@@ -1,8 +1,9 @@
 'use strict';
-// Every new release needs a unique id and changes:{songs:0,major:0,minor:1}.
+// Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
- {id:'2026-11-15-version-display',changes:{songs:0,major:0,minor:1},date:'2026-11-15',title:'누적 버전 표시 추가',items:['상단에 곡 추가·큰 수정·작은 수정 누적 버전을 표시합니다.','기존 곡 목록과 Git 저장 기록을 기준으로 이전 변경도 집계했습니다.']},
+ {id:'2026-11-15-mod-version',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'모드 수 기준으로 버전 변경',items:['버전 첫 숫자는 곡 수 대신 추가된 모드 수로 계산합니다.','기본 곡과 저사양·회피 없음 변형은 별도 모드로 세지 않습니다.']},
+ {id:'2026-11-15-version-display',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'누적 버전 표시 추가',items:['상단에 곡 추가·큰 수정·작은 수정 누적 버전을 표시합니다.','기존 곡 목록과 Git 저장 기록을 기준으로 이전 변경도 집계했습니다.']},
  {id:'2026-11-15-flowey-quality',date:'2026-11-15',title:'플라위 하트 화질·보프 위치 수정',items:['회전 하트 이미지를 원본 픽셀을 보존하는 무손실 이미지로 교체했습니다.','보프 동작별 위치 보정에 원본 배율을 반영해 과도하게 흔들리는 현상을 줄였습니다.']},
  {id:'2026-11-14-ranking-names',date:'2026-11-14',title:'랭킹 닉네임 필터 추가',items:['부적절한 표현이 포함된 닉네임은 게임에서 등록을 차단하고 랭킹 목록에서도 숨깁니다.']},
  {id:'2026-11-14-lightning-combo',date:'2026-11-14',title:'번개 피격 콤보 유지',items:['번개에 맞아도 콤보가 끊기지 않도록 변경했습니다. 체력 피해는 그대로 적용됩니다.']},
@@ -18,14 +19,14 @@ const GAME_UPDATES = [
 ];
 
 // Audited history through c105582; entries older than this baseline are already counted.
-const GAME_VERSION_BASELINE={songs:206,major:32,minor:46};
+const GAME_VERSION_BASELINE={mods:17,major:32,minor:46};
 const GAME_VERSION_TOTAL={...GAME_VERSION_BASELINE};
-for(const entry of [...GAME_UPDATES].reverse()){if(!entry.changes)continue;for(const key of ['songs','major','minor']){const n=entry.changes[key]||0;if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid version increment');GAME_VERSION_TOTAL[key]+=n;}entry.version=Object.values(GAME_VERSION_TOTAL).join('.');}
+for(const entry of [...GAME_UPDATES].reverse()){if(!entry.changes)continue;for(const key of ['mods','major','minor']){const n=entry.changes[key]||0;if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid version increment');GAME_VERSION_TOTAL[key]+=n;}entry.version=Object.values(GAME_VERSION_TOTAL).join('.');}
 const GAME_VERSION=Object.values(GAME_VERSION_TOTAL).join('.');
 
 (()=>{
  const key='fnf.updates.lastSeen',latest=GAME_UPDATES[0],trigger=document.getElementById('open-updates'),dialog=document.getElementById('updates-dialog'),body=document.getElementById('updates-content'),title=document.getElementById('updates-title');
- const badge=document.getElementById('game-version');if(badge){badge.textContent='v'+GAME_VERSION;badge.title='곡 추가 '+GAME_VERSION_TOTAL.songs+' · 큰 수정 '+GAME_VERSION_TOTAL.major+' · 작은 수정 '+GAME_VERSION_TOTAL.minor;badge.setAttribute('aria-label',badge.title);}
+ const badge=document.getElementById('game-version');if(badge){badge.textContent='v'+GAME_VERSION;badge.title='모드 추가 '+GAME_VERSION_TOTAL.mods+' · 큰 수정 '+GAME_VERSION_TOTAL.major+' · 작은 수정 '+GAME_VERSION_TOTAL.minor;badge.setAttribute('aria-label',badge.title);}
  if(!latest||!trigger||!dialog)return;
  const read=()=>{try{const value=localStorage.getItem(key);if(value)return value;}catch{}try{return sessionStorage.getItem(key);}catch{return null;}};
  const remember=()=>{try{localStorage.setItem(key,latest.id);}catch{try{sessionStorage.setItem(key,latest.id);}catch{}}};
