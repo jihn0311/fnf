@@ -100,3 +100,5 @@
 #mobile-mode{position:absolute;top:8px;right:8px;z-index:5;padding:8px 10px;border:1px solid #ffffff55;border-radius:6px;background:#10151dcc;color:#fff;font-size:12px;cursor:pointer;touch-action:manipulation}
 #mobile-mode[aria-pressed="true"]{border-color:#8cf5d9;color:#8cf5d9}
 .game.game-only #exit-game-only{right:140px}
+
+#volume-tray{position:absolute;top:0;left:50%;transform:translateX(-50%);width:220px;height:138px;z-index:30;pointer-events:none}#volume-tray[hidden]{display:none}.volume-box{width:100%;height:100%;object-fit:contain}#volume-bars{position:absolute;left:28px;top:25px;width:165px;height:46px;object-fit:contain}#volume-value{position:absolute;bottom:3px;left:0;width:100%;text-align:center;color:#fff;font:bold 13px monospace}

@@ -2575,5 +2575,16 @@
   "updates.js",
   "updates.css",
   "assets/extra-mods/undertale/sounds/damage.ogg",
-  "assets/extra-mods/undertale/fx/thunder.webp"
+  "assets/extra-mods/undertale/fx/thunder.webp",
+  "assets/volume/bars_1.png",
+  "assets/volume/bars_10.png",
+  "assets/volume/bars_2.png",
+  "assets/volume/bars_3.png",
+  "assets/volume/bars_4.png",
+  "assets/volume/bars_5.png",
+  "assets/volume/bars_6.png",
+  "assets/volume/bars_7.png",
+  "assets/volume/bars_8.png",
+  "assets/volume/bars_9.png",
+  "assets/volume/volumebox.png"
 ]

@@ -50,6 +50,7 @@ function selectSong(id){
   $('track-number').textContent=(song.audioSrc?'YOUR TRACK / ':'ORIGINAL TRACK / ')+String(Object.keys(SONGS).indexOf(songId)+1).padStart(2,'0');
   $('song-description').textContent=song.description;
 }
+let volumeLevel=1,volumeTimer;
 let audio, master, muted = false, state = 'ready', startTime = 0, pausedTime = 0;
 let notes = [], score = 0, combo = 0, maxCombo = 0, health = 50, earned = 0, judged = 0;
 let songIndex = 0, feedback = '', feedbackAt = -10, feedbackColor = '#fff', sources = [];
@@ -313,7 +314,7 @@ async function start(){
   showPauseActions(false);$('pause').disabled=true;stopSources();
   state='loading';pausedTime=0;pauseAfterLoad=false;readSettings();setSettingsLocked(true);$('start').disabled=true;$('start').textContent='음원 준비 중…';$('status').textContent='LOADING';
   try{
-    if(!audio){audio=new AudioContext();master=audio.createGain();master.gain.value=muted?0:.65;master.connect(audio.destination);}
+    if(!audio){audio=new AudioContext();master=audio.createGain();master.gain.value=muted?0:.65*volumeLevel;master.connect(audio.destination);}
     await audio.resume();
     // Release the previous song's decoded audio before loading the next stage.
     const voiceSources=song.voiceSources||(song.voiceSrc?[song.voiceSrc]:[]);
@@ -602,9 +603,10 @@ function frame(timestamp){updateHealthDirection();trackRenderBudget(timestamp);c
 }
 $('start').addEventListener('click',()=>state==='paused'?pause():start());$('pause').addEventListener('click',pause);
 $('restart').addEventListener('click',restartSong);$('stop-song').addEventListener('click',stopSong);
-$('sound').addEventListener('click',()=>{muted=!muted;if(master)master.gain.value=muted?0:.65;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');});
+$('sound').addEventListener('click',()=>{muted=!muted;if(!muted&&volumeLevel===0)volumeLevel=1;if(master)master.gain.value=muted?0:.65*volumeLevel;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');});
 document.addEventListener('keydown',e=>{
   if($('key-settings-dialog')?.open)return;
+  if(state==='playing'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!e.target?.matches?.('input,textarea,[contenteditable=true]')&&['Minus','Equal'].includes(e.code)){e.preventDefault();changeVolume(e.code==='Equal'?1:-1);return;}
   const key=inputKey(e);
   if(typeof dustinKey==='function'&&dustinKey(e,true))return;
   if(key==='Escape'&&document.querySelector('.game')?.classList.contains('game-only')&&!document.fullscreenElement){e.preventDefault();setGameOnly(false);return;}
@@ -733,12 +735,20 @@ $('key-settings-dialog')?.addEventListener('close',()=>{bindingLane=null;held.cl
 
 // Remember controls on this browser without storing in-progress game state.
 const savedControlIds=['difficulty','scroll','speed','rate','practice','nightmare','play-side','bot-mode','performance-mode'];
-function saveGamePreferences(){try{const controls={};for(const id of savedControlIds){const e=$(id);if(e)controls[id]=e.type==='checkbox'?e.checked:e.value;}localStorage.setItem('fnf-preferences-v1',JSON.stringify({controls,muted}));}catch{}}
+function saveGamePreferences(){try{const controls={};for(const id of savedControlIds){const e=$(id);if(e)controls[id]=e.type==='checkbox'?e.checked:e.value;}localStorage.setItem('fnf-preferences-v1',JSON.stringify({controls,muted,volumeLevel}));}catch{}}
 function restoreGamePreferences(){try{const saved=JSON.parse(localStorage.getItem('fnf-preferences-v1'));if(!saved?.controls)return;
  for(const id of savedControlIds){const e=$(id),v=saved.controls[id];if(!e||v===undefined)continue;if(e.type==='checkbox'){if(typeof v==='boolean')e.checked=v;}else if(e.tagName==='SELECT'){if([...e.options].some(o=>o.value===v))e.value=v;}else if(Number.isFinite(Number(v))){e.value=String(Math.max(Number(e.min)||0,Math.min(Number(e.max)||Infinity,Number(v))));}}
+ if(typeof saved.volumeLevel==='number'&&Number.isFinite(saved.volumeLevel))volumeLevel=Math.max(0,Math.min(1,saved.volumeLevel));
  muted=!!saved.muted;$('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');
  rebuildSongPicker();readSettings();changeScrollSpeed($('speed').value);updateHealthDirection();
  }catch{}}
 restoreGamePreferences();
 for(const id of [...savedControlIds,'speed-number'])for(const event of ['input','change'])$(id)?.addEventListener(event,saveGamePreferences);
 $('sound').addEventListener('click',saveGamePreferences);
+
+function changeVolume(direction){
+ volumeLevel=Math.max(0,Math.min(1,Math.round(((muted?0:volumeLevel)+direction*.1)*10)/10));muted=volumeLevel===0;
+ if(master)master.gain.value=muted?0:.65*volumeLevel;
+ $('sound').textContent=muted?'SOUND OFF':'SOUND ON';$('sound').setAttribute('aria-label',muted?'소리 켜기':'소리 끄기');
+ const tray=$('volume-tray'),bars=$('volume-bars'),level=Math.round(volumeLevel*10);bars.hidden=level===0;if(level)bars.src='assets/volume/bars_'+level+'.png';$('volume-value').textContent=Math.round(volumeLevel*100)+'%';tray.hidden=false;clearTimeout(volumeTimer);volumeTimer=setTimeout(()=>tray.hidden=true,1400);saveGamePreferences();
+}

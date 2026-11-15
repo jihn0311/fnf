@@ -2,6 +2,7 @@
 // Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-15-volume-keys',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'볼륨 단축키 추가',items:['플레이 중 - 키로 볼륨을 낮추고 = 키로 높일 수 있습니다.','원본 VOLUME 이미지와 막대를 표시하며 볼륨 설정을 저장합니다.']},
  {id:'2026-11-15-mod-version',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'모드 수 기준으로 버전 변경',items:['버전 첫 숫자는 곡 수 대신 추가된 모드 수로 계산합니다.','기본 곡과 저사양·회피 없음 변형은 별도 모드로 세지 않습니다.']},
  {id:'2026-11-15-version-display',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'누적 버전 표시 추가',items:['상단에 곡 추가·큰 수정·작은 수정 누적 버전을 표시합니다.','기존 곡 목록과 Git 저장 기록을 기준으로 이전 변경도 집계했습니다.']},
  {id:'2026-11-15-flowey-quality',date:'2026-11-15',title:'플라위 하트 화질·보프 위치 수정',items:['회전 하트 이미지를 원본 픽셀을 보존하는 무손실 이미지로 교체했습니다.','보프 동작별 위치 보정에 원본 배율을 반영해 과도하게 흔들리는 현상을 줄였습니다.']},
