@@ -1,6 +1,7 @@
 'use strict';
 // Add a new entry with a unique id whenever a user-facing update is published.
 const GAME_UPDATES = [
+ {id:'2026-11-15-flowey-quality',date:'2026-11-15',title:'플라위 하트 화질·보프 위치 수정',items:['회전 하트 이미지를 원본 픽셀을 보존하는 무손실 이미지로 교체했습니다.','보프 동작별 위치 보정에 원본 배율을 반영해 과도하게 흔들리는 현상을 줄였습니다.']},
  {id:'2026-11-14-ranking-names',date:'2026-11-14',title:'랭킹 닉네임 필터 추가',items:['부적절한 표현이 포함된 닉네임은 게임에서 등록을 차단하고 랭킹 목록에서도 숨깁니다.']},
  {id:'2026-11-14-lightning-combo',date:'2026-11-14',title:'번개 피격 콤보 유지',items:['번개에 맞아도 콤보가 끊기지 않도록 변경했습니다. 체력 피해는 그대로 적용됩니다.']},
  {id:'2026-11-14-sans-bones',date:'2026-11-14',title:'샌즈 뼈 연출 수정',items:['영상과 원본을 기준으로 긴 뼈의 크기, 빈틈 높이와 오른쪽에서 왼쪽으로 이동하는 경로를 수정했습니다.','반 박자마다 생성하며 구간 종료 후에도 이미 나온 뼈는 화면 밖까지 이동합니다.']},

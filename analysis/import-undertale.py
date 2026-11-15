@@ -3,7 +3,7 @@ import json,sys,copy,xml.etree.ElementTree as ET
 from PIL import Image
 root=Path(__file__).resolve().parent.parent
 source=Path('C:/Users/kht80/AppData/Local/Temp/undertale-original')
-helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)};exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0],ns)
+helper=root/'analysis/import-extra-mods.py';ns={'__file__':str(helper)};exec(helper.read_text(encoding='utf-8-sig').split('for pack,folder in')[0].replace('save(dest,quality=84,method=3)', "save(dest,quality=84,method=3,lossless=key.startswith('undertale/fx/Souls'))"),ns)
 art=ns['ART'];songs={};
 old=root/'undertale-mod.js'
 if old.exists():
@@ -21,6 +21,15 @@ for name in chars:
    if anim in a['animations']:a['config'][anim]['fps']=24
 for name in ['thunder','blaster','hall','grafix','star','bone','bonewall','soul','warning','box','Slash','lightning','vine','pellet','Souls','Souls1','Souls2','Souls3','FloweyStatic','speech_bubble']:
  ns['atlas'](source/'assets/shared/images'/name,'undertale/fx/'+name,height=650,bg=True)
+# Preserve original pixels for rotating hearts, avoiding lossy edge artifacts.
+for name in ['Souls','Souls1','Souls2','Souls3']:
+ key='undertale/fx/'+name
+ if not art['sprites'][key].get('lossless'):
+  del art['sprites'][key]
+  ns['atlas'](source/'assets/shared/images'/name,key,height=650,bg=True)['lossless']=True
+# Native character offsets are screen pixels, not scaled sprite pixels.
+if 'undertale:bfBackwards' in art['characters']:
+ art['characters']['undertale:bfBackwards']['nativeScale']=ns['read'](source/'assets/preload/characters/bfBackwards.json')['scale']
 skins={}
 for typ,name in [('Hurt Note','HURTNOTE_assets'),('Heal Note','HEALNOTE_assets'),('Sans Note','SANSNOTE_assets')]:
  base=source/'assets/shared/images'/name;dest=root/'assets/extra-mods/undertale/notes'/f'{name}.webp';dest.parent.mkdir(parents=True,exist_ok=True);Image.open(base.with_suffix('.png')).save(dest,lossless=True)

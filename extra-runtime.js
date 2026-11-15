@@ -174,7 +174,8 @@ function extraActor(side,t,x,y,black=false){
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
  }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'||song.pack==='galaxy'||song.pack==='undertale'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
-  ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*a.scale+f.ox-off[0]*a.scale,-idle.h-idle.oy+idleOff[1]*a.scale+f.oy-off[1]*a.scale,f.w,f.h);
+  const offsetScale=a.scale/(a.nativeScale||1);
+  ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*offsetScale+f.ox-off[0]*offsetScale,-idle.h-idle.oy+idleOff[1]*offsetScale+f.oy-off[1]*offsetScale,f.w,f.h);
  }else if(song.pack==='agoti'){
   const anchor=a.animations[key]?.[0]||a.animations.idle[0];
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-anchor.fw/2+f.ox,-anchor.fh+f.oy,f.w,f.h);
