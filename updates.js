@@ -1,6 +1,8 @@
 'use strict';
-// Add a new entry with a unique id whenever a user-facing update is published.
+// Every new release needs a unique id and changes:{songs:0,major:0,minor:1}.
+// See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-15-version-display',changes:{songs:0,major:0,minor:1},date:'2026-11-15',title:'누적 버전 표시 추가',items:['상단에 곡 추가·큰 수정·작은 수정 누적 버전을 표시합니다.','기존 곡 목록과 Git 저장 기록을 기준으로 이전 변경도 집계했습니다.']},
  {id:'2026-11-15-flowey-quality',date:'2026-11-15',title:'플라위 하트 화질·보프 위치 수정',items:['회전 하트 이미지를 원본 픽셀을 보존하는 무손실 이미지로 교체했습니다.','보프 동작별 위치 보정에 원본 배율을 반영해 과도하게 흔들리는 현상을 줄였습니다.']},
  {id:'2026-11-14-ranking-names',date:'2026-11-14',title:'랭킹 닉네임 필터 추가',items:['부적절한 표현이 포함된 닉네임은 게임에서 등록을 차단하고 랭킹 목록에서도 숨깁니다.']},
  {id:'2026-11-14-lightning-combo',date:'2026-11-14',title:'번개 피격 콤보 유지',items:['번개에 맞아도 콤보가 끊기지 않도록 변경했습니다. 체력 피해는 그대로 적용됩니다.']},
@@ -14,12 +16,20 @@ const GAME_UPDATES = [
  {id:'2026-11-14-undertale',date:'2026-11-14',title:'UNDERTALE 스테이지 추가',items:['튜토리얼, Asriel, Flowey, Sans 스테이지를 추가했습니다.','원본 채보·음악·캐릭터와 함정·회복 노트를 적용했습니다.','하트 이동, SPACE·터치 점프, 전투 대사와 공격 연출을 추가했습니다.','일반·저사양 모드를 제공하며, Flowey는 Normal 난이도로 플레이할 수 있습니다.','새 업데이트는 처음 접속할 때 한 번 안내하며, 왼쪽 위에서 내역을 다시 볼 수 있습니다.']},
  {id:'2026-11-11-galaxy',date:'2026-11-11',title:'갤럭시 채보 이동',items:['Cona·Underworld·Cyber에 노트와 판정 화살표 이동을 적용했습니다.','Underworld의 보라색 노트와 Cyber의 게임 화면 축소·이동 연출을 추가했습니다.','일반 모드는 모든 난이도에서 이동하며, 저사양 모드는 고정 채보를 유지합니다.']}
 ];
+
+// Audited history through c105582; entries older than this baseline are already counted.
+const GAME_VERSION_BASELINE={songs:206,major:32,minor:46};
+const GAME_VERSION_TOTAL={...GAME_VERSION_BASELINE};
+for(const entry of [...GAME_UPDATES].reverse()){if(!entry.changes)continue;for(const key of ['songs','major','minor']){const n=entry.changes[key]||0;if(!Number.isSafeInteger(n)||n<0)throw Error('Invalid version increment');GAME_VERSION_TOTAL[key]+=n;}entry.version=Object.values(GAME_VERSION_TOTAL).join('.');}
+const GAME_VERSION=Object.values(GAME_VERSION_TOTAL).join('.');
+
 (()=>{
  const key='fnf.updates.lastSeen',latest=GAME_UPDATES[0],trigger=document.getElementById('open-updates'),dialog=document.getElementById('updates-dialog'),body=document.getElementById('updates-content'),title=document.getElementById('updates-title');
+ const badge=document.getElementById('game-version');if(badge){badge.textContent='v'+GAME_VERSION;badge.title='곡 추가 '+GAME_VERSION_TOTAL.songs+' · 큰 수정 '+GAME_VERSION_TOTAL.major+' · 작은 수정 '+GAME_VERSION_TOTAL.minor;badge.setAttribute('aria-label',badge.title);}
  if(!latest||!trigger||!dialog)return;
  const read=()=>{try{const value=localStorage.getItem(key);if(value)return value;}catch{}try{return sessionStorage.getItem(key);}catch{return null;}};
  const remember=()=>{try{localStorage.setItem(key,latest.id);}catch{try{sessionStorage.setItem(key,latest.id);}catch{}}};
- function render(history){title.textContent=history?'업데이트 내역':'새로운 업데이트';body.replaceChildren();for(const entry of history?GAME_UPDATES:[latest]){const article=document.createElement('article'),date=document.createElement('time'),heading=document.createElement('h3'),list=document.createElement('ul');date.dateTime=entry.date;date.textContent=entry.date.replaceAll('-','.');heading.textContent=entry.title;for(const item of entry.items){const li=document.createElement('li');li.textContent=item;list.append(li);}article.append(date,heading,list);body.append(article);}dialog.scrollTop=0;}
+ function render(history){title.textContent=history?'업데이트 내역':'새로운 업데이트';body.replaceChildren();for(const entry of history?GAME_UPDATES:[latest]){const article=document.createElement('article'),date=document.createElement('time'),heading=document.createElement('h3'),list=document.createElement('ul');date.dateTime=entry.date;date.textContent=entry.date.replaceAll('-','.');heading.textContent=(entry.version?'v'+entry.version+' · ':'')+entry.title;for(const item of entry.items){const li=document.createElement('li');li.textContent=item;list.append(li);}article.append(date,heading,list);body.append(article);}dialog.scrollTop=0;}
  function open(history){if(dialog.open)return;render(history);dialog.showModal();remember();}
  trigger.addEventListener('click',async()=>{if(typeof state!=='undefined'&&state==='playing'&&typeof pause==='function')await pause();open(true);});
  document.getElementById('close-updates').addEventListener('click',()=>dialog.close());

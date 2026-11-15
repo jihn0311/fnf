@@ -5,3 +5,5 @@
 #updates-content{padding:0 24px}#updates-content article{padding:23px 0;border-bottom:1px solid #304252}#updates-content article:last-child{border-bottom:0}#updates-content time{font:12px monospace;color:#8cf5d9}#updates-content h3{font-size:19px;margin:10px 0 15px}#updates-content ul{padding-left:20px;margin:0;display:grid;gap:12px;color:#c3d1df;font-size:14px;line-height:1.75}.updates-footer{padding:18px 24px 24px;display:flex;justify-content:flex-end}.updates-footer button{padding:12px 26px;background:#8cf5d9;color:#10211e;border:0;border-radius:9px;font:700 14px inherit;cursor:pointer}
 #updates-dialog button:focus-visible,.updates-trigger:focus-visible{outline:3px solid #e7c66f;outline-offset:3px}
 @media(max-width:600px){.header-home{gap:9px}.updates-trigger{font-size:11px;padding:8px}.updates-heading{padding:18px}.updates-heading h2{font-size:20px}#updates-content{padding:0 18px}#updates-content ul{font-size:13px}.updates-footer{padding:16px 18px}}
+
+.game-version{display:inline-block;white-space:nowrap;font:700 13px monospace;letter-spacing:.04em;color:#8cf5d9;border:1px solid #46685f;background:#112921;border-radius:7px;padding:7px 9px}

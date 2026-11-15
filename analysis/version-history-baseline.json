@@ -1,0 +1,528 @@
+{
+  "cutoff": "c105582",
+  "songs": 206,
+  "counts": {
+    "song": 20,
+    "major": 32,
+    "minor": 46,
+    "excluded": 5
+  },
+  "note": "Retrospective severity classification. Song bundles count actual unique tracks; maintenance and selection notes excluded. Feature/presentation updates count as minor.",
+  "commits": [
+    {
+      "commit": "1a3768f",
+      "title": "Add Neon Duet rhythm game with Sonic.exe songs and web effects",
+      "category": "song"
+    },
+    {
+      "commit": "955facd",
+      "title": "Update note skins, timing feedback, speed controls and top health HUD",
+      "category": "minor"
+    },
+    {
+      "commit": "aa244bb",
+      "title": "Add mod packs and improve character rendering, audio, HUD and sustain judgments",
+      "category": "song"
+    },
+    {
+      "commit": "8130967",
+      "title": "Add Silly Billy with restored cutscenes and fix Endless and hazard notes",
+      "category": "song"
+    },
+    {
+      "commit": "d2b651d",
+      "title": "Add low-spec song variants, original countdown and transition protection",
+      "category": "minor"
+    },
+    {
+      "commit": "35e344b",
+      "title": "Add Impostor V4 stages and events, nightmare mode and gameplay fixes",
+      "category": "song"
+    },
+    {
+      "commit": "c12f2f4",
+      "title": "Record Selever song selection request",
+      "category": "excluded"
+    },
+    {
+      "commit": "e704c0a",
+      "title": "Record Casanova selection",
+      "category": "excluded"
+    },
+    {
+      "commit": "da2d88f",
+      "title": "Add selected Mid-Fight Masses songs and verify Selever character poses",
+      "category": "song"
+    },
+    {
+      "commit": "f01c12d",
+      "title": "Version browser assets to prevent stale mod rendering code",
+      "category": "major"
+    },
+    {
+      "commit": "ed40e32",
+      "title": "Match Casanova framing and add ALT chart with magic circle effects",
+      "category": "minor"
+    },
+    {
+      "commit": "dcea01e",
+      "title": "Adapt Mid-Fight Masses ALT stages and Gospel cross note skin",
+      "category": "minor"
+    },
+    {
+      "commit": "47f9523",
+      "title": "Fix singer and GF animation playback and improve stage clarity",
+      "category": "major"
+    },
+    {
+      "commit": "684f3e4",
+      "title": "Ground Impostor opponents and reduce shared gameplay traversal overhead",
+      "category": "major"
+    },
+    {
+      "commit": "38793e2",
+      "title": "Add Attack and Demonila and replace Casanova charts with Selever 2.1",
+      "category": "song"
+    },
+    {
+      "commit": "4acf019",
+      "title": "Prevent nightmare opponent drain from killing the player",
+      "category": "major"
+    },
+    {
+      "commit": "aa299aa",
+      "title": "Add Agoti songs, native character art and note modchart",
+      "category": "song"
+    },
+    {
+      "commit": "020267b",
+      "title": "Fix Selever transparent frames and optimize recent mod loading",
+      "category": "major"
+    },
+    {
+      "commit": "4a5d1cf",
+      "title": "Disable character miss poses while preserving penalties",
+      "category": "minor"
+    },
+    {
+      "commit": "b236292",
+      "title": "Show per-song D F J K key press counts",
+      "category": "minor"
+    },
+    {
+      "commit": "afb7cb8",
+      "title": "Reduce dense-chart input scanning and per-note rendering overhead",
+      "category": "major"
+    },
+    {
+      "commit": "75d86ae",
+      "title": "Persist cumulative key counts and illuminate square keycaps",
+      "category": "minor"
+    },
+    {
+      "commit": "c608bbf",
+      "title": "Use dedicated Sonic phantom and static note designs",
+      "category": "minor"
+    },
+    {
+      "commit": "23e821f",
+      "title": "Add Mario Madness songs and icon-based mod selection",
+      "category": "song"
+    },
+    {
+      "commit": "b491dfe",
+      "title": "Style per-mod remaining-time bars above key counters",
+      "category": "minor"
+    },
+    {
+      "commit": "d5c0953",
+      "title": "Order Mario songs by story worlds before bonus tracks",
+      "category": "minor"
+    },
+    {
+      "commit": "d27c7c0",
+      "title": "Port Mario scripted character transformations and preload their assets",
+      "category": "major"
+    },
+    {
+      "commit": "848ad5b",
+      "title": "Correct affected Mario song count in work log",
+      "category": "excluded"
+    },
+    {
+      "commit": "7322509",
+      "title": "Add All-Stars act background transitions and finale lightning",
+      "category": "major"
+    },
+    {
+      "commit": "75b020b",
+      "title": "Match All-Stars presentation to gameplay reference",
+      "category": "minor"
+    },
+    {
+      "commit": "a142d83",
+      "title": "Double nightmare opponent health drain",
+      "category": "minor"
+    },
+    {
+      "commit": "e0d1b69",
+      "title": "Fix All-Stars chord poses and animate Act 3 Mario",
+      "category": "major"
+    },
+    {
+      "commit": "4e42f9e",
+      "title": "Add Garcello pack with four songs and native character art",
+      "category": "song"
+    },
+    {
+      "commit": "44748fa",
+      "title": "Add Kapi Arcade Showdown with five playable songs",
+      "category": "song"
+    },
+    {
+      "commit": "f6af9e6",
+      "title": "Add Camellia songs, charts and character art",
+      "category": "song"
+    },
+    {
+      "commit": "1230bff",
+      "title": "Fix Camellia GF flicker and optimize and expand Kapi",
+      "category": "song"
+    },
+    {
+      "commit": "0d0308c",
+      "title": "Allow saved per-lane keyboard bindings",
+      "category": "minor"
+    },
+    {
+      "commit": "1efaddc",
+      "title": "Show keyboard settings beside sound button",
+      "category": "minor"
+    },
+    {
+      "commit": "2b95749",
+      "title": "Reduce normal-mode render pressure for steadier note scrolling",
+      "category": "major"
+    },
+    {
+      "commit": "3af76d5",
+      "title": "Separate cached 30fps stage rendering from full-rate notes",
+      "category": "major"
+    },
+    {
+      "commit": "3f66380",
+      "title": "Keep Kapi GF hair animation out of dance frames",
+      "category": "minor"
+    },
+    {
+      "commit": "ddfee3e",
+      "title": "Add opponent-side play and perfect autoplay bot",
+      "category": "minor"
+    },
+    {
+      "commit": "3732406",
+      "title": "Add QT dodge and safe variants with 10 percent damage protection",
+      "category": "song"
+    },
+    {
+      "commit": "d9afcaf",
+      "title": "Fix All Stars framing and controlled Kapi skins; allow 16x playback",
+      "category": "minor"
+    },
+    {
+      "commit": "be93e74",
+      "title": "Match readable QT video staging and add native BF dodge pose",
+      "category": "minor"
+    },
+    {
+      "commit": "a32ca2e",
+      "title": "Sync QT warning and prepare cues with native chart; animate stage TVs",
+      "category": "minor"
+    },
+    {
+      "commit": "f8ebf50",
+      "title": "Fix QT late character slots and stabilize KB transformation poses",
+      "category": "major"
+    },
+    {
+      "commit": "86dc29e",
+      "title": "Add 23 Dustin songs with lightweight charts, stages and character transitions",
+      "category": "song"
+    },
+    {
+      "commit": "85f907a",
+      "title": "Restore all Dustin vocal stems and align native stage and character framing",
+      "category": "major"
+    },
+    {
+      "commit": "e346247",
+      "title": "Add Corruption+ songs, vocals, scene changes and opening playback",
+      "category": "song"
+    },
+    {
+      "commit": "34e9351",
+      "title": "Restore Dustin normal-mode mechanics and repair timed scene rendering",
+      "category": "major"
+    },
+    {
+      "commit": "42bb766",
+      "title": "Keep Sans and Mettaton separate and widen Heatwave framing",
+      "category": "minor"
+    },
+    {
+      "commit": "529459d",
+      "title": "Fix Broken Reality player layout and restore attack presentation",
+      "category": "major"
+    },
+    {
+      "commit": "5cd23b6",
+      "title": "Fix Dustin phantom isolation, scroll transitions and bloom visibility",
+      "category": "major"
+    },
+    {
+      "commit": "58ac993",
+      "title": "Make in-game keycaps multi-touch controls for mobile play",
+      "category": "minor"
+    },
+    {
+      "commit": "ab2dc32",
+      "title": "Add stage-only fullscreen view with return control",
+      "category": "minor"
+    },
+    {
+      "commit": "46b015f",
+      "title": "Add Supabase casual leaderboard with explicit record submission (#1)",
+      "category": "minor"
+    },
+    {
+      "commit": "7252fc4",
+      "title": "Make online leaderboard visible with navigation and record panel",
+      "category": "minor"
+    },
+    {
+      "commit": "9fd4062",
+      "title": "Keep Dustin ensemble singers independent and restore Undyne vocals animation",
+      "category": "major"
+    },
+    {
+      "commit": "59db4bd",
+      "title": "Handle empty leaderboard creation responses as successful submissions",
+      "category": "major"
+    },
+    {
+      "commit": "17e1a40",
+      "title": "Match Undyne framing to reference and restore higher resolution character art",
+      "category": "minor"
+    },
+    {
+      "commit": "b3ead81",
+      "title": "Restore Uprising ensemble vocals and source character entrance timing",
+      "category": "major"
+    },
+    {
+      "commit": "c86a333",
+      "title": "Fix Perseverance ghost visibility and clear obstructing stage layers",
+      "category": "minor"
+    },
+    {
+      "commit": "4be3d33",
+      "title": "Restore Broken Reality Papyrus solo and split-body phases from source",
+      "category": "major"
+    },
+    {
+      "commit": "bf324f8",
+      "title": "Hide Undyne during Cornered Papyrus appearance",
+      "category": "minor"
+    },
+    {
+      "commit": "009a1fa",
+      "title": "Restore Cornered stage brightness after phantom transitions",
+      "category": "major"
+    },
+    {
+      "commit": "3066586",
+      "title": "Orient health meter around the controlled character screen side",
+      "category": "minor"
+    },
+    {
+      "commit": "b7ee70a",
+      "title": "Persist last-used gameplay controls and sound preference",
+      "category": "minor"
+    },
+    {
+      "commit": "9a84add",
+      "title": "Synchronize idle character cycles to one musical beat",
+      "category": "minor"
+    },
+    {
+      "commit": "2e7e27c",
+      "title": "Keep singing poses continuous across adjacent notes",
+      "category": "major"
+    },
+    {
+      "commit": "1645f5e",
+      "title": "Repeat singing motion throughout sustained notes",
+      "category": "major"
+    },
+    {
+      "commit": "3ac3520",
+      "title": "Render Uprising blackout and letterbox effects behind notes",
+      "category": "minor"
+    },
+    {
+      "commit": "f71ebb0",
+      "title": "Verify preferences health orientation and Cornered visibility regressions",
+      "category": "excluded"
+    },
+    {
+      "commit": "7ba6b0f",
+      "title": "Expose public records across device settings with nickname search",
+      "category": "major"
+    },
+    {
+      "commit": "c3c1ece",
+      "title": "Sort all leaderboard views by highest score first",
+      "category": "minor"
+    },
+    {
+      "commit": "75c51e3",
+      "title": "Keep score rankings separated by selected song",
+      "category": "minor"
+    },
+    {
+      "commit": "4715cd7",
+      "title": "Count identical leaderboard records once while retaining distinct results",
+      "category": "minor"
+    },
+    {
+      "commit": "2a3a889",
+      "title": "Halve idle dance speed without slowing singing animations",
+      "category": "minor"
+    },
+    {
+      "commit": "63fc510",
+      "title": "Separate sustain attack animations from repeating hold poses",
+      "category": "major"
+    },
+    {
+      "commit": "c7c3042",
+      "title": "Preserve Perseverance scroll recovery after simultaneous slowdown events",
+      "category": "major"
+    },
+    {
+      "commit": "fd1929d",
+      "title": "Fix You Are scene visibility and framing from reference",
+      "category": "major"
+    },
+    {
+      "commit": "1b14c55",
+      "title": "Draw Dustin cinematic bars behind note lanes",
+      "category": "minor"
+    },
+    {
+      "commit": "33fed9d",
+      "title": "Match You Are scene composition and character scale to reference",
+      "category": "minor"
+    },
+    {
+      "commit": "912e4f0",
+      "title": "Add In the Galaxy ten-song pack with native audio and characters",
+      "category": "song"
+    },
+    {
+      "commit": "a8426b0",
+      "title": "Match Galaxy city cast spacing and scale to reference video",
+      "category": "minor"
+    },
+    {
+      "commit": "84a8e6f",
+      "title": "Implement native Galaxy moving charts and purple note skin",
+      "category": "major"
+    },
+    {
+      "commit": "5f3f8c5",
+      "title": "Enable Galaxy receptor movement across standard difficulties",
+      "category": "major"
+    },
+    {
+      "commit": "a44d724",
+      "title": "Add Undertale soul tutorial with original charts and jump mechanics",
+      "category": "song"
+    },
+    {
+      "commit": "e16f412",
+      "title": "Add Asriel Hopes and Dreams with source charts and attack timeline",
+      "category": "song"
+    },
+    {
+      "commit": "9fa0429",
+      "title": "Add Flowey stage with soul transitions, healing notes and touch jump",
+      "category": "song"
+    },
+    {
+      "commit": "9e35b66",
+      "title": "Add Sans battle and verify Undertale stages, dialogue and soul controls",
+      "category": "song"
+    },
+    {
+      "commit": "ab3a326",
+      "title": "Clean Undertale verification file formatting",
+      "category": "excluded"
+    },
+    {
+      "commit": "81bc7dd",
+      "title": "Show each update once and add update history in header",
+      "category": "minor"
+    },
+    {
+      "commit": "17e40b3",
+      "title": "Fix Undertale dialogue layering and native attack visuals",
+      "category": "minor"
+    },
+    {
+      "commit": "3abc217",
+      "title": "Enlarge Undertale soul and fix delayed hazard damage",
+      "category": "major"
+    },
+    {
+      "commit": "3046545",
+      "title": "Keep intro dialogue visible in game-only fullscreen",
+      "category": "major"
+    },
+    {
+      "commit": "532f398",
+      "title": "Show touch jump only when mobile mode is enabled",
+      "category": "minor"
+    },
+    {
+      "commit": "c2b378d",
+      "title": "Add native Hopes star and thunder effects with Undertale hit sound",
+      "category": "minor"
+    },
+    {
+      "commit": "43f1202",
+      "title": "Prevent death during Hopes and Dreams four-lane finale",
+      "category": "major"
+    },
+    {
+      "commit": "e5bc70f",
+      "title": "Match Sans bone wall timing and movement to source video",
+      "category": "minor"
+    },
+    {
+      "commit": "9c860aa",
+      "title": "Preserve combo when Undertale lightning hits",
+      "category": "minor"
+    },
+    {
+      "commit": "96e18c3",
+      "title": "Filter inappropriate ranking nicknames and prepare database enforcement",
+      "category": "minor"
+    },
+    {
+      "commit": "c105582",
+      "title": "Preserve Flowey heart image quality and correct BF animation offsets",
+      "category": "minor"
+    }
+  ]
+}

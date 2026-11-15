@@ -1,0 +1,1042 @@
+[
+  {
+    "id": "sonic-black-sun",
+    "title": "Black Sun",
+    "audio": "assets/sonic/black-sun/Inst.ogg"
+  },
+  {
+    "id": "sonic-chaos",
+    "title": "Chaos",
+    "audio": "assets/sonic/chaos/Inst.ogg"
+  },
+  {
+    "id": "sonic-cycles",
+    "title": "Cycles",
+    "audio": "assets/sonic/cycles/Inst.ogg"
+  },
+  {
+    "id": "sonic-endless",
+    "title": "Endless",
+    "audio": "assets/sonic/endless/Inst.ogg"
+  },
+  {
+    "id": "sonic-faker",
+    "title": "Faker",
+    "audio": "assets/sonic/faker/Inst.ogg"
+  },
+  {
+    "id": "sonic-milk",
+    "title": "Milk",
+    "audio": "assets/sonic/milk/Inst.ogg"
+  },
+  {
+    "id": "sonic-sunshine",
+    "title": "Sunshine",
+    "audio": "assets/sonic/sunshine/Inst.ogg"
+  },
+  {
+    "id": "sonic-too-fest",
+    "title": "Too Fest",
+    "audio": "assets/sonic/too-fest/Inst.ogg"
+  },
+  {
+    "id": "sonic-too-slow",
+    "title": "Too Slow",
+    "audio": "assets/sonic/too-slow/Inst.ogg"
+  },
+  {
+    "id": "sonic-triple-trouble",
+    "title": "Triple Trouble",
+    "audio": "assets/sonic/triple-trouble/Inst.ogg"
+  },
+  {
+    "id": "sonic-you-cant-run",
+    "title": "You Cant Run",
+    "audio": "assets/sonic/you-cant-run/Inst.ogg"
+  },
+  {
+    "id": "virus-invade",
+    "title": "Virus R · Invade",
+    "audio": "assets/extra-mods/virus/invade/Inst.ogg"
+  },
+  {
+    "id": "virus-malfunction",
+    "title": "Virus R · Malfunction",
+    "audio": "assets/extra-mods/virus/malfunction/Inst.ogg"
+  },
+  {
+    "id": "virus-r-memory",
+    "title": "Virus R · R-Memory",
+    "audio": "assets/extra-mods/virus/r-memory/Inst.ogg"
+  },
+  {
+    "id": "virus-test",
+    "title": "Virus R · Test [Bonus]",
+    "audio": "assets/extra-mods/virus/test/Inst.ogg"
+  },
+  {
+    "id": "virus-the-battle-of-robbery",
+    "title": "Virus R · The-Battle-Of-Robbery",
+    "audio": "assets/extra-mods/virus/the-battle-of-robbery/Inst.ogg"
+  },
+  {
+    "id": "virus-virus-r",
+    "title": "Virus R · Virus-R",
+    "audio": "assets/extra-mods/virus/virus-r/Inst.ogg"
+  },
+  {
+    "id": "virus-warning",
+    "title": "Virus R · Warning",
+    "audio": "assets/extra-mods/virus/warning/Inst.ogg"
+  },
+  {
+    "id": "death-the-deathmatch",
+    "title": "Deathmatch · Deathmatch",
+    "audio": "assets/extra-mods/death/the-deathmatch/Inst.ogg"
+  },
+  {
+    "id": "death-the-deathmatch-evil",
+    "title": "Deathmatch · Deathmatch Evil",
+    "audio": "assets/extra-mods/death/the-deathmatch-evil/Inst.ogg"
+  },
+  {
+    "id": "death-tutorial",
+    "title": "Deathmatch · Tutorial [Bonus]",
+    "audio": "assets/extra-mods/death/tutorial/Inst.ogg"
+  },
+  {
+    "id": "death-tutorial-evil",
+    "title": "Deathmatch · Tutorial [Bonus] Evil",
+    "audio": "assets/extra-mods/death/tutorial-evil/Inst.ogg"
+  },
+  {
+    "id": "tainted-crush",
+    "title": "Tainted Fate · Crush",
+    "audio": "assets/extra-mods/tainted/crush/Inst.ogg"
+  },
+  {
+    "id": "tainted-defeat",
+    "title": "Tainted Fate · Defeat",
+    "audio": "assets/extra-mods/tainted/defeat/Inst.ogg"
+  },
+  {
+    "id": "tainted-destruction",
+    "title": "Tainted Fate · Destruction",
+    "audio": "assets/extra-mods/tainted/destruction/Inst.ogg"
+  },
+  {
+    "id": "silly-billy",
+    "title": "Silly Billy",
+    "audio": "assets/extra-mods/silly/audio/Inst.ogg"
+  },
+  {
+    "id": "impostor-actin-sus",
+    "title": "Impostor V4 · Actin-Sus",
+    "audio": "assets/extra-mods/impostor/audio/actin-sus/Inst.ogg"
+  },
+  {
+    "id": "impostor-alpha-moogus",
+    "title": "Impostor V4 · Alpha-Moogus",
+    "audio": "assets/extra-mods/impostor/audio/alpha-moogus/Inst.ogg"
+  },
+  {
+    "id": "impostor-armed",
+    "title": "Impostor V4 · Armed",
+    "audio": "assets/extra-mods/impostor/audio/armed/Inst.ogg"
+  },
+  {
+    "id": "impostor-ashes",
+    "title": "Impostor V4 · ashes",
+    "audio": "assets/extra-mods/impostor/audio/ashes/Inst.ogg"
+  },
+  {
+    "id": "impostor-blackout",
+    "title": "Impostor V4 · Blackout",
+    "audio": "assets/extra-mods/impostor/audio/blackout/Inst.ogg"
+  },
+  {
+    "id": "impostor-chewmate",
+    "title": "Impostor V4 · Chewmate",
+    "audio": "assets/extra-mods/impostor/audio/chewmate/Inst.ogg"
+  },
+  {
+    "id": "impostor-chippin",
+    "title": "Impostor V4 · Chippin",
+    "audio": "assets/extra-mods/impostor/audio/chippin/Inst.ogg"
+  },
+  {
+    "id": "impostor-chipping",
+    "title": "Impostor V4 · Chipping",
+    "audio": "assets/extra-mods/impostor/audio/chipping/Inst.ogg"
+  },
+  {
+    "id": "impostor-christmas",
+    "title": "Impostor V4 · Christmas",
+    "audio": "assets/extra-mods/impostor/audio/christmas/Inst.ogg"
+  },
+  {
+    "id": "impostor-crewicide",
+    "title": "Impostor V4 · Crewicide",
+    "audio": "assets/extra-mods/impostor/audio/crewicide/Inst.ogg"
+  },
+  {
+    "id": "impostor-danger",
+    "title": "Impostor V4 · Danger",
+    "audio": "assets/extra-mods/impostor/audio/danger/Inst.ogg"
+  },
+  {
+    "id": "impostor-defeat",
+    "title": "Impostor V4 · Defeat",
+    "audio": "assets/extra-mods/impostor/audio/defeat/Inst.ogg"
+  },
+  {
+    "id": "impostor-delusion",
+    "title": "Impostor V4 · Delusion",
+    "audio": "assets/extra-mods/impostor/audio/delusion/Inst.ogg"
+  },
+  {
+    "id": "impostor-dlow",
+    "title": "Impostor V4 · Dlow",
+    "audio": "assets/extra-mods/impostor/audio/dlow/Inst.ogg"
+  },
+  {
+    "id": "impostor-drippypop",
+    "title": "Impostor V4 · Drippypop",
+    "audio": "assets/extra-mods/impostor/audio/drippypop/Inst.ogg"
+  },
+  {
+    "id": "impostor-ejected",
+    "title": "Impostor V4 · ejected",
+    "audio": "assets/extra-mods/impostor/audio/ejected/Inst.ogg"
+  },
+  {
+    "id": "impostor-esculent",
+    "title": "Impostor V4 · esculent",
+    "audio": "assets/extra-mods/impostor/audio/esculent/Inst.ogg"
+  },
+  {
+    "id": "impostor-finale",
+    "title": "Impostor V4 · finale",
+    "audio": "assets/extra-mods/impostor/audio/finale/Inst.ogg"
+  },
+  {
+    "id": "impostor-heartbeat",
+    "title": "Impostor V4 · Heartbeat",
+    "audio": "assets/extra-mods/impostor/audio/heartbeat/Inst.ogg"
+  },
+  {
+    "id": "impostor-idk",
+    "title": "Impostor V4 · Idk",
+    "audio": "assets/extra-mods/impostor/audio/idk/Inst.ogg"
+  },
+  {
+    "id": "impostor-lights-down",
+    "title": "Impostor V4 · Lights-Down",
+    "audio": "assets/extra-mods/impostor/audio/lights-down/Inst.ogg"
+  },
+  {
+    "id": "impostor-magmatic",
+    "title": "Impostor V4 · Magmatic",
+    "audio": "assets/extra-mods/impostor/audio/magmatic/Inst.ogg"
+  },
+  {
+    "id": "impostor-mando",
+    "title": "Impostor V4 · Mando",
+    "audio": "assets/extra-mods/impostor/audio/mando/Inst.ogg"
+  },
+  {
+    "id": "impostor-meltdown",
+    "title": "Impostor V4 · Meltdown",
+    "audio": "assets/extra-mods/impostor/audio/meltdown/Inst.ogg"
+  },
+  {
+    "id": "impostor-neurotic",
+    "title": "Impostor V4 · Neurotic",
+    "audio": "assets/extra-mods/impostor/audio/neurotic/Inst.ogg"
+  },
+  {
+    "id": "impostor-O2",
+    "title": "Impostor V4 · O2",
+    "audio": "assets/extra-mods/impostor/audio/O2/Inst.ogg"
+  },
+  {
+    "id": "impostor-oversight",
+    "title": "Impostor V4 · Oversight",
+    "audio": "assets/extra-mods/impostor/audio/oversight/Inst.ogg"
+  },
+  {
+    "id": "impostor-ow",
+    "title": "Impostor V4 · Ow",
+    "audio": "assets/extra-mods/impostor/audio/ow/Inst.ogg"
+  },
+  {
+    "id": "impostor-pinkwave",
+    "title": "Impostor V4 · Pinkwave",
+    "audio": "assets/extra-mods/impostor/audio/pinkwave/Inst.ogg"
+  },
+  {
+    "id": "impostor-pretender",
+    "title": "Impostor V4 · pretender",
+    "audio": "assets/extra-mods/impostor/audio/pretender/Inst.ogg"
+  },
+  {
+    "id": "impostor-reactor",
+    "title": "Impostor V4 · Reactor",
+    "audio": "assets/extra-mods/impostor/audio/reactor/Inst.ogg"
+  },
+  {
+    "id": "impostor-reinforcements",
+    "title": "Impostor V4 · Reinforcements",
+    "audio": "assets/extra-mods/impostor/audio/reinforcements/Inst.ogg"
+  },
+  {
+    "id": "impostor-rivals",
+    "title": "Impostor V4 · Rivals",
+    "audio": "assets/extra-mods/impostor/audio/rivals/Inst.ogg"
+  },
+  {
+    "id": "impostor-roomcode",
+    "title": "Impostor V4 · ROOMCODE",
+    "audio": "assets/extra-mods/impostor/audio/roomcode/Inst.ogg"
+  },
+  {
+    "id": "impostor-sabotage",
+    "title": "Impostor V4 · Sabotage",
+    "audio": "assets/extra-mods/impostor/audio/sabotage/Inst.ogg"
+  },
+  {
+    "id": "impostor-spookpostor",
+    "title": "Impostor V4 · spookpostor",
+    "audio": "assets/extra-mods/impostor/audio/spookpostor/Inst.ogg"
+  },
+  {
+    "id": "impostor-sussus-moogus",
+    "title": "Impostor V4 · Sussus-Moogus",
+    "audio": "assets/extra-mods/impostor/audio/sussus-moogus/Inst.ogg"
+  },
+  {
+    "id": "impostor-titular",
+    "title": "Impostor V4 · Titular",
+    "audio": "assets/extra-mods/impostor/audio/titular/Inst.ogg"
+  },
+  {
+    "id": "impostor-top-10",
+    "title": "Impostor V4 · top-10",
+    "audio": "assets/extra-mods/impostor/audio/top-10/Inst.ogg"
+  },
+  {
+    "id": "impostor-torture",
+    "title": "Impostor V4 · Torture",
+    "audio": "assets/extra-mods/impostor/audio/torture/Inst.ogg"
+  },
+  {
+    "id": "impostor-turbulence",
+    "title": "Impostor V4 · turbulence",
+    "audio": "assets/extra-mods/impostor/audio/turbulence/Inst.ogg"
+  },
+  {
+    "id": "impostor-victory",
+    "title": "Impostor V4 · victory",
+    "audio": "assets/extra-mods/impostor/audio/victory/Inst.ogg"
+  },
+  {
+    "id": "impostor-voting-time",
+    "title": "Impostor V4 · Voting-Time",
+    "audio": "assets/extra-mods/impostor/audio/voting-time/Inst.ogg"
+  },
+  {
+    "id": "impostor-who",
+    "title": "Impostor V4 · Who",
+    "audio": "assets/extra-mods/impostor/audio/who/Inst.ogg"
+  },
+  {
+    "id": "survent-parish",
+    "title": "Mid-Fight Masses · Parish",
+    "audio": "assets/extra-mods/survent/audio/parish/Parish_Inst.ogg"
+  },
+  {
+    "id": "survent-worship",
+    "title": "Mid-Fight Masses · Worship",
+    "audio": "assets/extra-mods/survent/audio/worship/Worship_Inst.ogg"
+  },
+  {
+    "id": "survent-zavodila",
+    "title": "Mid-Fight Masses · Zavodila",
+    "audio": "assets/extra-mods/survent/audio/zavodila/Zavodila_Inst.ogg"
+  },
+  {
+    "id": "survent-casanova",
+    "title": "Mid-Fight Masses · Casanova",
+    "audio": "assets/extra-mods/survent/audio/casanova/Casanova_Inst.ogg"
+  },
+  {
+    "id": "survent-gospel",
+    "title": "Mid-Fight Masses · Gospel",
+    "audio": "assets/extra-mods/survent/audio/gospel/Gospel_Inst.ogg"
+  },
+  {
+    "id": "survent-demonila",
+    "title": "Mid-Fight Masses · Demonila",
+    "audio": "assets/extra-mods/survent/audio/demonila/Inst.ogg"
+  },
+  {
+    "id": "survent-attack",
+    "title": "Mid-Fight Masses · Attack",
+    "audio": "assets/extra-mods/survent/audio/attack/Inst.ogg"
+  },
+  {
+    "id": "agoti-screenplay",
+    "title": "A.G.O.T.I · Screenplay",
+    "audio": "assets/extra-mods/agoti/audio/screenplay/Inst.ogg"
+  },
+  {
+    "id": "agoti-parasite",
+    "title": "A.G.O.T.I · Parasite",
+    "audio": "assets/extra-mods/agoti/audio/parasite/Inst.ogg"
+  },
+  {
+    "id": "agoti-a.g.o.t.i",
+    "title": "A.G.O.T.I · A.G.O.T.I",
+    "audio": "assets/extra-mods/agoti/audio/a.g.o.t.i/Inst.ogg"
+  },
+  {
+    "id": "agoti-guns",
+    "title": "A.G.O.T.I · Guns",
+    "audio": "assets/extra-mods/agoti/audio/guns/Inst.ogg"
+  },
+  {
+    "id": "corruption-opening",
+    "title": "Corruption+ · Opening",
+    "audio": "assets/extra-mods/corruption/audio/opening/Inst.ogg"
+  },
+  {
+    "id": "corruption-null-and-void",
+    "title": "Corruption+ · Null And Void",
+    "audio": "assets/extra-mods/corruption/audio/null-and-void/Inst.ogg"
+  },
+  {
+    "id": "corruption-chkdsk",
+    "title": "Corruption+ · Chkdsk",
+    "audio": "assets/extra-mods/corruption/audio/chkdsk/Inst.ogg"
+  },
+  {
+    "id": "corruption-access-denied",
+    "title": "Corruption+ · Access Denied",
+    "audio": "assets/extra-mods/corruption/audio/access-denied/Inst.ogg"
+  },
+  {
+    "id": "corruption-bloodlust",
+    "title": "Corruption+ · Bloodlust",
+    "audio": "assets/extra-mods/corruption/audio/bloodlust/Inst.ogg"
+  },
+  {
+    "id": "corruption-pretence",
+    "title": "Corruption+ · Pretence",
+    "audio": "assets/extra-mods/corruption/audio/pretence/Inst.ogg"
+  },
+  {
+    "id": "dustin-perseverance",
+    "title": "Dustin · Perseverance",
+    "audio": "assets/extra-mods/dustin/audio/perseverance/Inst.ogg"
+  },
+  {
+    "id": "dustin-kinemorto",
+    "title": "Dustin · Kinemorto",
+    "audio": "assets/extra-mods/dustin/audio/kinemorto/Inst.ogg"
+  },
+  {
+    "id": "dustin-cornered",
+    "title": "Dustin · Cornered",
+    "audio": "assets/extra-mods/dustin/audio/cornered/Inst.ogg"
+  },
+  {
+    "id": "dustin-heatwave",
+    "title": "Dustin · Heatwave",
+    "audio": "assets/extra-mods/dustin/audio/heatwave/Inst.ogg"
+  },
+  {
+    "id": "dustin-avulsion",
+    "title": "Dustin · Avulsion",
+    "audio": "assets/extra-mods/dustin/audio/avulsion/Inst.ogg"
+  },
+  {
+    "id": "dustin-broken-reality",
+    "title": "Dustin · Broken Reality",
+    "audio": "assets/extra-mods/dustin/audio/broken-reality/Inst.ogg"
+  },
+  {
+    "id": "dustin-the-uprising",
+    "title": "Dustin · The Uprising",
+    "audio": "assets/extra-mods/dustin/audio/the-uprising/Inst.ogg"
+  },
+  {
+    "id": "dustin-you-are",
+    "title": "Dustin · YOU ARE",
+    "audio": "assets/extra-mods/dustin/audio/you-are/Inst.ogg"
+  },
+  {
+    "id": "dustin-haunted",
+    "title": "Dustin · Haunted",
+    "audio": "assets/extra-mods/dustin/audio/haunted/Inst.ogg"
+  },
+  {
+    "id": "dustin-bonetravaganza",
+    "title": "Dustin · Bonetravaganza",
+    "audio": "assets/extra-mods/dustin/audio/bonetravaganza/Inst.ogg"
+  },
+  {
+    "id": "dustin-homie-cide",
+    "title": "Dustin · Homie-cide",
+    "audio": "assets/extra-mods/dustin/audio/homie-cide/Inst.ogg"
+  },
+  {
+    "id": "dustin-thermal-shock",
+    "title": "Dustin · Thermal Shock",
+    "audio": "assets/extra-mods/dustin/audio/thermal-shock/Inst.ogg"
+  },
+  {
+    "id": "dustin-overthrone",
+    "title": "Dustin · Overthrone",
+    "audio": "assets/extra-mods/dustin/audio/overthrone/Inst.ogg"
+  },
+  {
+    "id": "dustin-redscreen",
+    "title": "Dustin · Redscreen",
+    "audio": "assets/extra-mods/dustin/audio/redscreen/Inst.ogg"
+  },
+  {
+    "id": "dustin-bargain",
+    "title": "Dustin · Bargain",
+    "audio": "assets/extra-mods/dustin/audio/bargain/Inst.ogg"
+  },
+  {
+    "id": "dustin-genocides",
+    "title": "Dustin · Genocides",
+    "audio": "assets/extra-mods/dustin/audio/genocides/Inst.ogg"
+  },
+  {
+    "id": "dustin-inopia",
+    "title": "Dustin · Inopia",
+    "audio": "assets/extra-mods/dustin/audio/inopia/Inst.ogg"
+  },
+  {
+    "id": "dustin-lorem-ipsum",
+    "title": "Dustin · LOREM IPSUM",
+    "audio": "assets/extra-mods/dustin/audio/lorem-ipsum/Inst.ogg"
+  },
+  {
+    "id": "dustin-psychopath",
+    "title": "Dustin · Psychopath",
+    "audio": "assets/extra-mods/dustin/audio/psychopath/Inst.ogg"
+  },
+  {
+    "id": "dustin-red-demon-o",
+    "title": "Dustin · red-demon-o",
+    "audio": "assets/extra-mods/dustin/audio/red-demon-o/Inst.ogg"
+  },
+  {
+    "id": "dustin-uncreate",
+    "title": "Dustin · Uncreate",
+    "audio": "assets/extra-mods/dustin/audio/uncreate/Inst.ogg"
+  },
+  {
+    "id": "dustin-vindication",
+    "title": "Dustin · Vindication",
+    "audio": "assets/extra-mods/dustin/audio/vindication/Inst.ogg"
+  },
+  {
+    "id": "dustin-yolo",
+    "title": "Dustin · YOLO",
+    "audio": "assets/extra-mods/dustin/audio/yolo/Inst.ogg"
+  },
+  {
+    "id": "qt-carefree",
+    "title": "QT · Carefree · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/carefree/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-carefree",
+    "title": "QT · Carefree · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/carefree/Inst.ogg"
+  },
+  {
+    "id": "qt-careless",
+    "title": "QT · Careless · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/careless/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-careless",
+    "title": "QT · Careless · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/careless/Inst.ogg"
+  },
+  {
+    "id": "qt-censory-overload",
+    "title": "QT · Censory-Overload · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/censory-overload/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-censory-overload",
+    "title": "QT · Censory-Overload · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/censory-overload/Inst.ogg"
+  },
+  {
+    "id": "qt-terminate",
+    "title": "QT · Terminate · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/terminate/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-terminate",
+    "title": "QT · Terminate · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/terminate/Inst.ogg"
+  },
+  {
+    "id": "qt-termination",
+    "title": "QT · Termination · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/termination/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-termination",
+    "title": "QT · Termination · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/termination/Inst.ogg"
+  },
+  {
+    "id": "qt-cessation",
+    "title": "QT · Cessation · 회피 있음",
+    "audio": "assets/extra-mods/qt/audio/cessation/Inst.ogg"
+  },
+  {
+    "id": "qt-safe-cessation",
+    "title": "QT · Cessation · 회피 없음",
+    "audio": "assets/extra-mods/qt/audio/cessation/Inst.ogg"
+  },
+  {
+    "id": "camellia-first-town-of-this-journey",
+    "title": "Camellia · First Town of This Journey",
+    "audio": "assets/extra-mods/camellia/audio/first-town-of-this-journey/Inst.ogg"
+  },
+  {
+    "id": "camellia-liquated",
+    "title": "Camellia · liquated",
+    "audio": "assets/extra-mods/camellia/audio/liquated/Inst.ogg"
+  },
+  {
+    "id": "camellia-why-do-you-hate-me",
+    "title": "Camellia · Why do you hate me?",
+    "audio": "assets/extra-mods/camellia/audio/why-do-you-hate-me/Inst.ogg"
+  },
+  {
+    "id": "camellia-quaoar",
+    "title": "Camellia · Quaoar",
+    "audio": "assets/extra-mods/camellia/audio/quaoar/Inst.ogg"
+  },
+  {
+    "id": "camellia-crystallized",
+    "title": "Camellia · crystallized",
+    "audio": "assets/extra-mods/camellia/audio/crystallized/Inst.ogg"
+  },
+  {
+    "id": "camellia-nacreous-snowmelt",
+    "title": "Camellia · Nacreous Snowmelt",
+    "audio": "assets/extra-mods/camellia/audio/nacreous-snowmelt/Inst.ogg"
+  },
+  {
+    "id": "camellia-lioness-pride",
+    "title": "Camellia · Lioness' Pride",
+    "audio": "assets/extra-mods/camellia/audio/lioness-pride/Inst.ogg"
+  },
+  {
+    "id": "camellia-ghost",
+    "title": "Camellia · GHOST",
+    "audio": "assets/extra-mods/camellia/audio/ghost/Inst.ogg"
+  },
+  {
+    "id": "camellia-ghoul",
+    "title": "Camellia · GHOUL",
+    "audio": "assets/extra-mods/camellia/audio/ghoul/Inst.ogg"
+  },
+  {
+    "id": "camellia-ghost-vip",
+    "title": "Camellia · GHOST (2020 Halloween+++++++++ VIP)",
+    "audio": "assets/extra-mods/camellia/audio/ghost-vip/Inst.ogg"
+  },
+  {
+    "id": "camellia-dance-with-silence",
+    "title": "Camellia · Dance With Silence",
+    "audio": "assets/extra-mods/camellia/audio/dance-with-silence/Inst.ogg"
+  },
+  {
+    "id": "camellia-burning-aquamarine",
+    "title": "Camellia · Burning Aquamarine",
+    "audio": "assets/extra-mods/camellia/audio/burning-aquamarine/Inst.ogg"
+  },
+  {
+    "id": "camellia-tremendous",
+    "title": "Camellia · TremENDouS",
+    "audio": "assets/extra-mods/camellia/audio/tremendous/Inst.ogg"
+  },
+  {
+    "id": "camellia-racemization",
+    "title": "Camellia · Racemization",
+    "audio": "assets/extra-mods/camellia/audio/racemization/Inst.ogg"
+  },
+  {
+    "id": "camellia-kisaragi",
+    "title": "Camellia · Kisaragi",
+    "audio": "assets/extra-mods/camellia/audio/kisaragi/Inst.ogg"
+  },
+  {
+    "id": "camellia-compute it",
+    "title": "Camellia · Compute It",
+    "audio": "assets/extra-mods/camellia/audio/compute it/Inst.ogg"
+  },
+  {
+    "id": "camellia-exit-this-earth's-atomosphere",
+    "title": "Camellia · Exit This Earth's Atomosphere",
+    "audio": "assets/extra-mods/camellia/audio/exit-this-earth's-atomosphere/Inst.ogg"
+  },
+  {
+    "id": "camellia-tutorial",
+    "title": "Camellia · Tutorial...?",
+    "audio": "assets/extra-mods/camellia/audio/tutorial/Inst.ogg"
+  },
+  {
+    "id": "kapi-wocky",
+    "title": "Kapi · Wocky",
+    "audio": "assets/extra-mods/kapi/audio/wocky/Inst.ogg"
+  },
+  {
+    "id": "kapi-beathoven",
+    "title": "Kapi · Beathoven",
+    "audio": "assets/extra-mods/kapi/audio/beathoven/Inst.ogg"
+  },
+  {
+    "id": "kapi-hairball",
+    "title": "Kapi · Hairball",
+    "audio": "assets/extra-mods/kapi/audio/hairball/Inst.ogg"
+  },
+  {
+    "id": "kapi-nyaw",
+    "title": "Kapi · Nyaw",
+    "audio": "assets/extra-mods/kapi/audio/nyaw/Inst.ogg"
+  },
+  {
+    "id": "kapi-flatzone",
+    "title": "Kapi · Flatzone",
+    "audio": "assets/extra-mods/kapi/audio/flatzone/Inst.ogg"
+  },
+  {
+    "id": "kapi-meowgen",
+    "title": "Kapi · meowgen",
+    "audio": "assets/extra-mods/kapi/audio/meowgen/Inst.ogg"
+  },
+  {
+    "id": "kapi-scratch-post",
+    "title": "Kapi · scratch-post",
+    "audio": "assets/extra-mods/kapi/audio/scratch-post/Inst.ogg"
+  },
+  {
+    "id": "kapi-sanctuary",
+    "title": "Kapi · sanctuary",
+    "audio": "assets/extra-mods/kapi/audio/sanctuary/Inst.ogg"
+  },
+  {
+    "id": "kapi-pyoro",
+    "title": "Kapi · pyoro",
+    "audio": "assets/extra-mods/kapi/audio/pyoro/Inst.ogg"
+  },
+  {
+    "id": "undertale-tutorial",
+    "title": "SOUL Tutorial",
+    "audio": "assets/extra-mods/undertale/audio/tutorial/Inst.ogg"
+  },
+  {
+    "id": "undertale-hopes-and-dreams",
+    "title": "Hopes and Dreams",
+    "audio": "assets/extra-mods/undertale/audio/hopes-and-dreams/Inst.ogg"
+  },
+  {
+    "id": "undertale-your-worst-nightmare",
+    "title": "Your Worst Nightmare",
+    "audio": "assets/extra-mods/undertale/audio/your-worst-nightmare/Inst.ogg"
+  },
+  {
+    "id": "undertale-megalovania",
+    "title": "Megalovania / Reality Check",
+    "audio": "assets/extra-mods/undertale/audio/megalovania/Inst.ogg"
+  },
+  {
+    "id": "galaxy-galaxy",
+    "title": "Galaxy · Galaxy",
+    "audio": "assets/extra-mods/galaxy/audio/galaxy/Inst.ogg"
+  },
+  {
+    "id": "galaxy-game",
+    "title": "Galaxy · Game",
+    "audio": "assets/extra-mods/galaxy/audio/game/Inst.ogg"
+  },
+  {
+    "id": "galaxy-kastimagina",
+    "title": "Galaxy · Kastimagina",
+    "audio": "assets/extra-mods/galaxy/audio/kastimagina/Inst.ogg"
+  },
+  {
+    "id": "galaxy-cona",
+    "title": "Galaxy · Cona",
+    "audio": "assets/extra-mods/galaxy/audio/cona/Inst.ogg"
+  },
+  {
+    "id": "galaxy-underworld",
+    "title": "Galaxy · Underworld",
+    "audio": "assets/extra-mods/galaxy/audio/underworld/Inst.ogg"
+  },
+  {
+    "id": "galaxy-cyber",
+    "title": "Galaxy · Cyber",
+    "audio": "assets/extra-mods/galaxy/audio/cyber/Inst.ogg"
+  },
+  {
+    "id": "galaxy-newton",
+    "title": "Galaxy · Newton",
+    "audio": "assets/extra-mods/galaxy/audio/newton/Inst.ogg"
+  },
+  {
+    "id": "galaxy-destiny",
+    "title": "Galaxy · Destiny",
+    "audio": "assets/extra-mods/galaxy/audio/destiny/Inst.ogg"
+  },
+  {
+    "id": "galaxy-peace",
+    "title": "Galaxy · Peace",
+    "audio": "assets/extra-mods/galaxy/audio/peace/Inst.ogg"
+  },
+  {
+    "id": "galaxy-familanna",
+    "title": "Galaxy · Familanna",
+    "audio": "assets/extra-mods/galaxy/audio/familanna/Inst.ogg"
+  },
+  {
+    "id": "garcello-headache",
+    "title": "Garcello · Headache",
+    "audio": "assets/extra-mods/garcello/audio/headache/Inst.ogg"
+  },
+  {
+    "id": "garcello-nerves",
+    "title": "Garcello · Nerves",
+    "audio": "assets/extra-mods/garcello/audio/nerves/Inst.ogg"
+  },
+  {
+    "id": "garcello-release",
+    "title": "Garcello · Release",
+    "audio": "assets/extra-mods/garcello/audio/release/Inst.ogg"
+  },
+  {
+    "id": "garcello-fading",
+    "title": "Garcello · Fading",
+    "audio": "assets/extra-mods/garcello/audio/fading/Inst.ogg"
+  },
+  {
+    "id": "mario-abandoned",
+    "title": "Abandoned",
+    "audio": "assets/extra-mods/mario/audio/abandoned/Inst.ogg"
+  },
+  {
+    "id": "mario-all-stars",
+    "title": "All-Stars",
+    "audio": "assets/extra-mods/mario/audio/all-stars/Inst.ogg"
+  },
+  {
+    "id": "mario-all-stars-old",
+    "title": "All-Stars Old",
+    "audio": "assets/extra-mods/mario/audio/all-stars-old/Inst.ogg"
+  },
+  {
+    "id": "mario-alone",
+    "title": "Alone",
+    "audio": "assets/extra-mods/mario/audio/alone/Inst.ogg"
+  },
+  {
+    "id": "mario-alone-old",
+    "title": "Alone Old",
+    "audio": "assets/extra-mods/mario/audio/alone-old/Inst.ogg"
+  },
+  {
+    "id": "mario-apparition",
+    "title": "Apparition",
+    "audio": "assets/extra-mods/mario/audio/apparition/Inst.ogg"
+  },
+  {
+    "id": "mario-apparition-old",
+    "title": "Apparition Old",
+    "audio": "assets/extra-mods/mario/audio/apparition-old/Inst.ogg"
+  },
+  {
+    "id": "mario-bad-day",
+    "title": "Bad Day",
+    "audio": "assets/extra-mods/mario/audio/bad-day/Inst.ogg"
+  },
+  {
+    "id": "mario-dark-forest",
+    "title": "Dark Forest",
+    "audio": "assets/extra-mods/mario/audio/dark-forest/Inst.ogg"
+  },
+  {
+    "id": "mario-day-out",
+    "title": "Day Out",
+    "audio": "assets/extra-mods/mario/audio/day-out/Inst.ogg"
+  },
+  {
+    "id": "mario-demise",
+    "title": "Demise",
+    "audio": "assets/extra-mods/mario/audio/demise/Inst.ogg"
+  },
+  {
+    "id": "mario-demise-old",
+    "title": "Demise Old",
+    "audio": "assets/extra-mods/mario/audio/demise-old/Inst.ogg"
+  },
+  {
+    "id": "mario-dictator",
+    "title": "Dictator",
+    "audio": "assets/extra-mods/mario/audio/dictator/Inst.ogg"
+  },
+  {
+    "id": "mario-dictator-old",
+    "title": "Dictator Old",
+    "audio": "assets/extra-mods/mario/audio/dictator-old/Inst.ogg"
+  },
+  {
+    "id": "mario-forbidden-star",
+    "title": "Forbidden Star",
+    "audio": "assets/extra-mods/mario/audio/forbidden-star/Inst.ogg"
+  },
+  {
+    "id": "mario-golden-land",
+    "title": "Golden Land",
+    "audio": "assets/extra-mods/mario/audio/golden-land/Inst.ogg"
+  },
+  {
+    "id": "mario-golden-land-old",
+    "title": "Golden Land Old",
+    "audio": "assets/extra-mods/mario/audio/golden-land-old/Inst.ogg"
+  },
+  {
+    "id": "mario-i-hate-you",
+    "title": "I Hate You",
+    "audio": "assets/extra-mods/mario/audio/i-hate-you/Inst.ogg"
+  },
+  {
+    "id": "mario-i-hate-you-old",
+    "title": "I Hate You Old",
+    "audio": "assets/extra-mods/mario/audio/i-hate-you-old/Inst.ogg"
+  },
+  {
+    "id": "mario-its-a-me",
+    "title": "Its a me",
+    "audio": "assets/extra-mods/mario/audio/its-a-me/Inst.ogg"
+  },
+  {
+    "id": "mario-its-a-me-old",
+    "title": "Its a me Old",
+    "audio": "assets/extra-mods/mario/audio/its-a-me-old/Inst.ogg"
+  },
+  {
+    "id": "mario-last-course",
+    "title": "Last Course",
+    "audio": "assets/extra-mods/mario/audio/last-course/Inst.ogg"
+  },
+  {
+    "id": "mario-mario-sing-and-game-rythm-9",
+    "title": "MARIO SING AND GAME RYTHM 9",
+    "audio": "assets/extra-mods/mario/audio/mario-sing-and-game-rythm-9/Inst.ogg"
+  },
+  {
+    "id": "mario-no-hope",
+    "title": "No Hope",
+    "audio": "assets/extra-mods/mario/audio/no-hope/Inst.ogg"
+  },
+  {
+    "id": "mario-no-party",
+    "title": "No Party",
+    "audio": "assets/extra-mods/mario/audio/no-party/Inst.ogg"
+  },
+  {
+    "id": "mario-no-party-old",
+    "title": "No Party Old",
+    "audio": "assets/extra-mods/mario/audio/no-party-old/Inst.ogg"
+  },
+  {
+    "id": "mario-nourishing-blood",
+    "title": "Nourishing Blood",
+    "audio": "assets/extra-mods/mario/audio/nourishing-blood/Inst.ogg"
+  },
+  {
+    "id": "mario-oh-god-no",
+    "title": "Oh God No",
+    "audio": "assets/extra-mods/mario/audio/oh-god-no/Inst.ogg"
+  },
+  {
+    "id": "mario-overdue",
+    "title": "Overdue",
+    "audio": "assets/extra-mods/mario/audio/overdue/Inst.ogg"
+  },
+  {
+    "id": "mario-overdue-old",
+    "title": "Overdue Old",
+    "audio": "assets/extra-mods/mario/audio/overdue-old/Inst.ogg"
+  },
+  {
+    "id": "mario-paranoia",
+    "title": "Paranoia",
+    "audio": "assets/extra-mods/mario/audio/paranoia/Inst.ogg"
+  },
+  {
+    "id": "mario-powerdown",
+    "title": "Powerdown",
+    "audio": "assets/extra-mods/mario/audio/powerdown/Inst.ogg"
+  },
+  {
+    "id": "mario-powerdown-old",
+    "title": "Powerdown Old",
+    "audio": "assets/extra-mods/mario/audio/powerdown-old/Inst.ogg"
+  },
+  {
+    "id": "mario-promotion",
+    "title": "Promotion",
+    "audio": "assets/extra-mods/mario/audio/promotion/Inst.ogg"
+  },
+  {
+    "id": "mario-racetraitors",
+    "title": "Racetraitors",
+    "audio": "assets/extra-mods/mario/audio/racetraitors/Inst.ogg"
+  },
+  {
+    "id": "mario-racetraitors-old",
+    "title": "Racetraitors Old",
+    "audio": "assets/extra-mods/mario/audio/racetraitors-old/Inst.ogg"
+  },
+  {
+    "id": "mario-so-cool",
+    "title": "So Cool",
+    "audio": "assets/extra-mods/mario/audio/so-cool/Inst.ogg"
+  },
+  {
+    "id": "mario-starman-slaughter",
+    "title": "Starman Slaughter",
+    "audio": "assets/extra-mods/mario/audio/starman-slaughter/Inst.ogg"
+  },
+  {
+    "id": "mario-thalassophobia",
+    "title": "Thalassophobia",
+    "audio": "assets/extra-mods/mario/audio/thalassophobia/Inst.ogg"
+  },
+  {
+    "id": "mario-the-end",
+    "title": "The End",
+    "audio": "assets/extra-mods/mario/audio/the-end/Inst.ogg"
+  },
+  {
+    "id": "mario-unbeatable",
+    "title": "Unbeatable",
+    "audio": "assets/extra-mods/mario/audio/unbeatable/Inst.ogg"
+  }
+]
