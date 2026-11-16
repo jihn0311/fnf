@@ -16,12 +16,12 @@ function drawEvilReferenceStage(t){
  if(p.tilt&&!song.lowSpec){ctx.translate(560,265);ctx.rotate(-.13);ctx.scale(1.16,1.16);ctx.translate(-560,-265);}
  for(const layer of evilReferenceLayers(t)){extraSprite(layer.key,t,layer.x,layer.y,layer.w,layer.h);if(layer.key.endsWith('/stagewall')&&song.stage!=='dad-final'){const g=ctx.createRadialGradient(570,210,160,570,210,360);g.addColorStop(0,'#21162b');g.addColorStop(.7,'#21162b');g.addColorStop(1,'#21162b00');ctx.fillStyle=g;ctx.fillRect(150,0,850,450);}}
  const draw=(side,key,x,y,scale=1)=>{extraState.chars[side]='evil-reference:'+key;ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);extraActor(side,t,0,0);ctx.restore();};
- if(p.bg==='theatre'){if(p.eyes&&!song.lowSpec){ctx.save();ctx.globalCompositeOperation='screen';extraSprite('evil-reference/bg/eyes',t,0,0,1120,530);ctx.restore();}draw('nova',p.dad,270,485);draw('echo',p.bf,820,490);}
+ if(p.bg==='theatre'){if(p.eyes&&!song.lowSpec){ctx.save();ctx.globalCompositeOperation='screen';extraSprite('evil-reference/bg/eyes',t,0,0,1120,530);ctx.restore();}draw('nova',p.dad,270,485);draw('echo',p.bf,820,490,p.bf==='corruptedmom'?340/230:p.bf==='spooky-player'?260/230:1);}
  else{
   if(p.tv){draw('gf','tv',560,255,.85);}
   if(p.portal&&!song.lowSpec){const g=ctx.createRadialGradient(820,310,20,820,310,220);g.addColorStop(0,'#050010');g.addColorStop(.7,'#6500b088');g.addColorStop(1,'#52009a00');ctx.fillStyle=g;ctx.fillRect(580,70,500,460);}
-  if(p.guitar){const start=t>=298?298:t>=211?211:t>=151?151:96;for(const side of ['nova','echo'])extraSprite('evil-reference/capture/'+side,t-start,0,0,1120,530,'idle',12,true);}
-  else{const bob=p.flying&&!song.lowSpec?Math.sin(t*2)*14:0;if(!p.hideSoul)draw('nova','soul',280,445+bob,1.12);if(p.bg==='sky'&&!p.flying)extraSprite('evil-reference/bg/platform',0,675,430,300,100);draw('echo','bf-default',820,490-bob,.85);}
+  if(p.guitar){const start=t>=298?298:t>=211?211:t>=151?151:96;const h=530,w=h*640/360,x=(1120-w)/2;for(const side of ['nova','echo'])extraSprite('evil-reference/capture/'+side,t-start,x,0,w,h,'idle',12,true);}
+  else{const bob=p.flying&&!song.lowSpec?Math.sin(t*2)*14:0;if(!p.hideSoul)draw('nova','soul',280,445+bob,1.25);if(p.bg==='sky'&&!p.flying)extraSprite('evil-reference/bg/platform',0,675,430,300,100);draw('echo','bf-default',820,490-bob,.85);}
   if(p.pulse&&!song.lowSpec){ctx.strokeStyle='#4a082c';ctx.lineWidth=12;ctx.globalAlpha=.25+.1*Math.sin(t*7);ctx.strokeRect(5,5,1110,520);ctx.globalAlpha=1;}
  }
  ctx.restore();
