@@ -146,6 +146,8 @@ function extraActor(side,t,x,y,black=false){
  const special=s.special[side];
  if(special&&a.animations[special.name]){const c=a.config?.[special.name],length=a.animations[special.name].length/(c?.fps||24);if(t-special.at<length||(song.pack!=='silly'&&songId!=='tainted-defeat'&&song.pack!=='impostor'&&song.pack!=='kapi'&&song.pack!=='qt'&&song.pack!=='qt-safe'&&song.pack!=='dustin'&&!singing)){key=special.name;elapsed=t-special.at;}}
  if(typeof dustinAttackPose==='function'){const pose=dustinAttackPose(side,t);if(pose&&a.animations[pose.key]){key=pose.key;elapsed=pose.elapsed;}}
+ // The television is a long scene animation, not a beat-reset character idle.
+ if(song.pack==='evil-reference'&&s.chars[side]==='evil-reference:tv')elapsed=Math.max(0,t)%((a.animations[key]?.length||1)/(a.config?.[key]?.fps||24));
  const f=extraFrame(a,key,elapsed,24,false);if(!f)return;const im=modImages.get(f.src||a.src);if(!im)return;
  const off=a.config?.[key]?.offsets||[0,0];ctx.save();if((song.pack==='mario'||song.pack==='kapi'||song.pack==='corruption')&&a.pixel)ctx.imageSmoothingEnabled=false;ctx.translate(x,y);ctx.scale(a.renderScale||1,a.renderScale||1);
  // Keep BF's feet anchored while enlarging the pre-white-background phases.

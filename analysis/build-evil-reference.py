@@ -27,18 +27,26 @@ if True:
  f=cv2.inpaint(f,masks,7,cv2.INPAINT_TELEA);Image.fromarray(cv2.cvtColor(f,cv2.COLOR_BGR2RGB)).save(sky,quality=95)
 art['sprites']['evil-reference/bg/sky']={'src':ns['web'](sky),'width':640,'height':360}
 chart=m.extract(2,0,332)
-for side,rect in [('nova',(5,40,305,300)),('echo',(330,130,300,205))]:
+# Two seconds of unobstructed guitar performance, captured at 12 fps.
+# Keep the shared camera origin rather than re-centering each silhouette.
+for side,rect in [('nova',(10,40,320,310)),('echo',(340,130,290,229))]:
  key='evil-reference/capture/'+side
- if key in art['sprites'] and art['sprites'][key].get('cleanCapture'):continue
- frames={};sheet=Image.new('RGBA',(1280,1800));row=0
- for lane,anim in [(-1,'idle'),(0,'singLEFT'),(1,'singDOWN'),(2,'singUP'),(3,'singRIGHT')]:
-  candidates=[n for n in chart[side] if 150<n['time']<160 and (lane<0 or n['lane']==lane)]
-  at=154.0;frames[anim]=[]
-  for j in range(2):
-   f=m.capture(2,at+j/24);mask=np.zeros((360,640),np.uint8);cv2.grabCut(f,mask,rect,np.zeros((1,65)),np.zeros((1,65)),4,cv2.GC_INIT_WITH_RECT)
-   rgba=cv2.cvtColor(f,cv2.COLOR_BGR2RGBA);rgba[:,:,3]=np.where((mask==1)|(mask==3),255,0).astype(np.uint8);im=Image.fromarray(rgba);sheet.paste(im,(j*640,row*360));frames[anim].append({'x':j*640,'y':row*360,'w':640,'h':360,'ox':0,'oy':0,'fw':640,'fh':360})
-  row+=1
- path=OUT/(side+'-guitar-capture.webp');sheet.save(path,lossless=True);src=ns['web'](path);art['sprites'][key]={'src':src,'pages':[src],'scale':1,'animations':frames,'cleanCapture':True}
+ if art['sprites'].get(key,{}).get('captureRevision')==3:continue
+ frames=[];sheet=Image.new('RGBA',(1280,4320))
+ for j in range(24):
+  f=m.capture(2,156.0+j/12);mask=np.zeros((360,640),np.uint8)
+  cv2.grabCut(f,mask,rect,np.zeros((1,65)),np.zeros((1,65)),4,cv2.GC_INIT_WITH_RECT)
+  alpha=np.where((mask==1)|(mask==3),255,0).astype(np.uint8)
+  if side=='nova':
+   b,g,r=cv2.split(f.astype(np.float32));alpha=((r>38)&(r>=g*.98)).astype(np.uint8)*255
+   clip=np.zeros_like(alpha);x0,y0,w0,h0=rect;clip[y0:y0+h0,x0:x0+w0]=255;alpha=cv2.bitwise_and(alpha,clip)
+   alpha=cv2.morphologyEx(alpha,cv2.MORPH_CLOSE,np.ones((5,5),np.uint8))
+  filled=alpha.copy();cv2.floodFill(filled,None,(0,0),255);alpha=cv2.bitwise_or(alpha,cv2.bitwise_not(filled))
+  rgba=cv2.cvtColor(f,cv2.COLOR_BGR2RGBA);rgba[:,:,3]=alpha
+  x,y=(j%2)*640,(j//2)*360;sheet.paste(Image.fromarray(rgba),(x,y))
+  frames.append({'x':x,'y':y,'w':640,'h':360,'ox':0,'oy':0,'fw':640,'fh':360})
+ path=OUT/(side+'-guitar-capture.webp');sheet.save(path,lossless=True);src=ns['web'](path)
+ art['sprites'][key]={'src':src,'pages':[src],'scale':1,'animations':{'idle':frames},'captureRevision':3,'fps':12}
 for index,slug,title,start,end in m.STAGES:
  # Refined gameplay endings exclude the credits and fan-art montages.
  end={0:195,3:112}.get(index,end)
