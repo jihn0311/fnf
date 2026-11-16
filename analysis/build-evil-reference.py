@@ -53,6 +53,12 @@ for index,slug,title,start,end in m.STAGES:
  audio=OUT/(slug+'.m4a')
  if not audio.exists():subprocess.run([FF,'-loglevel','error','-ss',str(start),'-i',m.INFO[index]['file'],'-t',str(end-start),'-vn','-c:a','aac','-b:a','160k','-y',str(audio)],check=True)
  raw=copy.deepcopy(m.extract(index,start,end));charts={}
+ recovery_path=ROOT/'analysis/evil-reference-chart-recovery.json'
+ recovered=json.loads(recovery_path.read_text(encoding='utf-8')).get(slug,{}) if recovery_path.exists() else {}
+ for side,additions in recovered.items():
+  for n in additions:
+   if not any(o['lane']==n['lane'] and abs(o['time']-n['time'])<.12 for o in raw[side]):
+    raw[side].append({k:n[k] for k in ['time','lane','duration']})
  for side,notes in raw.items():
   notes[:]=sorted((n for n in notes if 0<=n['time']<end-start),key=lambda n:n['time'])
   next_lane={}

@@ -9,6 +9,8 @@ await p.locator('[data-mod="evil-reference"]').click();const ids=await p.locator
 for(const id of ids)for(const low of [false,true]){const r=await p.evaluate(async({id,low})=>{selectSong(id+(low?'-low':''));settings.difficulty='normal';await prepareMod();state='paused';notes=createChart();opponentNotes=createChart('normal','nova');document.querySelector('.overlay').style.display='none';for(const t of [0,50,100,155,220,310].filter(t=>t<DURATION)){extraUpdate(t,true);draw(t);}return {notes:notes.length,opponent:opponentNotes.length,duration:DURATION,images:modImages.size};},{id,low});assert(r.notes>100&&r.opponent>80);console.log('PASS',id,low,r);if(!low)await p.locator('canvas').first().screenshot({path:process.env.TEMP+'/'+id+'.png'});}
 await p.evaluate(async()=>{
  selectSong('evil-reference-dad-final');await prepareMod();
+ const guitar=MOD_SONGS['evil-reference-soul-final'].charts.normal.echo;
+ for(const [lo,hi] of [[104,114],[160,174],[300,314]])if(guitar.filter(n=>n.time>=lo&&n.time<hi).length<15)throw Error('Missing guitar chart section '+lo);
  const expected=[[70,'pico-player'],[95,'spooky-player'],[125,'corruptedmom'],[150,'bf']];
  for(const [t,name] of expected)if(evilReferencePhase(t).bf!==name)throw Error('Wrong transformation at '+t);
  for(const side of ['nova','echo']){const a=EXTRA_ART.sprites['evil-reference/capture/'+side];if(a.animations.idle.length!==24)throw Error('Missing guitar frames');const seen=new Set();for(let j=0;j<24;j++){const f=extraFrame(a,'idle',j/12,12,true);seen.add(f.x+','+f.y);}if(seen.size<23)throw Error('Guitar animation frozen');}
