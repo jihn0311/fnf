@@ -524,6 +524,7 @@ function drawCachedScene(t){
 }
 function draw(t){prepareStageResolution();
   drawCachedScene(t);
+  if(typeof mobilePortraitActive==='function'&&mobilePortraitActive()){drawMobilePortrait(t);return;}
   if(typeof drawUndertaleUnderlay==='function')drawUndertaleUnderlay(t);
   if(typeof dustinUnderlay==='function')dustinUnderlay(t);
   if(song.pack==='silly'&&!song.lowSpec)sillyUnderlay(t);

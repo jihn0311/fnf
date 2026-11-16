@@ -88,6 +88,7 @@ function updateDustinEffects(t){
  if(state!=='playing'){s.last=null;return;}const dt=s.last===null?0:Math.max(0,Math.min(.1,(t-s.last)/(settings.rate||1)));s.last=t;
  if(s.drainEnabled&&s.drainTime>0&&songId==='dustin-broken-reality'){health=Math.max(7.5,health-2.5*s.drain*(s.attack?.hit?.65:1)*dt);s.drainTime=Math.max(0,s.drainTime-dt);}
  if(s.karma>0){s.karma=Math.max(0,s.karma-dt);health=Math.max(5,health-5*dt);}
+ if(mobileMode){s.attack=null;s.qte=null;return;}
  const step=dustinStep(t);
  if(songId==='dustin-avulsion'&&step>=2110&&step<2238){if(!s.avulsionDrainStarted){health=100;s.avulsionDrainStarted=true;}const ramp=step<2116?.3:.46+.2*clamp01((t-dustinStepTime(2116))/10)**2;if(!settings.bot)health=Math.max(0,health-ramp*.96*50*dt);}
  if(songId==='dustin-lorem-ipsum'){for(const cue of [234,1764,1812,1860,1908])if(step>=cue&&step<cue+12&&!s.qteDone.includes(cue)){s.qte={step:cue,end:dustinStepTime(cue+12)};s.qteDone.push(cue);}if(s.qte){if(settings.bot&&t>=s.qte.end-.12*(settings.rate||1))s.qte=null;else if(t>s.qte.end){health=0;s.qte=null;}}}
@@ -102,8 +103,8 @@ function dustinHazard(note,kind){if(!dustinFull()||!note.hurt)return false;note.
  else{health=Math.max(0,health-5);s.madness++;if(s.madness>=8)health=0;}
  s.flashes.push({at:time(),duration:.2,color:'#f00'});feedback=note.sourceNoteType==='NOTE_karma'?'KARMA':note.sourceNoteType==='NOTE_hate'?'HATE':'MADNESS';feedbackAt=time();feedbackColor='#ff539d';feedbackOffsetMs=null;updateHud();return true;}
 function dustinAttackPress(t){const s=dustinFX,a=s?.attack;if(!a||a.judged||t<a.at+.4||t>a.at+.4+1/a.speed)return false;const distance=Math.abs(-.5+(t-a.at-.4)*a.speed);if(distance>.3942)return true;const gain=distance<=.0547?.63:distance<=.1898?.45:.24;a.judged=true;a.hit=true;a.judgedAt=t;a.position=clamp01((t-a.at-.4)*a.speed);extraState.special.echo={name:'attack',at:t+.2};if(state==='playing')extraSound('dustin:snd_laz',1);a.rating=distance<=.0547?'PERFECT':distance<=.1898?'GOOD':'BAD';health=Math.min(100,health+gain*50*Math.max(1,s.drain*.47));return true;}
-function dustinKey(e,down){if(!dustinFull()||state!=='playing')return false;const key=e.code||e.key;if(down)dustinKeys.add(key);else dustinKeys.delete(key);const step=dustinStep(time());if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ'].includes(key)&&dustinSoulActive(step)){e.preventDefault();return true;}if(down&&!e.repeat&&key==='Space'){e.preventDefault();if(songId==='dustin-avulsion'&&step>=2110&&step<2238)health=Math.min(100,health+.053*50);if(dustinFX.qte&&time()>=dustinFX.qte.end-.24*(settings.rate||1)&&time()<=dustinFX.qte.end)dustinFX.qte=null;if(songId==='dustin-perseverance'&&step>=2192&&step<=2281&&time()>=dustinFX.dodgeReadyAt){dustinFX.dodgeUntil=time()+.8*(settings.rate||1);dustinFX.dodgeReadyAt=time()+1*(settings.rate||1);extraState.special.echo={name:'dodge',at:time()};}dustinAttackPress(time());return true;}return false;}
-function dustinSoulActive(step){return dustinFull()&&songId==='dustin-heatwave'&&((step>=4&&step<112)||(step>=1984&&step<2204));}
+function dustinKey(e,down){if(mobileMode)return false;if(!dustinFull()||state!=='playing')return false;const key=e.code||e.key;if(down)dustinKeys.add(key);else dustinKeys.delete(key);const step=dustinStep(time());if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyZ'].includes(key)&&dustinSoulActive(step)){e.preventDefault();return true;}if(down&&!e.repeat&&key==='Space'){e.preventDefault();if(songId==='dustin-avulsion'&&step>=2110&&step<2238)health=Math.min(100,health+.053*50);if(dustinFX.qte&&time()>=dustinFX.qte.end-.24*(settings.rate||1)&&time()<=dustinFX.qte.end)dustinFX.qte=null;if(songId==='dustin-perseverance'&&step>=2192&&step<=2281&&time()>=dustinFX.dodgeReadyAt){dustinFX.dodgeUntil=time()+.8*(settings.rate||1);dustinFX.dodgeReadyAt=time()+1*(settings.rate||1);extraState.special.echo={name:'dodge',at:time()};}dustinAttackPress(time());return true;}return false;}
+function dustinSoulActive(step){return !mobileMode&&dustinFull()&&songId==='dustin-heatwave'&&((step>=4&&step<112)||(step>=1984&&step<2204));}
 function updateDustinSoul(t,dt,step){if(!dustinSoulActive(step))return;const s=dustinFX.soul,scale=1120/1280;const dx=(dustinKeys.has('ArrowRight')?1:0)-(dustinKeys.has('ArrowLeft')?1:0),dy=(dustinKeys.has('ArrowDown')?1:0)-(dustinKeys.has('ArrowUp')?1:0);s.x=Math.max(452,Math.min(668,s.x+dx*176.7*dt*scale));s.y=Math.max(192,Math.min(364,s.y+dy*176.7*dt*scale));s.mode=step>=63?'yellow':'red';s.invulnerable=Math.max(0,s.invulnerable-dt);
  if(settings.bot){s.x=560;s.y=330;}
  if(dustinKeys.has('KeyZ')&&s.mode==='yellow'&&t-s.shot>.18){s.shot=t;s.bullets.push({x:s.x,y:s.y});}
@@ -200,7 +201,7 @@ function dustinUnderlay(t){
 }
 
 function dustinAttackEnd(a){return a.hit?a.judgedAt+50/30:a.at+.4+1/a.speed+16/30;}
-function dustinAttackPose(side,t){
+function dustinAttackPose(side,t){if(mobileMode)return null;
  if(!dustinFull()||songId!=='dustin-broken-reality'||side!=='echo')return null;
  const a=dustinFX?.attack;if(!a||t<a.at||t>=dustinAttackEnd(a))return null;
  if(a.hit&&t>=a.judgedAt+.2)return {key:'attack',elapsed:t-a.judgedAt-.2};
@@ -208,7 +209,7 @@ function dustinAttackPose(side,t){
  if(!a.hit&&t>=expired)return {key:'attack_back',elapsed:t-expired};
  return t-a.at<.5?{key:'attack_prep',elapsed:t-a.at}:{key:'attack_prep-loop',elapsed:t-a.at-.5};
 }
-function drawDustinAttack(t){
+function drawDustinAttack(t){if(mobileMode)return;
  const a=dustinFX?.attack;if(!a||t<a.at||t>=dustinAttackEnd(a))return;
  const expired=a.at+.4+1/a.speed,miss=!a.hit&&t>=expired;
  const alpha=clamp01((t-a.at)/.15)*clamp01((dustinAttackEnd(a)-t)/.2);

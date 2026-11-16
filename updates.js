@@ -2,6 +2,7 @@
 // Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-16-mobile-portrait',changes:{mods:0,major:0,minor:1},date:'2026-11-16',title:'세로형 모바일 터치 플레이',items:['모바일 모드 버튼을 SOUND 버튼 옆으로 옮겼습니다.','모바일 모드를 켜면 세로 화면 아래 큰 화살표를 직접 터치할 수 있습니다. 동시 입력과 롱노트 누르기를 지원합니다.','모바일에서는 점프·회피 공격과 추가 조작 버튼을 제외하며, 모드를 끄면 기존 화면으로 돌아갑니다.']},
  {id:'2026-11-16-evil-guitar-chart',changes:{mods:0,major:1,minor:0},date:'2026-11-16',title:'Discharge 기타 구간 채보 복원',items:['영상의 보라·하늘·초록 원형 노트가 추출되지 않아 비어 있던 기타 구간 채보를 복원했습니다.','영상에서 이동 경로를 추적해 판정 시점을 추정했으며 원본과 오차가 있을 수 있습니다.']},
  {id:'2026-11-16-evil-proportions',changes:{mods:0,major:0,minor:1},date:'2026-11-16',title:'영상 재구성 캐릭터 비율 조정',items:['기타 캡처 캐릭터가 가로로 늘어나지 않도록 원본 가로·세로 비율을 유지합니다.','엄마와 스키드·펌프, Soul BF의 상대적인 크기를 조정했습니다.']},
  {id:'2026-11-16-evil-animation',changes:{mods:0,major:0,minor:1},date:'2026-11-16',title:'영상 재구성 캐릭터·동작 수정',items:['마지막 Daddy Dearest 전투의 피코·스키드와 펌프·엄마 등장 순서와 상대 변화를 조정했습니다.','눈빛 효과의 검은 영역이 무대 배경을 가리지 않도록 수정했습니다.','기타 장면을 24프레임 연속 캡처로 바꾸고 TV 동작이 매 박자 처음부터 반복되던 문제를 수정했습니다.','캡처 기반 동작과 전환 시점은 영상 재구성이므로 원본과 차이가 남아 있습니다.']},

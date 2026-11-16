@@ -102,3 +102,17 @@
 .game.game-only #exit-game-only{right:140px}
 
 #volume-tray{position:absolute;top:0;left:50%;transform:translateX(-50%);width:220px;height:138px;z-index:30;pointer-events:none}#volume-tray[hidden]{display:none}.volume-box{width:100%;height:100%;object-fit:contain}#volume-bars{position:absolute;left:28px;top:25px;width:165px;height:46px;object-fit:contain}#volume-value{position:absolute;bottom:3px;left:0;width:100%;text-align:center;color:#fff;font:bold 13px monospace}
+/* Portrait touch play keeps the scene and arrows in one proportional viewport. */
+.header-actions #mobile-mode{position:static;white-space:nowrap;font-size:11px;padding:9px 12px}
+#mobile-play[hidden]{display:none!important}#mobile-play{position:relative;width:100%;aspect-ratio:400/760;touch-action:none;background:#21182e}
+#mobile-play canvas{width:100%!important;height:100%!important;min-height:0!important;object-fit:contain!important;aspect-ratio:400/760}
+.mobile-arrow{position:absolute;top:71%;width:25%;height:21%;padding:0;border:0;background:transparent;touch-action:none;-webkit-user-select:none;user-select:none}
+.mobile-arrow:focus-visible{outline:2px solid #8cf5d9;outline-offset:-4px}
+.game.mobile-layout .stage-viewport>canvas{display:none!important}
+.game.mobile-layout .stage-viewport{width:min(100%,440px)!important;max-width:100%;margin:auto;aspect-ratio:400/760!important;flex:none!important}
+.game.mobile-layout .stage-viewport>.health{top:48px!important;left:5%!important;width:90%!important;max-width:none!important;transform:none!important;z-index:4}
+.game.mobile-layout .health-label{display:none}
+.game.mobile-layout #undertale-jump,.game.mobile-layout #qt-dodge,.game.mobile-layout #ring-input{display:none!important}
+.game.mobile-layout .overlay{inset:0!important;z-index:6}
+.game.mobile-layout.game-only .stage-viewport,.game.mobile-layout:fullscreen .stage-viewport{width:min(100vw,calc((100dvh - 55px)*400/760))!important}
+@media(max-width:700px){body.mobile-layout-enabled .app{padding:0 6px}body.mobile-layout-enabled header{height:auto;min-height:65px;flex-wrap:wrap;padding:10px 0}.header-actions{gap:5px}.header-actions #mobile-mode{margin-left:0}.game.mobile-layout .stage-footer{gap:6px;padding:0 6px}.game.mobile-layout .key-counts{display:none}}

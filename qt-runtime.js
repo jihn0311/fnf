@@ -10,6 +10,7 @@ function drawQTActors(t){for(const [side,x,y,scale] of [['gf',560,350,.8],['nova
 function drawQTStage(t){extraSprite(qtLayers()[0].key,0,0,0,1120,530);if(song.lowSpec)extraSprite('qt/stage/tv',0,65,300,990,175);else extraSprite('qt/tv',t,65,300,990,175,String(qtState?.tv||0));drawQTActors(t);}
 function qtDamage(){health=Math.max(0,health-10);qtState.flashUntil=time()+.3*(settings.rate||1);updateHud();}
 function updateQT(t){
+ if(mobileMode){if(qtState){for(const a of qtState.attacks)if(a.at<=t)a.done=true;qtState.last=t;}return;}
  if(!qtActive()||!qtState||!song.qtDodge||state!=='playing')return;
  const q=qtState,rate=settings.rate||1,stalled=q.last!==null&&t-q.last>.12*rate;q.last=t;
  while(q.cursor<q.attacks.length&&q.attacks[q.cursor].done)q.cursor++;
@@ -23,12 +24,13 @@ function updateQT(t){
  }
 }
 function qtDodgePose(t){if(extraState?.chars?.echo&&MOD_ART.characters[extraState.chars.echo]?.animations.dodge)extraState.special.echo={name:'dodge',at:t};}
-function dodgeQT(){
+function dodgeQT(){if(mobileMode)return;
  if(!qtActive()||!song.qtDodge||!qtState||state!=='playing'||settings.bot)return;
  const t=time(),rate=settings.rate||1;
  for(let i=qtState.cursor;i<qtState.attacks.length;i++){const a=qtState.attacks[i];if(a.at>t+.22*rate)break;if(!a.done&&t<=a.at+.18*rate){a.dodged=true;qtDodgePose(t);}}
 }
 function drawQTHud(t){
+ if(mobileMode)return;
  if(!qtActive()||!song.qtDodge||!qtState)return;
  const a=qtState.attacks.slice(qtState.cursor,qtState.cursor+4).find(a=>!a.done&&t>=(a.warn??a.at-.65*(settings.rate||1))&&t<=a.at+.18*(settings.rate||1)&&!a.dodged);
  const strike=qtState.attacks.slice(Math.max(0,qtState.cursor-4),qtState.cursor+4).find(a=>t>=a.at&&t<a.at+.25*(settings.rate||1));
