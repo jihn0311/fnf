@@ -15,7 +15,7 @@ function extraHealthVisibility(hide){const node=document.querySelector?.('.healt
 async function extraPrepare(){
  extraReset();virusBackdrop=null;const scene=MOD_ART.scenes[song.sceneKey];const assets=[];if(typeof qtActive==='function'&&qtActive())for(const name of ['Normal','Cute','Error','tv'])assets.push(EXTRA_ART.sprites['qt/stage/'+name].src);if(song.pack==='mario')for(const skin of Object.values(song.specialNoteSkins||{}))assets.push(skin.src);if(song.noteSkin)assets.push(song.noteSkin.src);if(song.playerNoteSkin)assets.push(song.playerNoteSkin.src);
  for(const key of scene.characters){const a=typeof dustinEffectCharacter==='function'?dustinEffectCharacter(key):MOD_ART.characters[key];assets.push(...(a.pages||[a.src]));if(song.pack==='mario'&&a.icon)assets.push(a.icon);}
- for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes'||key.startsWith('undertale/skin/'))){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
+ for(const key of scene.spriteKeys.filter(key=>!song.lowSpec||key==='death/stage/hurt-notes'||key.startsWith('undertale/skin/')||key.startsWith('evil-reference/'))){const a=EXTRA_ART.sprites[key];if(song.pack==='virus'){if(!virusLayerKeys().includes(key))continue;const frames=a.animations?.idle||Object.values(a.animations||{})[0];assets.push(...(frames?frames.map(f=>f.src||a.src):[a.src]));}else assets.push(...(a.pages||[a.src]));}
  if(song.pack==='dustin'||song.pack==='corruption')for(const key of scene.spriteKeys)assets.push(EXTRA_ART.sprites[key].src);
  if(song.pack==='mario'&&scene.phaseBackgrounds)for(const key of Object.values(scene.phaseBackgrounds))assets.push(EXTRA_ART.sprites[key].src);
  if(song.lowSpec&&scene.presentationKeys?.pipe)assets.push(EXTRA_ART.sprites[scene.presentationKeys.pipe].src);
@@ -172,7 +172,7 @@ function extraActor(side,t,x,y,black=false){
   const ratio=a.scale/base.scale;ctx.scale(1/ratio,1/ratio);
   const originX=(-anchor.w/2-anchor.ox+anchorOff[0]*base.scale)*ratio,originY=(-anchor.h-anchor.oy+anchorOff[1]*base.scale)*ratio;
   ctx.drawImage(im,f.x,f.y,f.w,f.h,originX+f.ox-off[0]*a.scale,originY+f.oy-off[1]*a.scale,f.w,f.h);
- }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'||song.pack==='galaxy'||song.pack==='undertale'){
+ }else if(song.pack==='kapi'||song.pack==='qt'||song.pack==='qt-safe'||song.pack==='dustin'||song.pack==='corruption'||song.pack==='galaxy'||song.pack==='undertale'||song.pack==='evil-reference'){
   const idle=a.animations.idle[0],idleOff=a.config?.idle?.offsets||[0,0];
   const offsetScale=a.scale/(a.nativeScale||1);
   ctx.drawImage(im,f.x,f.y,f.w,f.h,-idle.w/2-idle.ox+idleOff[0]*offsetScale+f.ox-off[0]*offsetScale,-idle.h-idle.oy+idleOff[1]*offsetScale+f.oy-off[1]*offsetScale,f.w,f.h);
@@ -208,6 +208,7 @@ function extraStage(t){
  }else if(song.pack==='camellia'){
   for(const l of camelliaLayers())extraSprite(l.key,0,l.x,l.y,l.w,l.h);
   drawCamelliaActors(t);
+ }else if(song.pack==='evil-reference'){drawEvilReferenceStage(t);
  }else if(song.pack==='undertale'){drawUndertaleStage(t);
  }else if(song.pack==='galaxy'){drawGalaxyStage(t);
  }else if(song.pack==='garcello'){

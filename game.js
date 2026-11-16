@@ -546,7 +546,7 @@ function draw(t){prepareStageResolution();
     const left=laneX(0,side)-47;
     label(side===playerSide()?(settings.bot?'BOT · 자동':'PLAYER · 직접 연주'):'AUTO',laneX(1,side)+45,18,11,side===playerSide()?'#8cf5d9':'#a7b7cd');
     const shade=ctx.createLinearGradient(0,0,0,530);shade.addColorStop(0,['survent-casanova','survent-gospel'].includes(songId)?'#080e1d55':'#080e1da8');shade.addColorStop(.5,'#080e1d0a');shade.addColorStop(1,'#080e1d55');
-    if(song.pack!=='undertale'){ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);}
+    if(song.pack!=='undertale'&&song.pack!=='evil-reference'){ctx.fillStyle=shade;ctx.fillRect(left,0,366,490);}
     for(let lane=0;lane<4;lane++){
       const activeOpponent=opponentLit[lane];
       const lit=state==='playing'&&t>=0&&(side===autoSide()?activeOpponent:(flashes[lane]>t||laneHeld(lane)||botLit[lane]));
@@ -567,6 +567,7 @@ function draw(t){prepareStageResolution();
       if(typeof drawDustinNote==='function'&&drawDustinNote(note,x,y,tail,t))continue;
       if(typeof drawMarioNote==='function'&&drawMarioNote(note,x,y,tail,t,side))continue;
       if(typeof drawUndertaleNote==='function'&&drawUndertaleNote(note,x,y,tail))continue;
+      if(typeof drawEvilReferenceNote==='function'&&drawEvilReferenceNote(note,x,y,tail))continue;
       if(note.hurt&&typeof extraDrawHurt==='function'){extraDrawHurt(note,x,y,tail);continue;}
       if(note.duration){
         sustainSkin(x,y,tail,note.lane,COLORS[note.lane],endlessSkin(note.time));
@@ -661,7 +662,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 // Story sequence from the original Impostor V4 weeks/weekList.txt and week JSONs.
 const impostorStoryOrder=["sussus-moogus", "sabotage", "meltdown", "sussus-toogus", "lights-down", "reactor", "ejected", "mando", "dlow", "oversight", "danger", "double-kill", "defeat", "ashes", "magmatic", "boiling-point", "delusion", "blackout", "neurotic", "heartbeat", "pinkwave", "pretender", "o2", "voting-time", "turbulence", "victory", "titular", "greatest-plan", "reinforcements", "armed", "sussy-bussy", "rivals", "chewmate", "christmas", "spookpostor", "alpha-moogus", "actin-sus"];
-const modNames={undertale:'UNDERTALE · Sans / Asriel / Flowey',galaxy:'In the Galaxy',corruption:'Corruption+',dustin:'Dustin',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
+const modNames={'evil-reference':'Corruption · 영상 재구성',undertale:'UNDERTALE · Sans / Asriel / Flowey',galaxy:'In the Galaxy',corruption:'Corruption+',dustin:'Dustin',qt:'QT · 회피 있음','qt-safe':'QT · 회피 없음',sonic:'Sonic.exe',virus:'Virus R',death:'Deathmatch',tainted:'Tainted Fate',silly:'Silly Billy',impostor:'Impostor V4',survent:'Mid-Fight Masses / Selever',agoti:'A.G.O.T.I',camellia:'Camellia',kapi:'Kapi · Arcade Showdown',garcello:'Garcello · Smoke ’Em Out Struggle',mario:"Mario’s Madness",original:'기본 곡 / 추가 음악'};
 let selectedMod=null;
 function songFamily(id,track){return track.pack||((track.baseSongId||id).startsWith('sonic-')?'sonic':'original');}
 function buildModCards(){

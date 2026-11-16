@@ -2,6 +2,7 @@
 // Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-16-evil-reference',changes:{mods:1,major:0,minor:0},date:'2026-11-16',title:'Corruption 영상 재구성 스테이지 추가',items:['Daddy Dearest 3개와 Soul BF 4개 스테이지를 별도 모드로 추가했습니다.','영상 음원과 추정 채보, 캐릭터·배경 전환 및 캡처 이미지를 적용했습니다.','원본 채보가 없어 판정 시점과 일부 동작·연출은 영상과 차이가 있습니다. 일반·저사양을 선택할 수 있습니다.']},
  {id:'2026-11-15-volume-keys',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'볼륨 단축키 추가',items:['플레이 중 - 키로 볼륨을 낮추고 = 키로 높일 수 있습니다.','원본 VOLUME 이미지와 막대를 표시하며 볼륨 설정을 저장합니다.']},
  {id:'2026-11-15-mod-version',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'모드 수 기준으로 버전 변경',items:['버전 첫 숫자는 곡 수 대신 추가된 모드 수로 계산합니다.','기본 곡과 저사양·회피 없음 변형은 별도 모드로 세지 않습니다.']},
  {id:'2026-11-15-version-display',changes:{mods:0,major:0,minor:1},date:'2026-11-15',title:'누적 버전 표시 추가',items:['상단에 곡 추가·큰 수정·작은 수정 누적 버전을 표시합니다.','기존 곡 목록과 Git 저장 기록을 기준으로 이전 변경도 집계했습니다.']},

@@ -1,0 +1,100 @@
+{
+  "dad-day1": {
+    "source": "FRIDAY NIGHT FUNKIN' mod EVIL Boyfriend vs Daddy Dearest!.mp4.mp4",
+    "range": [
+      0,
+      118
+    ],
+    "notes": {
+      "nova": 290,
+      "echo": 245
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "dad-day2": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs Corrupt Daddy Dearest DAY 2.mp4",
+    "range": [
+      0,
+      150
+    ],
+    "notes": {
+      "nova": 368,
+      "echo": 367
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "dad-final": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs Corrupt Daddy Dearest FINAL BATTLE.mp4",
+    "range": [
+      0,
+      211
+    ],
+    "notes": {
+      "nova": 667,
+      "echo": 597
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "soul-day1": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs BF.mp4",
+    "range": [
+      0,
+      112
+    ],
+    "notes": {
+      "nova": 365,
+      "echo": 247
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "soul-day2": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs BF DAY 2.mp4",
+    "range": [
+      0,
+      195
+    ],
+    "notes": {
+      "nova": 388,
+      "echo": 345
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "soul-final": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs BF FINAL BATTLE.mp4",
+    "range": [
+      0,
+      332
+    ],
+    "notes": {
+      "nova": 411,
+      "echo": 570
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  },
+  "soul-escape": {
+    "source": "FRIDAY NIGHT FUNKIN mod EVIL Boyfriend vs BF ESCAPE.mp4",
+    "range": [
+      70,
+      178
+    ],
+    "notes": {
+      "nova": 133,
+      "echo": 188
+    },
+    "chart": "Video tracking at 30 fps; occluded arrows, sustain endings and moving lanes can differ. Normal/Hard share reconstruction; Easy thins notes.",
+    "audio": "Video mix includes vocals and effects; no separate stems.",
+    "visuals": "Existing matching native sprites plus screenshot-derived sky and guitar poses. Camera/effect reconstruction is approximate."
+  }
+}

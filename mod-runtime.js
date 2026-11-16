@@ -110,6 +110,7 @@ function showModVideo(){
 function closeModVideo(){const video=$('mod-video');video.pause();video.removeAttribute('src');video.load();$('mod-cinema').hidden=true;}
 
 function drawLowSpecStage(t){
+ if(song.pack==='evil-reference'){drawEvilReferenceStage(t);return;}
  if(song.pack==='corruption'){drawCorruptionStage(t);return;}
  if(song.pack==='dustin'){drawDustinStage(t);return;}
  if(typeof qtActive==='function'&&qtActive()){drawQTStage(t);return;}
@@ -137,6 +138,7 @@ function drawLowSpecStage(t){
 
 let lowSpecBackground=null;
 function lowSpecLayers(){
+ if(song.pack==='evil-reference')return evilReferenceLayers(0);
  if(song.pack==='corruption')return corruptionLayers();
  if(song.pack==='dustin')return dustinLayers();
  if(typeof qtActive==='function'&&qtActive())return qtLayers();
