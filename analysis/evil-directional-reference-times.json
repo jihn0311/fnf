@@ -1,0 +1,242 @@
+[
+  {
+    "character": "clean-dad",
+    "lane": 0,
+    "video": 6,
+    "time": 74.222
+  },
+  {
+    "character": "clean-dad",
+    "lane": 1,
+    "video": 6,
+    "time": 75.419
+  },
+  {
+    "character": "clean-dad",
+    "lane": 2,
+    "video": 6,
+    "time": 55.445
+  },
+  {
+    "character": "clean-dad",
+    "lane": 3,
+    "video": 6,
+    "time": 75.54
+  },
+  {
+    "character": "dearestcanon",
+    "lane": 0,
+    "video": 5,
+    "time": 33.327
+  },
+  {
+    "character": "dearestcanon",
+    "lane": 1,
+    "video": 5,
+    "time": 26.152
+  },
+  {
+    "character": "dearestcanon",
+    "lane": 2,
+    "video": 5,
+    "time": 56.235
+  },
+  {
+    "character": "dearestcanon",
+    "lane": 3,
+    "video": 5,
+    "time": 37.812
+  },
+  {
+    "character": "dearestresist",
+    "lane": 0,
+    "video": 4,
+    "time": 19.585
+  },
+  {
+    "character": "dearestresist",
+    "lane": 1,
+    "video": 4,
+    "time": 59.694
+  },
+  {
+    "character": "dearestresist",
+    "lane": 2,
+    "video": 4,
+    "time": 21.891
+  },
+  {
+    "character": "dearestresist",
+    "lane": 3,
+    "video": 4,
+    "time": 29.218
+  },
+  {
+    "character": "dearestend",
+    "lane": 0,
+    "video": 5,
+    "time": 200.156
+  },
+  {
+    "character": "dearestend",
+    "lane": 1,
+    "video": 5,
+    "time": 200.994
+  },
+  {
+    "character": "dearestend",
+    "lane": 2,
+    "video": 5,
+    "time": 195.966
+  },
+  {
+    "character": "dearestend",
+    "lane": 3,
+    "video": 5,
+    "time": 198.982
+  },
+  {
+    "character": "bf",
+    "lane": 0,
+    "video": 6,
+    "time": 77.665
+  },
+  {
+    "character": "bf",
+    "lane": 1,
+    "video": 6,
+    "time": 92.674
+  },
+  {
+    "character": "bf",
+    "lane": 2,
+    "video": 6,
+    "time": 85.31
+  },
+  {
+    "character": "bf",
+    "lane": 3,
+    "video": 6,
+    "time": 83.202
+  },
+  {
+    "character": "pico-player",
+    "lane": 0,
+    "video": 5,
+    "time": 71.316
+  },
+  {
+    "character": "pico-player",
+    "lane": 1,
+    "video": 5,
+    "time": 70.729
+  },
+  {
+    "character": "pico-player",
+    "lane": 2,
+    "video": 5,
+    "time": 69.306
+  },
+  {
+    "character": "pico-player",
+    "lane": 3,
+    "video": 5,
+    "time": 70.309
+  },
+  {
+    "character": "spooky-player",
+    "lane": 0,
+    "video": 5,
+    "time": 110.825
+  },
+  {
+    "character": "spooky-player",
+    "lane": 1,
+    "video": 5,
+    "time": 112.743
+  },
+  {
+    "character": "spooky-player",
+    "lane": 2,
+    "video": 5,
+    "time": 112.229
+  },
+  {
+    "character": "spooky-player",
+    "lane": 3,
+    "video": 5,
+    "time": 99.66
+  },
+  {
+    "character": "corruptedmom",
+    "lane": 0,
+    "video": 5,
+    "time": 122.48
+  },
+  {
+    "character": "corruptedmom",
+    "lane": 1,
+    "video": 5,
+    "time": 129.789
+  },
+  {
+    "character": "corruptedmom",
+    "lane": 2,
+    "video": 5,
+    "time": 121.461
+  },
+  {
+    "character": "corruptedmom",
+    "lane": 3,
+    "video": 5,
+    "time": 123.643
+  },
+  {
+    "character": "soul",
+    "lane": 0,
+    "video": 3,
+    "time": 81.079
+  },
+  {
+    "character": "soul",
+    "lane": 1,
+    "video": 3,
+    "time": 44.164
+  },
+  {
+    "character": "soul",
+    "lane": 2,
+    "video": 3,
+    "time": 41.234
+  },
+  {
+    "character": "soul",
+    "lane": 3,
+    "video": 3,
+    "time": 67.819
+  },
+  {
+    "character": "bf-default",
+    "lane": 0,
+    "video": 3,
+    "time": 15.397
+  },
+  {
+    "character": "bf-default",
+    "lane": 1,
+    "video": 3,
+    "time": 58.679
+  },
+  {
+    "character": "bf-default",
+    "lane": 2,
+    "video": 3,
+    "time": 39.236
+  },
+  {
+    "character": "bf-default",
+    "lane": 3,
+    "video": 3,
+    "time": 74.712
+  }
+]

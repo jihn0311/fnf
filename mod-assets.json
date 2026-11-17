@@ -2610,5 +2610,10 @@
   "assets/extra-mods/evil-reference/characters/soul-0.webp",
   "assets/extra-mods/evil-reference/characters/tv-0.webp",
   "assets/extra-mods/evil-reference/characters/clean-dad-0.webp",
-  "mobile-play.js"
+  "mobile-play.js",
+  "evil-capture-mod.js",
+  "assets/extra-mods/evil-reference/restored-guitar.webp",
+  "assets/extra-mods/evil-reference/restored-dad.webp",
+  "assets/extra-mods/evil-reference/restored-guests.webp",
+  "assets/extra-mods/evil-reference/restored-soul.webp"
 ]

@@ -58,7 +58,7 @@ for index,slug,title,start,end in m.STAGES:
  for side,additions in recovered.items():
   for n in additions:
    if not any(o['lane']==n['lane'] and abs(o['time']-n['time'])<.12 for o in raw[side]):
-    raw[side].append({k:n[k] for k in ['time','lane','duration']})
+    raw[side].append({**{k:n[k] for k in ['time','lane','duration']},'captureGuitar':True})
  for side,notes in raw.items():
   notes[:]=sorted((n for n in notes if 0<=n['time']<end-start),key=lambda n:n['time'])
   next_lane={}

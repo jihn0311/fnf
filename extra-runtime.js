@@ -89,6 +89,7 @@ function extraUpdate(t,quiet=false){
 }
 function extraSwap(t=time()){return songId==='tainted-destruction'&&state!=='ready'?clamp01((t-112*BEAT)/.3):0;}
 function extraNote(note,side){
+ if(song.pack==='evil-reference')actors[side].captureGuitar=!!note.captureGuitar;
  if(!extraActive()||!extraState)return;
  if(note.heal&&side===playerSide())health=Math.min(100,health+25);
  if(note.noAnimation)return;
