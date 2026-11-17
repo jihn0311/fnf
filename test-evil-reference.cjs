@@ -16,6 +16,10 @@ await p.evaluate(async()=>{
  for(const [key,a] of Object.entries(EVIL_CAPTURE_ART)){const frames=['idle','singLEFT','singDOWN','singUP','singRIGHT'].map(k=>a.animations[k]?.[0]);if(frames.some(f=>!f))throw Error('Missing direction '+key);if(new Set(frames.map(f=>f.x+','+f.y)).size!==5)throw Error('Reused directional pose '+key);}
  selectSong('evil-reference-soul-final');await prepareMod();
  const rendered=new Set();for(let lane=0;lane<4;lane++){animateSinger('echo',lane,155,1);extraNote({captureGuitar:true,time:155,lane},'echo');if(!evilGuitarFor('echo',155.1))throw Error('Guitar tag ignored');if(evilCapturePose('echo',155.1).key!=='sing'+['LEFT','DOWN','UP','RIGHT'][lane])throw Error('Wrong input pose');draw(155.1);rendered.add(canvas.toDataURL());}if(rendered.size!==4)throw Error('Directions rendered identically');
+ actors.echo.until=-1;if(drawEvilCapture('echo','bf-default',155,820,490,221)!==false)throw Error('Native idle bypassed');
+ for(const name of ['bf-default','soul','bf','clean-dad'])if(MOD_ART.characters['evil-reference:'+name].animations.idle.length<2)throw Error('Missing native idle');
+ animateSinger('echo',3,155,1);extraNote({captureGuitar:true,time:155,lane:3},'echo');
+ const shifts=[],translate=ctx.translate;ctx.translate=function(x,y){shifts.push([x,y]);return translate.call(this,x,y);};try{drawEvilCapture('echo','guitar-echo',155.05,820,490,221);drawEvilCapture('echo','guitar-echo',155.15,820,490,221);}finally{ctx.translate=translate;}if(JSON.stringify(shifts[0])!==JSON.stringify(shifts[1]))throw Error('Artificial vertical drift');
  extraNote({time:155,lane:3},'echo');if(evilGuitarFor('echo',155.1))throw Error('Microphone note kept guitar');
  for(const id of Object.keys(MOD_SONGS).filter(id=>id.startsWith('evil-reference-')&&!id.endsWith('-low'))){selectSong(id);await prepareMod();for(let lane=0;lane<4;lane++){for(const side of ['nova','echo'])Object.assign(actors[side],{lane,at:50,until:51,sustainUntil:51});extraUpdate(50.15,true);draw(50.15);}}
  // Verify actual draw transforms preserve source character proportions.

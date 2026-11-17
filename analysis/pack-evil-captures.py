@@ -9,7 +9,7 @@ if config.exists():SOURCES=json.loads(config.read_text(encoding='utf-8'))
 ROWS={'guitar':['guitar-nova','guitar-echo'],'dad':['clean-dad','dearestresist','dearestend','bf'],'guests':['pico-player','spooky-player','corruptedmom'],'soul':['soul','bf-default']}
 assets={}
 for group,names in ROWS.items():
- src=Path(SOURCES[group]);src=src if src.is_absolute() else ROOT/src;im=Image.open(src).convert('RGBA');dest=ROOT/'assets/extra-mods/evil-reference'/('restored-'+group+('-v2' if group=='guitar' else '')+'.webp');im.save(dest,lossless=True);web=dest.relative_to(ROOT).as_posix();cw=im.width/5
+ src=Path(SOURCES[group]);src=src if src.is_absolute() else ROOT/src;im=Image.open(src).convert('RGBA');dest=ROOT/'assets/extra-mods/evil-reference'/('restored-'+group+('-v3' if group=='guitar' else '')+'.webp');im.save(dest,lossless=True);web=dest.relative_to(ROOT).as_posix();cw=im.width/5
  alpha=im.getchannel('A');bands=[];begin=None
  for y in range(im.height):
   occupied=sum(v>32 for v in alpha.crop((0,y,im.width,y+1)).getdata())>8

@@ -18,11 +18,11 @@ function evilCapturePose(side,t,guitar=false){
 function drawEvilCapture(side,name,t,x,y,height){
  const asset=EXTRA_ART.sprites['evil-reference/pose/'+name];if(!asset)return false;
  const pose=evilCapturePose(side,t,name.startsWith('guitar-')),index=pose.active?actors[side].lane+1:0;
+ if(!pose.active&&!name.startsWith('guitar-'))return false;
  const f=asset.animations[pose.key]?.[0],im=modImages.get(asset.src);if(!f||!im)return false;
  const idle=asset.poseBounds[0],bounds=asset.poseBounds[index],scale=height/(idle[3]-idle[1]);
  // All poses share one scale and a fixed foot anchor; down poses stay shorter.
- const bob=pose.active?Math.sin(t/BEAT*Math.PI*2)*2:Math.sin(t/BEAT*Math.PI*2)*3;
- ctx.save();ctx.translate(x,y+bob);ctx.scale(scale,scale);
+ ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
  ctx.drawImage(im,f.x,f.y,f.w,f.h,-(bounds[0]+bounds[2])/2,-bounds[3],f.w,f.h);ctx.restore();return true;
 }
 function evilGuitarFor(side,t){
@@ -41,7 +41,7 @@ function drawEvilReferenceStage(t){
  else{
   if(p.tv){draw('gf','tv',560,255,.85);}
   if(p.portal&&!song.lowSpec){const g=ctx.createRadialGradient(820,310,20,820,310,220);g.addColorStop(0,'#050010');g.addColorStop(.7,'#6500b088');g.addColorStop(1,'#52009a00');ctx.fillStyle=g;ctx.fillRect(580,70,500,460);}
-  const bob=p.flying&&!song.lowSpec?Math.sin(t*2)*14:0;
+  const bob=0;
   if(!p.hideSoul){if(evilGuitarFor('nova',t))drawEvilCapture('nova','guitar-nova',t,280,445+bob,325);else draw('nova','soul',280,445+bob,1.25);}
   if(p.bg==='sky'&&!p.flying)extraSprite('evil-reference/bg/platform',0,675,430,300,100);
   if(evilGuitarFor('echo',t))drawEvilCapture('echo','guitar-echo',t,820,490-bob,221);else draw('echo','bf-default',820,490-bob,.85);
