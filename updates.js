@@ -2,6 +2,7 @@
 // Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-17-bf-guitar-hands',changes:{mods:0,major:0,minor:1},date:'2026-11-17',title:'BF 기타 포즈 손 위치 수정',items:['BF 기타 2·3·4번 포즈에서 양손을 주머니 밖으로 꺼내 기타 목과 줄을 잡도록 수정했습니다.','기타를 몸 앞에 배치하고 나머지 포즈는 유지했습니다.']},
  {id:'2026-11-17-captured-poses',changes:{mods:0,major:1,minor:0},date:'2026-11-17',title:'커럽션 방향별 캡처 동작',items:['영상의 방향별 캡처를 바탕으로 대기·왼쪽·아래·위·오른쪽 포즈를 복원했습니다.','기타 장면을 자동 반복 대신 입력한 방향과 롱노트 유지 상태에 연결했습니다.','마이크 노트와 기타 노트를 구분하고 가려진 얼굴·손·기타를 다른 캡처를 참고해 재구성했습니다. 복원 부분은 원본과 차이가 있을 수 있습니다.']},
  {id:'2026-11-16-mobile-portrait',changes:{mods:0,major:0,minor:1},date:'2026-11-16',title:'세로형 모바일 터치 플레이',items:['모바일 모드 버튼을 SOUND 버튼 옆으로 옮겼습니다.','모바일 모드를 켜면 세로 화면 아래 큰 화살표를 직접 터치할 수 있습니다. 동시 입력과 롱노트 누르기를 지원합니다.','모바일에서는 점프·회피 공격과 추가 조작 버튼을 제외하며, 모드를 끄면 기존 화면으로 돌아갑니다.']},
  {id:'2026-11-16-evil-guitar-chart',changes:{mods:0,major:1,minor:0},date:'2026-11-16',title:'Discharge 기타 구간 채보 복원',items:['영상의 보라·하늘·초록 원형 노트가 추출되지 않아 비어 있던 기타 구간 채보를 복원했습니다.','영상에서 이동 경로를 추적해 판정 시점을 추정했으며 원본과 오차가 있을 수 있습니다.']},
