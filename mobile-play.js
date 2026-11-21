@@ -5,6 +5,13 @@ const mobilePointers=new Set();
 for(let lane=0;lane<4;lane++){
  const b=document.createElement('button');b.type='button';b.className='mobile-arrow';b.style.left=(lane*25)+'%';b.setAttribute('aria-label',['왼쪽','아래','위','오른쪽'][lane]+' 노트');
  b.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();b.setPointerCapture(e.pointerId);const id='pointer:mobile:'+e.pointerId;mobilePointers.add(id);inputDown(id,lane);});
+ b.addEventListener('pointermove',e=>{
+  const id='pointer:mobile:'+e.pointerId;if(!mobileMode||!mobilePointers.has(id))return;e.preventDefault();
+  const r=mobilePanel.getBoundingClientRect(),band=b.getBoundingClientRect();
+  const next=e.clientX>=r.left&&e.clientX<r.right&&e.clientY>=band.top&&e.clientY<band.bottom?Math.min(3,Math.floor((e.clientX-r.left)/r.width*4)):-1;
+  if(held.get(id)===(next<0?undefined:next))return;
+  inputUp(id);if(next>=0)inputDown(id,next);
+ });
  for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,e=>{const id='pointer:mobile:'+e.pointerId;inputUp(id);mobilePointers.delete(id);});
  b.addEventListener('contextmenu',e=>e.preventDefault());mobilePanel.append(b);
 }
