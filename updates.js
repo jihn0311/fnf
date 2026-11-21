@@ -2,6 +2,7 @@
 // Every new release needs a unique id and changes:{mods:0,major:0,minor:1}.
 // See VERSIONING.md. Counts are cumulative; do not reset other components.
 const GAME_UPDATES = [
+ {id:'2026-11-21-bf-mic-eye',changes:{mods:0,major:0,minor:1},date:'2026-11-21',title:'마이크 BF 눈 수정',items:['마이크를 든 BF의 두 번째 포즈에서 양쪽 눈이 보이도록 수정했습니다.']},
  {id:'2026-11-21-mobile-slide',changes:{mods:0,major:0,minor:1},date:'2026-11-21',title:'모바일 슬라이드 입력',items:['손가락을 떼지 않고 옆 화살표로 밀면 해당 방향으로 입력이 바뀝니다.','화살표 영역 밖에서는 누름을 해제하고 다시 들어오면 입력합니다. 여러 손가락도 각각 처리합니다.']},
  {id:'2026-11-17-idle-eye',changes:{mods:0,major:0,minor:1},date:'2026-11-17',title:'BF 눈·커럽션 대기 동작 수정',items:['BF 기타 두 번째 포즈의 눈을 보정했습니다.','캡처 포즈와 Escape에 추가했던 인위적인 상하 이동을 제거했습니다.','일반 캐릭터가 쉴 때는 모드 파일의 원본 대기 애니메이션을 사용합니다. 기타 대기 포즈는 유지합니다.']},
  {id:'2026-11-17-bf-guitar-hands',changes:{mods:0,major:0,minor:1},date:'2026-11-17',title:'BF 기타 포즈 손 위치 수정',items:['BF 기타 2·3·4번 포즈에서 양손을 주머니 밖으로 꺼내 기타 목과 줄을 잡도록 수정했습니다.','기타를 몸 앞에 배치하고 나머지 포즈는 유지했습니다.']},
